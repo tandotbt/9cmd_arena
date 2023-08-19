@@ -376,8 +376,8 @@ function refreshTableData() {
 }
 
 function refreshInfoTableData() {
-    // $.getJSON("https://cors-get-proxy.sirjosh.workers.dev/?url=http://jsonblob.com/api/1141252404015915008").done(function (data) {
-		$.getJSON("http://jsonblob.com/api/1141252404015915008").done(function (data) {
+    $.getJSON("https://cors-get-proxy.sirjosh.workers.dev/?url=http://jsonblob.com/api/1141252404015915008").done(function (data) {
+		// $.getJSON("http://jsonblob.com/api/1141252404015915008").done(function (data) {
         var dataArray = []; // Khởi tạo một mảng mới
 
         // Chuyển đổi đối tượng JSON thành một mảng
