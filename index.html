@@ -64,6 +64,7 @@
             <!-- <h3>Click vào tiêu đề cột để sắp xếp!</h3> -->
 
             <div style="overflow-wrap: anywhere; display: flex; align-items: flex-start;">
+		<div style="display:flex;flex-direction: column;align-items: stretch;">
                 <table id="infoTable">
                     <tr class="notHide" id="selectedItemsRow" style="background-image: url('assets/cover.png'); background-repeat: no-repeat; background-attachment: fixed; background-size: cover;">
                         <!-- <td style="display: none;" id="cors_anywhere" colspan="12"> -->
@@ -76,15 +77,14 @@
                             <button id="resetButton" class="button-37">Reset table</button>
                             <input list="item" type="text" id="searchItem" onkeyup="searchItemFun()" placeholder="Search for names.." />
                         </td>
+
                         <!-- <td colspan="10" style="font-size: 2vw;"><input list="item" type="text" id="searchItem" onkeyup="searchItemFun()" placeholder="Search for names.." /></td> -->
                     </tr>
-
                     <tr class="notHide infoYou">
                         <td>-</td>
                         <td><img src="assets/loading_small.gif" /></td>
                         <td colspan="10">-</td>
                     </tr>
-
                     <tr class="notHide">
                         <th>Block</th>
                         <th>Avg Block Time</th>
@@ -93,7 +93,11 @@
                         <th>Time block</th>
                         <th>Time</th>
                     </tr>
+					
                 </table>
+				<div class="commentbox"></div><script src="https://unpkg.com/commentbox.io/dist/commentBox.min.js"></script><script>commentBox('5678010745225216-proj')</script>	
+				</div>
+
                 <table id="myTable">
                     <tbody>
                         <tr class="sticky notHide">
