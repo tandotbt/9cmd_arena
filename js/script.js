@@ -164,6 +164,8 @@ function replaceColumnWithImage() {
             if (entry.isIntersecting) {
                 var cell = entry.target;
                 var avataraddress = cell.getAttribute("id").replace("imgCell-", "");
+				// Lấy giá trị số thứ tự student1
+				var avatarIndex = cell.getAttribute("data-index");
                 $.getJSON("https://api.9cscan.com/account?avatar=" + avataraddress).done(function (apiData) {
                     var avatarAddress = avataraddress.toLowerCase();
                     var level; // New variable to store the level
@@ -191,7 +193,7 @@ function replaceColumnWithImage() {
 
                         var imageUrl = "https://raw.githubusercontent.com/planetarium/NineChronicles/development/nekoyume/Assets/Resources/UI/Icons/Item/" + armorId + ".png";
                         cell.innerHTML =
-                            "<div class='image-container'>" +
+                            "<label for='radio-" + avatarIndex + "'><div class='image-container'>" +
                             "<div style='z-index: 1;position: absolute;padding-left: 25px;padding-bottom: 30px;font-size: 13px;font-family: monospace;color: lightyellow;'>" +
                             level +
                             "</div>" +
@@ -199,7 +201,8 @@ function replaceColumnWithImage() {
                             imageUrl +
                             "'>" +
                             "<img style='padding-left: 26px;padding-bottom: 30px;'class='lazyload image' src='assets/loading_small.gif' data-src='https://raw.githubusercontent.com/planetarium/NineChronicles/development/nekoyume/Assets/Resources/UI/Icons/Item/Character_Level_Bg.png'>" +
-                            "<img class='lazyload image' src='assets/loading_small.gif' data-src='https://raw.githubusercontent.com/planetarium/NineChronicles/development/nekoyume/Assets/Resources/UI/Icons/Item/character_frame.png'></div>";
+                            "<img class='lazyload image' src='assets/loading_small.gif' data-src='https://raw.githubusercontent.com/planetarium/NineChronicles/development/nekoyume/Assets/Resources/UI/Icons/Item/character_frame.png'></div>"
+							+ "<label>";
                     }
                 });
 
@@ -229,7 +232,7 @@ function refreshTableData() {
         $.each(data, function (key, value) {
             student += "<tr>";
             student += "<td>" + "<label for='radio-" + student1 + "'>" + student1 + "</label></td>";
-            student += "<td id='imgCell-" + value.avataraddress + "'><img src='assets/loading_small.gif'></td>";
+			student += "<td id='imgCell-" + value.avataraddress + "' data-index='" + student1 + "'><img src='assets/loading_small.gif'></td>";
             student += "<td>" + "<label for='radio-" + student1 + "'>" + value.avatarname + "</label></td>";
             student += "<td>" + "<label for='radio-" + student1 + "'>" + value.rankid + "</label></td>";
             student += "<td>" + "<label for='radio-" + student1 + "'>" + value.cp + "</label></td>";
