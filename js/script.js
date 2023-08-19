@@ -392,7 +392,7 @@ function refreshInfoTableData() {
             student += "<tr>";
             student += "<td>" + value.block + "</td>";
             student += "<td>" + value.avgBlock + " <b>s</b></td>";
-            student += "<td>" + value.roundID + "</td>";
+            student += "<td>" + value.roundID + "/20</td>";
             student += "<td>" + value.blockEndRound + "</td>";
             student += "<td>" + value.timeBlock + "</td>";
             student += "<td>" + value.h + ":" + value.m + ":" + value.s + "</td>";
