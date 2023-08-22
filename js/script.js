@@ -232,7 +232,7 @@ function refreshTableData() {
         $.each(data, function (key, value) {
             student += "<tr>";
             student += "<td>" + "<label for='radio-" + student1 + "'>" + student1 + "</label></td>";
-			student += "<td id='imgCell-" + value.avataraddress + "' data-index='" + student1 + "'><img src='assets/loading_small.gif'></td>";
+			student += "<td style='height: 80px;' id='imgCell-" + value.avataraddress + "' data-index='" + student1 + "'><img src='assets/loading_small.gif'></td>";
             student += "<td>" + "<label for='radio-" + student1 + "'>" + value.avatarname + "</label></td>";
             student += "<td>" + "<label for='radio-" + student1 + "'>" + value.rankid + "</label></td>";
             student += "<td>" + "<label for='radio-" + student1 + "'>" + value.cp + "</label></td>";
