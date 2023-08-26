@@ -225,7 +225,7 @@ function replaceColumnWithImage() {
 
 function refreshTableData() {
     // $.getJSON("https://cors-get-proxy.sirjosh.workers.dev/?url=https://api.9capi.com/arenaLeaderboard").done(function (data) {
-    $.getJSON("http://api.9capi.com/arenaLeaderboard/").done(function (data) {
+    $.getJSON("https://api.9capi.com/arenaLeaderboard/").done(function (data) {
         // $.getJSON("http://jsonblob.com/api/1142073037486415872").done(function (data) {
         var student = "";
         var student1 = 1;
