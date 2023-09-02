@@ -224,9 +224,34 @@ function replaceColumnWithImage() {
 }
 
 function refreshTableData() {
-    $.getJSON("https://cors-get-proxy.sirjosh.workers.dev/?url=https://api.9capi.com/arenaLeaderboard").done(function (data) {
-    // $.getJSON("https://api.9capi.com/arenaLeaderboard/").done(function (data) {
-        // $.getJSON("http://jsonblob.com/api/1142073037486415872").done(function (data) {
+$.getJSON("https://cors-get-proxy.sirjosh.workers.dev/?url=https://api.9capi.com/arenaLeaderboard")
+  .done(function(data) {
+    if (Array.isArray(data) && data.length === 0) {
+      // Dữ liệu trả về là một mảng rỗng
+      // Thực hiện lấy dữ liệu từ link khác
+      $.getJSON("http://jsonblob.com/api/1142073037486415872")
+	  // .data.battleArenaRanking|.[]|{avataraddress: .avatarAddress,avatarname: .name,cp,currenttickets: 999,rankid: .ranking,roundid: 999,score}
+        .done(function(otherData) {
+          // Xử lý dữ liệu từ link khác
+          console.log("Sử dụng link dự phòng");
+		  creatTableArena(otherData);
+        })
+        .fail(function(jqXHR, textStatus, error) {
+          // Xử lý khi yêu cầu thất bại
+          console.log("Lỗi khi lấy dữ liệu từ link dự phòng:", error);
+        });
+    } else {
+      // Xử lý dữ liệu từ API ban đầu
+      console.log("Sử dụng từ 9capi");
+	  creatTableArena(data);
+    }
+  })
+  .fail(function(jqXHR, textStatus, error) {
+    // Xử lý khi yêu cầu thất bại
+    console.log("Lỗi khi lấy dữ liệu từ API:", error);
+  });
+};
+function creatTableArena(data) {
         var student = "";
         var student1 = 1;
         var totalRows = data.length;
@@ -377,8 +402,8 @@ function refreshTableData() {
                 $("#infoTable tr.infoYou").replaceWith(newRow);
             });
         });
-    });
-}
+    }	
+
 
 function refreshInfoTableData() {
     $.getJSON("https://jsonblob.com/api/1141252404015915008").done(function (data) {
