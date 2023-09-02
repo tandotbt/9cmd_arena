@@ -229,7 +229,7 @@ $.getJSON("https://cors-get-proxy.sirjosh.workers.dev/?url=https://api.9capi.com
     if (Array.isArray(data) && data.length === 0) {
       // Dữ liệu trả về là một mảng rỗng
       // Thực hiện lấy dữ liệu từ link khác
-      $.getJSON("http://jsonblob.com/api/1142073037486415872")
+      $.getJSON("https://jsonblob.com/api/jsonBlob/1142073037486415872")
 	  // .data.battleArenaRanking|.[]|{avataraddress: .avatarAddress,avatarname: .name,cp,currenttickets: 999,rankid: .ranking,roundid: 999,score}
         .done(function(otherData) {
           // Xử lý dữ liệu từ link khác
