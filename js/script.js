@@ -260,7 +260,8 @@ function creatTableArena(data) {
             student += "<tr>";
             student += "<td>" + "<label for='radio-" + student1 + "'>" + student1 + "</label></td>";
             student += "<td style='width: 80px;height: 80px;' id='imgCell-" + value.avataraddress + "' data-index='" + student1 + "'><img src='assets/loading_small.gif'></td>";
-            student += "<td>" + "<label for='radio-" + student1 + "'>" + value.avatarname + "</label></td>";
+			var avatarCode = value.avataraddress.substring(2, 6);
+            student += "<td>" + "<label style='font-weight: bold;' for='radio-" + student1 + "'>" + value.avatarname + " <span class='mute-text'>#" + avatarCode + "</span></label></td>";
             student += "<td>" + "<label for='radio-" + student1 + "'>" + value.rankid + "</label></td>";
             student += "<td>" + "<label for='radio-" + student1 + "'>" + value.cp + "</label></td>";
             student += "<td>" + "<label for='radio-" + student1 + "'>" + value.score + "</label></td>";
