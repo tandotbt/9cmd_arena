@@ -191,7 +191,7 @@ function replaceColumnWithImage() {
                             armorId = armorEquipment.id;
                         }
 
-                        var imageUrl = "https://raw.githubusercontent.com/planetarium/NineChronicles/development/nekoyume/Assets/Resources/UI/Icons/Item/" + armorId + ".png";
+                        var imageUrl = "https://raw.githubusercontent.com/planetarium/NineChronicles/v200020-1/nekoyume/Assets/Resources/UI/Icons/Item/" + armorId + ".png";
                         cell.innerHTML =
                             "<label for='radio-" +
                             avatarIndex +
@@ -202,8 +202,8 @@ function replaceColumnWithImage() {
                             "<img class='lazyload image' src='assets/loading_small.gif' data-src='" +
                             imageUrl +
                             "'>" +
-                            "<img style='padding-left: 26px;padding-bottom: 30px;'class='lazyload image' src='assets/loading_small.gif' data-src='https://raw.githubusercontent.com/planetarium/NineChronicles/development/nekoyume/Assets/Resources/UI/Icons/Item/Character_Level_Bg.png'>" +
-                            "<img class='lazyload image' src='assets/loading_small.gif' data-src='https://raw.githubusercontent.com/planetarium/NineChronicles/development/nekoyume/Assets/Resources/UI/Icons/Item/character_frame.png'></div>" +
+                            "<img style='padding-left: 26px;padding-bottom: 30px;'class='lazyload image' src='assets/loading_small.gif' data-src='https://raw.githubusercontent.com/planetarium/NineChronicles/v200020-1/nekoyume/Assets/Resources/UI/Icons/Item/Character_Level_Bg.png'>" +
+                            "<img class='lazyload image' src='assets/loading_small.gif' data-src='https://raw.githubusercontent.com/planetarium/NineChronicles/v200020-1/nekoyume/Assets/Resources/UI/Icons/Item/character_frame.png'></div>" +
                             "<label>";
                     }
                 });
