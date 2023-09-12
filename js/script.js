@@ -329,7 +329,7 @@ function creatTableArena(data) {
 			var avatarCode = value.avataraddress.substring(2, 6);
             student += "<td>" + "<label style='font-weight: bold;' for='radio-" + student1 + "'>" + value.avatarname + " <span class='mute-text'>#" + avatarCode + "</span></label></td>";
             // student += "<td>" + "<label for='radio-" + student1 + "'>" + value.rankid + "</label></td>";
-            student += "<td>" + "<label style='white-space: nowrap;' for='radio-" + student1 + "'>" + value.cp.toLocaleString('en-US') + "</label></td>";
+            student += "<td>" + "<label style='white-space: nowrap;' for='radio-" + student1 + "'>" + value.cp + "</label></td>";
             student += "<td>" + "<label style='white-space: nowrap;' for='radio-" + student1 + "'>" + value.score + "</label></td>";
             student += "<td>" + "<label for='radio-" + student1 + "'>" + value.currenttickets + "</label></td>";
 			student += "<td>" + "<label for='radio-" + student1 + "'>" + value.win + "/" + value.lose + "</label></td>";
