@@ -324,7 +324,7 @@ function creatTableArena(data) {
         // ITERATING THROUGH OBJECTS
         $.each(data, function (key, value) {
             student += "<tr>";
-            student += "<td>" + "<label for='radio-" + student1 + "'>" + value.rankid + "</label></td>";
+            student += "<td>" + "<label for='radio-" + student1 + "'>" + student1 +"<br><span class='mute-text'>#"+ value.rankid + "</span></label></td>";
             student += "<td style='width: 80px;height: 80px;' id='imgCell-" + value.avataraddress + "' data-index='" + student1 + "'><img src='assets/loading_small.gif'></td>";
 			var avatarCode = value.avataraddress.substring(2, 6);
             student += "<td>" + "<label style='font-weight: bold;' for='radio-" + student1 + "'>" + value.avatarname + " <span class='mute-text'>#" + avatarCode + "</span></label></td>";
