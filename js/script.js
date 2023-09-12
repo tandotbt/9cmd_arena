@@ -222,19 +222,58 @@ function replaceColumnWithImage() {
         observer.observe(cell);
     });
 }
+var timerRefreshTableData;
 
 function refreshTableData() {
+// Thêm CSS dark-mode cho nút resetButton
+$("#resetButton").addClass("dark-mode");
+
+// Tắt khả dụng của nút resetButton trong 5 giây
+$("#resetButton").prop("disabled", true);
+setTimeout(function () {
+$("#resetButton").prop("disabled", false);
+$("#resetButton").removeClass("dark-mode");
+}, 5000);
+
+// Reset input number
+$("#numberInput").val("1");
+$("#rangeInput").val("0");
+$("#rangeInput2").val("0");
+
+var resetDataInfoYou = `
+<td>-</td>
+<td><img src='assets/loading_small.gif'></td>
+<td colspan="10">-</td>
+`;
+var newRow = $("<tr class='notHide infoYou'></tr>").html(resetDataInfoYou);
+$("#infoTable tr.infoYou").replaceWith(newRow);	
 $.getJSON("https://api.9capi.com/arenaLeaderboard")
-  .done(function(data) {
-    if (Array.isArray(data) && data.length === 0) {
+  .done(function(apiData1) {
+    if (Array.isArray(apiData1) && apiData1.length === 0) {
       // Dữ liệu trả về là một mảng rỗng
       // Thực hiện lấy dữ liệu từ link khác
       $.getJSON("https://jsonblob.com/api/jsonBlob/1142073037486415872")
 	  // .data.battleArenaRanking|.[]|{avataraddress: .avatarAddress,avatarname: .name,cp,currenttickets: 999,rankid: .ranking,roundid: 999,score}
-        .done(function(otherData) {
+        .done(function(apiData1) {
           // Xử lý dữ liệu từ link khác
           console.log("Sử dụng link dự phòng");
-		  creatTableArena(otherData);
+		  
+		  fetch("https://jsonblob.com/api/1151020625430437888")
+			  .then(response2 => response2.json())
+			  .then(apiData2 => {
+				if (Array.isArray(apiData2) && apiData2.length > 0) {
+				  // Hợp nhất dữ liệu từ hai API
+				  const mergedData = apiData1.map(data1 => {
+					const matchingData2 = apiData2.find(data2 => data2.avataraddress.toLowerCase() === data1.avataraddress.toLowerCase());
+					return { ...data1, ...matchingData2 };
+				  });
+
+				  creatTableArena(mergedData);
+				} else {
+				  console.log('API 2 không trả về một mảng hợp lệ');
+				  creatTableArena(apiData1);
+				}
+			  });
         })
         .fail(function(jqXHR, textStatus, error) {
           // Xử lý khi yêu cầu thất bại
@@ -243,29 +282,58 @@ $.getJSON("https://api.9capi.com/arenaLeaderboard")
     } else {
       // Xử lý dữ liệu từ API ban đầu
       console.log("Sử dụng từ 9capi");
-	  creatTableArena(data);
+		  fetch("https://jsonblob.com/api/1151020625430437888")
+			  .then(response2 => response2.json())
+			  .then(apiData2 => {
+				if (Array.isArray(apiData2) && apiData2.length > 0) {
+				  // Hợp nhất dữ liệu từ hai API
+				  const mergedData = apiData1.map(data1 => {
+					const matchingData2 = apiData2.find(data2 => data2.avataraddress.toLowerCase() === data1.avataraddress.toLowerCase());
+					return { ...data1, ...matchingData2 };
+				  });
+
+				  creatTableArena(mergedData);
+				} else {
+				  console.log('API 2 không trả về một mảng hợp lệ');
+				  creatTableArena(apiData1);
+				}
+			  });
     }
   })
   .fail(function(jqXHR, textStatus, error) {
     // Xử lý khi yêu cầu thất bại
     console.log("Lỗi khi lấy dữ liệu từ API:", error);
   });
+  
+timeAutoResetTable = $("#timeAutoResetTable").val();
+$("#resetButton span").text(timeAutoResetTable);
+timerRefreshTableData = setTimeout(refreshTableData, timeAutoResetTable * 1000);
 };
+function refreshTableDataAgain() {
+    // Hủy định thời gian chờ hiện tại (nếu có)
+    clearTimeout(timerRefreshTableData);
+
+    // Gọi lại hàm fetchDataAvatar()
+    refreshTableData();
+}
 function creatTableArena(data) {
+		console.log(data);
         var student = "";
         var student1 = 1;
         var totalRows = data.length;
         // ITERATING THROUGH OBJECTS
         $.each(data, function (key, value) {
             student += "<tr>";
-            student += "<td>" + "<label for='radio-" + student1 + "'>" + student1 + "</label></td>";
+            student += "<td>" + "<label for='radio-" + student1 + "'>" + value.rankid + "</label></td>";
             student += "<td style='width: 80px;height: 80px;' id='imgCell-" + value.avataraddress + "' data-index='" + student1 + "'><img src='assets/loading_small.gif'></td>";
 			var avatarCode = value.avataraddress.substring(2, 6);
             student += "<td>" + "<label style='font-weight: bold;' for='radio-" + student1 + "'>" + value.avatarname + " <span class='mute-text'>#" + avatarCode + "</span></label></td>";
-            student += "<td>" + "<label for='radio-" + student1 + "'>" + value.rankid + "</label></td>";
-            student += "<td>" + "<label for='radio-" + student1 + "'>" + value.cp + "</label></td>";
-            student += "<td>" + "<label for='radio-" + student1 + "'>" + value.score + "</label></td>";
+            // student += "<td>" + "<label for='radio-" + student1 + "'>" + value.rankid + "</label></td>";
+            student += "<td>" + "<label style='white-space: nowrap;' for='radio-" + student1 + "'>" + value.cp.toLocaleString('en-US') + "</label></td>";
+            student += "<td>" + "<label style='white-space: nowrap;' for='radio-" + student1 + "'>" + value.score + "</label></td>";
             student += "<td>" + "<label for='radio-" + student1 + "'>" + value.currenttickets + "</label></td>";
+			student += "<td>" + "<label for='radio-" + student1 + "'>" + value.win + "/" + value.lose + "</label></td>";
+			student += "<td>" + "<label for='radio-" + student1 + "'>" + value.purchasedTicketCount + " <br>(" + value.purchasedTicketNCG.toFixed(1) + " ncg)</label></td>";
             student +=
                 "<td><div class='radio-wrapper'><input id='radio-" +
                 student1 +
@@ -353,35 +421,6 @@ function creatTableArena(data) {
             $("#myTable tr:not(.notHide)").slice(number, endRow2).addClass("range2");
         });
 
-        // Gán sự kiện click cho nút resetButton
-        $("#resetButton").click(function () {
-            // Tải lại dữ liệu từ getJSON
-            refreshTableData();
-
-            // Thêm CSS dark-mode cho nút resetButton
-            $(this).addClass("dark-mode");
-
-            // Tắt khả dụng của nút resetButton trong 5 giây
-            $(this).prop("disabled", true);
-            setTimeout(function () {
-                $("#resetButton").prop("disabled", false);
-                $("#resetButton").removeClass("dark-mode");
-            }, 5000);
-
-            // Reset input number
-            $("#numberInput").val("1");
-            $("#rangeInput").val("0");
-            $("#rangeInput2").val("0");
-
-            var resetDataInfoYou = `
-      <td>-</td>
-      <td><img src='assets/loading_small.gif'></td>
-      <td colspan="10">-</td>
-    `;
-            var newRow = $("<tr class='notHide infoYou'></tr>").html(resetDataInfoYou);
-            $("#infoTable tr.infoYou").replaceWith(newRow);
-        });
-
         $(document).ready(function () {
             $('input[name="avatarSelection"]').change(function () {
                 var selectedAvatarIndex = parseInt($(this).attr("id").split("-")[1]);
@@ -417,12 +456,12 @@ function refreshInfoTableData() {
         // ITERATING THROUGH OBJECTS
         $.each(dataArray, function (key, value) {
             student += "<tr>";
-            student += "<td>" + value.block + "</td>";
+            student += "<td style='white-space: nowrap;'>" + value.block + "</td>";
             student += "<td>" + value.avgBlock + " <b>s</b></td>";
             student += "<td>" + value.roundID + "/20</td>";
             student += "<td>" + value.blockEndRound + "</td>";
             student += "<td>" + value.timeBlock + "</td>";
-            student += "<td>" + value.h + ":" + value.m + ":" + value.s + "</td>";
+            student += "<td style='white-space: nowrap;'>" + value.h + ":" + value.m + ":" + value.s + "</td>";
             student += "</tr>";
             student1 += 1;
         });

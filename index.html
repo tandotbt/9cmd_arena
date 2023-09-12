@@ -82,7 +82,9 @@
                             <input type="number" id="numberInput" value="1" /><br>
                             <input class="range-style" type="range" id="rangeInput" min="0" max="200" step="50" value="0" />
                             <input class="range-style" type="range" id="rangeInput2" min="0" max="200" step="50" value="0" /><br>
-                            <button id="resetButton" class="button-37">Reset table</button>
+                            <input class="button-37" type="number" id="timeAutoResetTable" value="999" min="10"/>
+							<button id="resetButton" onclick="refreshTableDataAgain()" class="button-37">Auto reset table after <span></span>s</button>
+							
                             <input list="item" type="text" id="searchItem" onkeyup="searchItemFun()" placeholder="Search for names.." />
                         </td>
 
@@ -109,13 +111,15 @@
                 <table id="myTable">
                     <tbody>
                         <tr class="sticky notHide">
-                            <th>STT</th>
+                            <th>Rank</th>
                             <th>Image</th>
                             <th>Name</th>
-                            <th>Rank</th>
+                            <!-- <th>Rank</th> -->
                             <th>CP</th>
                             <th>Score</th>
                             <th>Tickets</th>
+							<th>Win/lose</th>
+							<th>BuyTickets</th>
                             <th>You</th>
                             <th>Enemy</th>
                         </tr>
@@ -123,10 +127,12 @@
 							<td>-</td>
 							<td><img src="assets/loading_small.gif" /></td>
 							<td>-------------------------</td>
-							<td>-</td>
+							<!-- <td>-</td> -->
 							<td>--------</td>
 							<td>-----</td>
 							<td>-</td>
+							<td>---/---</td>
+							<td>------</td>
 							<td>-</td>
 							<td>---</td>
 						</tr>
