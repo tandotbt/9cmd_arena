@@ -339,7 +339,12 @@ function creatTableArena(data) {
             student += "<td>" + "<label style='white-space: nowrap;' for='radio-" + student1 + "'>" + value.score + "</label></td>";
             student += "<td>" + "<label for='radio-" + student1 + "'>" + value.currenttickets + "</label></td>";
 			student += "<td>" + "<label for='radio-" + student1 + "'>" + value.win + "/" + value.lose + "</label></td>";
-			student += "<td>" + "<label for='radio-" + student1 + "'>" + value.purchasedTicketCount + " <br><span class='mute-text' style='white-space: nowrap;'>" + value.purchasedTicketNCG.toFixed(1) + " ncg</span></label></td>";
+			if (value.purchasedTicketNCG) {
+				temp =  value.purchasedTicketNCG.toFixed(1);
+			} else {
+				temp = 0;
+			}
+			student += "<td>" + "<label for='radio-" + student1 + "'>" + value.purchasedTicketCount + " <br><span class='mute-text' style='white-space: nowrap;'>" + temp + " ncg</span></label></td>";
             student +=
                 "<td><div class='radio-wrapper'><input id='radio-" +
                 student1 +
