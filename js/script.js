@@ -128,16 +128,30 @@ function handleButtonClick(button) {
 
     // Lấy số thứ tự của sinh viên từ ID của button
     var studentId = button.id.split("-")[1];
+    var sessionDataArena = getDataFromSessionStorage("sessionDataArena", selectedRadioValue);
 
     // Gửi lệnh POST tới URL xác định
-    // sendPostRequest("https://cors-proxy.fringe.zone/https://api.9capi.com/arenaSim/", putData, function (response, status) {
     sendPostRequest("https://api.9capi.com/arenaSim", putData, function (response, status) {
         var resultButton = $("#button-" + studentId);
         if (status === "success") {
             resultButton.text(response.winPercentage + "%");
+
+            if (sessionDataArena === null) {
+                sessionDataArena = {};
+            }
+
+            sessionDataArena[itemId] = response.winPercentage;
         } else {
-            resultButton.text("Error");
+            resultButton.text("-999");
+
+            if (sessionDataArena === null) {
+                sessionDataArena = {};
+            }
+
+            sessionDataArena[itemId] = -999;
         }
+
+        addDataForSessionStorage("sessionDataArena", selectedRadioValue, sessionDataArena);
     });
 }
 
@@ -254,26 +268,11 @@ $.getJSON("https://api.9capi.com/arenaLeaderboard")
       // Thực hiện lấy dữ liệu từ link khác
       $.getJSON("https://jsonblob.com/api/jsonBlob/1142073037486415872")
 	  // .data.battleArenaRanking|.[]|{avataraddress: .avatarAddress,avatarname: .name,cp,currenttickets: 999,rankid: .ranking,roundid: 999,score}
-        .done(function(apiData1) {
+        .done(function(mergedData) {
           // Xử lý dữ liệu từ link khác
           console.log("Sử dụng link dự phòng");
-		  
-		  fetch("https://jsonblob.com/api/1151020625430437888")
-			  .then(response2 => response2.json())
-			  .then(apiData2 => {
-				if (Array.isArray(apiData2) && apiData2.length > 0) {
-				  // Hợp nhất dữ liệu từ hai API
-				  const mergedData = apiData1.map(data1 => {
-					const matchingData2 = apiData2.find(data2 => data2.avataraddress.toLowerCase() === data1.avataraddress.toLowerCase());
-					return { ...data1, ...matchingData2 };
-				  });
+		  creatTableArena(mergedData);
 
-				  creatTableArena(mergedData);
-				} else {
-				  console.log('API 2 không trả về một mảng hợp lệ');
-				  creatTableArena(apiData1);
-				}
-			  });
         })
         .fail(function(jqXHR, textStatus, error) {
           // Xử lý khi yêu cầu thất bại
@@ -291,7 +290,14 @@ $.getJSON("https://api.9capi.com/arenaLeaderboard")
 					const matchingData2 = apiData2.find(data2 => data2.avataraddress.toLowerCase() === data1.avataraddress.toLowerCase());
 					return { ...data1, ...matchingData2 };
 				  });
-
+						// Bản lưu dự phòng
+						fetch('https://jsonblob.com/api/jsonBlob/1142073037486415872', {
+						  method: 'PUT',
+						  headers: {
+							'Content-Type': 'application/json'
+						  },
+						  body: JSON.stringify(mergedData)
+						});
 				  creatTableArena(mergedData);
 				} else {
 				  console.log('API 2 không trả về một mảng hợp lệ');
@@ -324,7 +330,7 @@ function creatTableArena(data) {
         // ITERATING THROUGH OBJECTS
         $.each(data, function (key, value) {
             student += "<tr>";
-            student += "<td>" + "<label for='radio-" + student1 + "'>" + student1 +"<br><span class='mute-text'>#"+ value.rankid + "</span></label></td>";
+            student += "<td>" + "<label for='radio-" + student1 + "'>" + student1 +"<br><span class='mute-text' style='white-space: nowrap;'>#"+ value.rankid + "</span></label></td>";
             student += "<td style='width: 80px;height: 80px;' id='imgCell-" + value.avataraddress + "' data-index='" + student1 + "'><img src='assets/loading_small.gif'></td>";
 			var avatarCode = value.avataraddress.substring(2, 6);
             student += "<td>" + "<label style='font-weight: bold;' for='radio-" + student1 + "'>" + value.avatarname + " <span class='mute-text'>#" + avatarCode + "</span></label></td>";
@@ -333,7 +339,7 @@ function creatTableArena(data) {
             student += "<td>" + "<label style='white-space: nowrap;' for='radio-" + student1 + "'>" + value.score + "</label></td>";
             student += "<td>" + "<label for='radio-" + student1 + "'>" + value.currenttickets + "</label></td>";
 			student += "<td>" + "<label for='radio-" + student1 + "'>" + value.win + "/" + value.lose + "</label></td>";
-			student += "<td>" + "<label for='radio-" + student1 + "'>" + value.purchasedTicketCount + " <br>(" + value.purchasedTicketNCG.toFixed(1) + " ncg)</label></td>";
+			student += "<td>" + "<label for='radio-" + student1 + "'>" + value.purchasedTicketCount + " <br><span class='mute-text' style='white-space: nowrap;'>" + value.purchasedTicketNCG.toFixed(1) + " ncg</span></label></td>";
             student +=
                 "<td><div class='radio-wrapper'><input id='radio-" +
                 student1 +
@@ -421,27 +427,57 @@ function creatTableArena(data) {
             $("#myTable tr:not(.notHide)").slice(number, endRow2).addClass("range2");
         });
 
-        $(document).ready(function () {
-            $('input[name="avatarSelection"]').change(function () {
-                var selectedAvatarIndex = parseInt($(this).attr("id").split("-")[1]);
+$(document).ready(function () {
+  $('input[name="avatarSelection"]').change(function () {
+    var selectedAvatarIndex = parseInt($(this).attr("id").split("-")[1]);
 
-                $("#numberInput").val(selectedAvatarIndex);
-                // RESET CSS CLASSES
-                $("#myTable tr").removeClass("range1 range2");
-                // ADD CSS CLASS
-                $("#myTable tr:not(.notHide)")
-                    .eq(selectedAvatarIndex - 1)
-                    .addClass("row_pick");
+    $("#numberInput").val(selectedAvatarIndex);
+    // RESET CSS CLASSES
+    $("#myTable tr").removeClass("range1 range2");
+    // ADD CSS CLASS
+    $("#myTable tr:not(.notHide)")
+      .eq(selectedAvatarIndex - 1)
+      .addClass("row_pick");
 
-                // Copy selected columns to infoTable
-                var selectedRow = $(this).closest("tr");
-                var selectedColumns = selectedRow.find("th:lt(3), td:lt(3)").clone();
-                // Modify the third column
-                selectedColumns.eq(2).attr("colspan", "10");
-                var newRow = $("<tr class='notHide infoYou'></tr>").append(selectedColumns);
-                $("#infoTable tr.infoYou").replaceWith(newRow);
-            });
-        });
+    // Copy selected columns to infoTable
+    var selectedRow = $(this).closest("tr");
+    var selectedColumns = selectedRow.find("th:lt(3), td:lt(3)").clone();
+    // Modify the third column
+    selectedColumns.eq(2).attr("colspan", "10");
+    var newRow = $("<tr class='notHide infoYou'></tr>").append(selectedColumns);
+    $("#infoTable tr.infoYou").replaceWith(newRow);
+
+    // Sử dụng % win đã lưu nếu có
+    var selectedRadioValue = $('input[name="avatarSelection"]:checked').val();
+    var sessionDataArena = getDataFromSessionStorage("sessionDataArena", selectedRadioValue);
+
+    if (sessionDataArena !== null && Object.keys(sessionDataArena).length !== 0) {
+      $(".button-11").each(async function () {
+        var itemId = $(this).data("itemid");
+        var studentId = $(this).attr("id").split("-")[1];
+
+        // Duyệt qua từng khóa trong sessionDataArena
+        for (var key in sessionDataArena) {
+          if (key.toLowerCase() === itemId.toLowerCase()) {
+            try {
+              // Sử dụng Promise để bao bọc hành động bất đồng bộ
+              await new Promise((resolve) => {
+                setTimeout(resolve, 0); // Giữ nguyên luồng chính để tránh gây tắc nghẽn
+              });
+
+              // Nếu itemId trùng khóa trong sessionDataArena, thực hiện hành động tương ứng
+              $("#button-" + studentId).text(sessionDataArena[key] + "%");
+              break; // Kết thúc vòng lặp sau khi tìm thấy khóa trùng
+            } catch (error) {
+              // Xử lý lỗi nếu có
+              console.error(error);
+            }
+          }
+        }
+      });
+    }
+  });
+});
     }	
 
 
@@ -474,4 +510,62 @@ function refreshInfoTableData() {
         // Lập lịch chạy lại hàm sau 5 giây
         setTimeout(refreshInfoTableData, 5000);
     });
+}
+
+function addDataForSessionStorage(parentKey, childKey, data) {
+    // Kiểm tra xem sessionStorage có tồn tại hay không
+    if (typeof sessionStorage !== "undefined") {
+        // Lấy dữ liệu từ sessionStorage (nếu có)
+        var sessionStorageData = sessionStorage.getItem(parentKey);
+
+        // Kiểm tra và chuyển đổi dữ liệu từ JSON thành đối tượng JavaScript
+        var parsedData = sessionStorageData ? JSON.parse(sessionStorageData) : {};
+
+        // Thêm dữ liệu mới vào đối tượng JavaScript
+        parsedData[childKey] = data;
+
+        // Chuyển đổi đối tượng JavaScript thành JSON
+        var updatedData = JSON.stringify(parsedData);
+
+        // Lưu dữ liệu vào sessionStorage
+        sessionStorage.setItem(parentKey, updatedData);
+    } else {
+        console.log("Trình duyệt của bạn không hỗ trợ sessionStorage.");
+    }
+}
+function getDataFromSessionStorage(parentKey, childKey) {
+    // Kiểm tra xem sessionStorage có tồn tại hay không
+    if (typeof sessionStorage !== "undefined") {
+        // Lấy dữ liệu từ sessionStorage (nếu có)
+        var sessionStorageData = sessionStorage.getItem(parentKey);
+
+        // Kiểm tra và chuyển đổi dữ liệu từ JSON thành đối tượng JavaScript
+        var parsedData = sessionStorageData ? JSON.parse(sessionStorageData) : {};
+
+        // Trả về dữ liệu theo childKey (nếu tồn tại)
+        if (parsedData.hasOwnProperty(childKey) && parsedData[childKey] !== "") {
+            return parsedData[childKey];
+        } else {
+            return null; // Trả về null nếu childKey không tồn tại trong dữ liệu
+        }
+    } else {
+        console.log("Trình duyệt của bạn không hỗ trợ sessionStorage.");
+        return null; // Trình duyệt không hỗ trợ sessionStorage, trả về null
+    }
+}
+function delDataFromSessionStorage(parentKey, childKey) {
+    var parentData = sessionStorage.getItem(parentKey);
+    if (parentData) {
+        var parsedData = JSON.parse(parentData);
+
+        if (parsedData.hasOwnProperty(childKey)) {
+            delete parsedData[childKey];
+            sessionStorage.setItem(parentKey, JSON.stringify(parsedData));
+            console.log("Đã xóa dữ liệu con '" + childKey + "' trong dữ liệu cha '" + parentKey + "'.");
+        } else {
+            console.log("Dữ liệu con '" + childKey + "' không tồn tại trong dữ liệu cha '" + parentKey + "'.");
+        }
+    } else {
+        console.log("Dữ liệu cha '" + parentKey + "' không tồn tại trong sessionStorage.");
+    }
 }
