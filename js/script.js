@@ -142,13 +142,13 @@ function handleButtonClick(button) {
 
             sessionDataArena[itemId] = response.winPercentage;
         } else {
-            resultButton.text("-999");
+            resultButton.text("-1%");
 
             if (sessionDataArena === null) {
                 sessionDataArena = {};
             }
 
-            sessionDataArena[itemId] = -999;
+            sessionDataArena[itemId] = -1;
         }
 
         addDataForSessionStorage("sessionDataArena", selectedRadioValue, sessionDataArena);
@@ -338,8 +338,8 @@ function creatTableArena(data) {
             student += "<td>" + "<label style='white-space: nowrap;' for='radio-" + student1 + "'>" + value.cp + "</label></td>";
             student += "<td>" + "<label style='white-space: nowrap;' for='radio-" + student1 + "'>" + value.score + "</label></td>";
             student += "<td>" + "<label for='radio-" + student1 + "'>" + value.currenttickets + "</label></td>";
-			student += "<td>" + "<label for='radio-" + student1 + "'>" + (value.win ? value.win : "-") + "/" + (value.lose ? value.lose : "-") + "</label></td>";
-			student += "<td>" + "<label for='radio-" + student1 + "'>" + (value.purchasedTicketCount ? value.purchasedTicketCount : "-") + " <br><span class='mute-text' style='white-space: nowrap;'>" + (value.purchasedTicketNCG ? value.purchasedTicketNCG.toFixed(1) : "-") + " ncg</span></label></td>";
+			student += "<td>" + "<label for='radio-" + student1 + "'>" + (typeof value.win !== "undefined" && value.win !== null ? value.win : "-") + "/" + (typeof value.lose !== "undefined" && value.lose !== null ? value.lose : "-") + "</label></td>";
+			student += "<td>" + "<label for='radio-" + student1 + "'>" + (typeof value.purchasedTicketCount !== "undefined" && value.purchasedTicketCount !== null ? value.purchasedTicketCount : "-") + " <br><span class='mute-text' style='white-space: nowrap;'>" + (typeof value.purchasedTicketNCG !== "undefined" && value.purchasedTicketNCG !== null ? value.purchasedTicketNCG.toFixed(1) : "-") + " ncg</span></label></td>";
             student +=
                 "<td><div class='radio-wrapper'><input id='radio-" +
                 student1 +
@@ -352,7 +352,7 @@ function creatTableArena(data) {
                 "/><label for='radio-" +
                 student1 +
                 "'></label></div></td>";
-            student += "<td><div class='button-wrapper'><button class='button-11' id='button-" + student1 + "' onclick='handleButtonClick(this)' data-itemid='" + value.avataraddress + "'>0%</button></div></td>";
+            student += "<td><div class='button-wrapper'><button class='button-11' id='button-" + student1 + "' onclick='handleButtonClick(this)' data-itemid='" + value.avataraddress + "'>-1%</button></div></td>";
             student += "</tr>";
             student1 += 1;
         });
