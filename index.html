@@ -1,182 +1,189 @@
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <title>9CMD Arena</title>
-        <link rel="shortcut icon" href="assets/favicon.png" />
-        <script src="js/lazysizes.min.js" async=""></script>
-        <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-        <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-        <script src="js/script.js"></script>
-        <link rel="stylesheet" type="text/css" href="css/style.css" />
-        <!-- CSS FOR STYLING THE PAGE -->
-        <style>
-                               tr.sticky {
-                                   position: -webkit-sticky;
-                                   position: sticky;
-                                   top: 0px;
-                                   z-index: 999;
-                                   background-image: url('assets/cover.png');
-                                   background-repeat: no-repeat;
-                                   background-attachment: fixed;
-                                   background-size: cover;
-                               }
-                               <!-- td.equip { -->
-                                   <!-- background-color: #4caf50; -->
-                                   <!-- border: 1px solid black; -->
-                               <!-- } -->
-            tr.range1 {
-                                   background-color: #4caf5087;
-                                   border: 1px solid black;
-                               }
 
-            tr.row_pick {
-                                   background-color: #e4f5d4;
-                                   border: 1px solid black;
-                               }
+  <head>
+    <meta charset="UTF-8" />
+    <title>9CMD Arena</title>
+    <link rel="shortcut icon" href="assets/favicon.png" />
+    <script src="js/lazysizes.min.js" async=""></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="js/script.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <!-- CSS FOR STYLING THE PAGE -->
+    <style>
+      tr.sticky {
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0px;
+        z-index: 999;
+        background-image: url('assets/cover.png');
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+      }
 
-                               <!-- td.pick { -->
-                                   <!-- background-color: #2196f3; -->
-                                   <!-- border: 1px solid black; -->
-                               <!-- } -->
+      tr.range1 {
+        background-color: #4caf5087;
+        border: 1px solid black;
+      }
 
-                               tr.range2 {
-                                   background-color: #f4433663;
-                                   border: 1px solid black;
-                               }
+      tr.row_pick {
+        background-color: #e4f5d4;
+        border: 1px solid black;
+      }
 
-                               td.pickAndEquip {
-                                   background-color: #ffffff00;
-                                   background-image: linear-gradient(to right, #ffeb3bb0, #9c27b085);
-                                   border: 1px solid black;
-                               }
-        </style>
-    </head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-BH6ESTL89Y"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
 
-  gtag('config', 'G-BH6ESTL89Y');
-</script>
-    <body>
-        <div class="tooltip">
-            <button id="backToTopBtn" onclick="scrollToTop()"><span class="tooltiptext">Back to top</span></button>
+      tr.range2 {
+        background-color: #f4433663;
+        border: 1px solid black;
+      }
+
+      td.pickAndEquip {
+        background-color: #ffffff00;
+        background-image: linear-gradient(to right, #ffeb3bb0, #9c27b085);
+        border: 1px solid black;
+      }
+
+    </style>
+  </head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-BH6ESTL89Y"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'G-BH6ESTL89Y');
+
+  </script>
+
+  <body>
+    <div class="tooltip">
+      <button id="backToTopBtn" onclick="scrollToTop()"><span class="tooltiptext">Back to top</span></button>
+    </div>
+    <section>
+      <h1><a href="https://tan-dot-bt.gitbook.io/9cmd/" target="_blank"><img src="assets/ArenaSimulatorTitle.png" alt="ArenaSimulatorTitle" style="width: 55vw;" /></a></h1>
+
+      <p style="font-weight: bold;padding: 10px;">Join group telegram for notification <a href="https://t.me/viNineChronicles/629" target="_blank"><img src="assets/telegram.png" alt="telegram" style="width: 30px;" /></a> </p>
+
+      <div style="overflow-wrap: anywhere;display: flex;flex-direction: row-reverse;align-content: center;flex-wrap: nowrap;justify-content: center;align-items: flex-start;">
+        <div style="display:flex;flex-direction: column;align-items: stretch;position: -webkit-sticky;position: sticky;top: 0;">
+          <table id="infoTable">
+            <tr class="notHide" id="selectedItemsRow" style="background-image: url('assets/cover.png'); background-repeat: no-repeat; background-attachment: fixed; background-size: cover;">
+              <!-- <td style="display: none;" id="cors_anywhere" colspan="12"> -->
+              <!-- <a href="https://cors-anywhere.herokuapp.com/corsdemo/" target="_blank"><button class="button-37">https://cors-anywhere.herokuapp.com/corsdemo</button></a> -->
+              <!-- </td> -->
+              <td colspan="10" style="width: 400px; height: 250px;">
+                <input type="number" id="numberInput" value="1" /><br>
+                <input class="range-style" type="range" id="rangeInput" min="0" max="200" step="50" value="0" />
+                <input class="range-style" type="range" id="rangeInput2" min="0" max="200" step="50" value="0" /><br>
+                <input class="button-37" type="number" id="timeAutoResetTable" value="999" min="10" />
+                <button id="resetButton" onclick="refreshTableDataAgain()" class="button-37">Auto reset table after <span></span>s</button>
+
+                <input list="item" type="text" id="searchItem" onkeyup="searchItemFun()" placeholder="Search for names.." />
+              </td>
+
+              <!-- <td colspan="10" style="font-size: 2vw;"><input list="item" type="text" id="searchItem" onkeyup="searchItemFun()" placeholder="Search for names.." /></td> -->
+            </tr>
+            <tr class="notHide infoYou">
+              <td>-</td>
+              <td><img src="assets/loading_small.gif" /></td>
+              <td colspan="10">-</td>
+            </tr>
+            <tr class="notHide">
+              <th>Block</th>
+              <th>Avg Block Time</th>
+              <th>Round ID</th>
+              <th>Block end round</th>
+              <th>Time block</th>
+              <th>Time</th>
+            </tr>
+
+          </table>
+          <div class="commentbox"></div>
+          <script src="https://unpkg.com/commentbox.io/dist/commentBox.min.js"></script>
+          <script>
+            commentBox('5678010745225216-proj')
+
+          </script>
         </div>
-        <section>
-            <h1>
-                Tutorial here: <a href="https://tan-dot-bt.gitbook.io/9cmd/" target="_blank"><img src="assets/9cmd.png" alt="9cmd" style="width: 120;" /></a>
-            </h1>
-            <p style="font-weight: bold;padding: 10px;">Join group telegram for notification <a href="https://t.me/viNineChronicles/629" target="_blank"><img src="assets/telegram.png" alt="telegram" style="width: 30px;" /></a> </p>
-            <!-- <h3>Click vào tiêu đề cột để sắp xếp!</h3> -->
 
-            <div style="overflow-wrap: anywhere; display: flex; align-items: flex-start;">
-		<div style="display:flex;flex-direction: column;align-items: stretch;">
-                <table id="infoTable">
-                    <tr class="notHide" id="selectedItemsRow" style="background-image: url('assets/cover.png'); background-repeat: no-repeat; background-attachment: fixed; background-size: cover;">
-                        <!-- <td style="display: none;" id="cors_anywhere" colspan="12"> -->
-                        <!-- <a href="https://cors-anywhere.herokuapp.com/corsdemo/" target="_blank"><button class="button-37">https://cors-anywhere.herokuapp.com/corsdemo</button></a> -->
-                        <!-- </td> -->
-                        <td colspan="10" style="width: 400px; height: 250px;">
-                            <input type="number" id="numberInput" value="1" /><br>
-                            <input class="range-style" type="range" id="rangeInput" min="0" max="200" step="50" value="0" />
-                            <input class="range-style" type="range" id="rangeInput2" min="0" max="200" step="50" value="0" /><br>
-                            <input class="button-37" type="number" id="timeAutoResetTable" value="999" min="10"/>
-							<button id="resetButton" onclick="refreshTableDataAgain()" class="button-37">Auto reset table after <span></span>s</button>
-							
-                            <input list="item" type="text" id="searchItem" onkeyup="searchItemFun()" placeholder="Search for names.." />
-                        </td>
+        <table id="myTable">
+          <tbody>
+            <tr class="sticky notHide">
+              <th>Rank</th>
+              <th>Image</th>
+              <th>Name</th>
+              <!-- <th>Rank</th> -->
+              <th>CP</th>
+              <th>Score</th>
+              <th>Tickets</th>
+              <th>Win/Lose</th>
+              <th>BuyTickets</th>
+              <th>You</th>
+              <th>Enemy</th>
+            </tr>
+            <tr>
+              <td>-</td>
+              <td><img src="assets/loading_small.gif" /></td>
+              <td>-------------------------</td>
+              <!-- <td>-</td> -->
+              <td>--------</td>
+              <td>-----</td>
+              <td>-</td>
+              <td>---/---</td>
+              <td>------</td>
+              <td>-</td>
+              <td>---</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <script type="text/javascript">
+        const {
+          compare
+        } = new Intl.Collator(undefined, {
+          numeric: true,
+        });
 
-                        <!-- <td colspan="10" style="font-size: 2vw;"><input list="item" type="text" id="searchItem" onkeyup="searchItemFun()" placeholder="Search for names.." /></td> -->
-                    </tr>
-                    <tr class="notHide infoYou">
-                        <td>-</td>
-                        <td><img src="assets/loading_small.gif" /></td>
-                        <td colspan="10">-</td>
-                    </tr>
-                    <tr class="notHide">
-                        <th>Block</th>
-                        <th>Avg Block Time</th>
-                        <th>Round ID</th>
-                        <th>Block end round</th>
-                        <th>Time block</th>
-                        <th>Time</th>
-                    </tr>
-					
-                </table>
-				<div class="commentbox"></div><script src="https://unpkg.com/commentbox.io/dist/commentBox.min.js"></script><script>commentBox('5678010745225216-proj')</script>	
-				</div>
+        $("th", "#myTable").click(function() {
+          sortColumn($(this).index());
+        });
 
-                <table id="myTable">
-                    <tbody>
-                        <tr class="sticky notHide">
-                            <th>Rank</th>
-                            <th>Image</th>
-                            <th>Name</th>
-                            <!-- <th>Rank</th> -->
-                            <th>CP</th>
-                            <th>Score</th>
-                            <th>Tickets</th>
-							<th>Win/Lose</th>
-							<th>BuyTickets</th>
-                            <th>You</th>
-                            <th>Enemy</th>
-                        </tr>
-						<tr>
-							<td>-</td>
-							<td><img src="assets/loading_small.gif" /></td>
-							<td>-------------------------</td>
-							<!-- <td>-</td> -->
-							<td>--------</td>
-							<td>-----</td>
-							<td>-</td>
-							<td>---/---</td>
-							<td>------</td>
-							<td>-</td>
-							<td>---</td>
-						</tr>
-                    </tbody>
-                </table>
-            </div>
-            <script type="text/javascript">
-                const { compare } = new Intl.Collator(undefined, {
-                    numeric: true,
-                });
+        var btn = $("#backToTopBtn");
 
-                $("th", "#myTable").click(function () {
-                    sortColumn($(this).index());
-                });
+        $(window).scroll(function() {
+          if ($(window).scrollTop() > 20) {
+            btn.addClass("show");
+          } else {
+            btn.removeClass("show");
+          }
+        });
 
-                var btn = $("#backToTopBtn");
+        $(document).ready(function() {
+          // Cập nhật giá trị trong nút thành "0"
+          $(".button-11").text("-1%");
 
-                $(window).scroll(function () {
-                    if ($(window).scrollTop() > 20) {
-                        btn.addClass("show");
-                    } else {
-                        btn.removeClass("show");
-                    }
-                });
+          // Thêm sự kiện change cho radio buttons
+          $(document).on("change", 'input[name="avatarSelection"]', function() {
+            // Lấy giá trị của radio được chọn
+            var selectedRadioValue = $(this).val();
 
-                $(document).ready(function () {
-                    // Cập nhật giá trị trong nút thành "0"
-                    $(".button-11").text("-1%");
+            // Cập nhật giá trị trong nút thành "0"
+            $(".button-11").text("-1%");
+          });
+        });
 
-                    // Thêm sự kiện change cho radio buttons
-                    $(document).on("change", 'input[name="avatarSelection"]', function () {
-                        // Lấy giá trị của radio được chọn
-                        var selectedRadioValue = $(this).val();
+        $(document).ready(function() {
+          refreshTableData();
+          refreshInfoTableData();
+        });
 
-                        // Cập nhật giá trị trong nút thành "0"
-                        $(".button-11").text("-1%");
-                    });
-                });
+      </script>
+    </section>
+  </body>
 
-                $(document).ready(function () {
-                    refreshTableData();
-                    refreshInfoTableData();
-                });
-            </script>
-        </section>
-    </body>
 </html>
