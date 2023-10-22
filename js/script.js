@@ -284,23 +284,23 @@ function refreshTableData() {
   $.getJSON("https://api.dccnft.com/v1/9c/avatars/all")
     .done(function(apiDCCData) {
       addDataForSessionStorage("sessionDataArena", "dataAvatarDCC", apiDCCData.avatars)
-	  console.log("Sử dụng ảnh DCC");
+      console.log("Sử dụng ảnh DCC");
     })
     .fail(function(jqXHR, textStatus, error) {
       // Xử lý khi yêu cầu thất bại
       addDataForSessionStorage("sessionDataArena", "dataAvatarDCC", {})
-	  console.log("Sử dụng ảnh thường");
+      console.log("Sử dụng ảnh thường");
       console.log("Lỗi khi lấy dữ liệu từ API DCC:", error);
     });
   $.getJSON("https://api.9capi.com/arenaLeaderboard")
     .done(function(apiData1) {
       if (Array.isArray(apiData1) && apiData1.length === 0) {
         // Dữ liệu trả về là một mảng rỗng
-        // Thực hiện lấy dữ liệu từ link khác
+        // Thực hiện lấy dữ liệu từ link dự phòng
         $.getJSON("https://jsonblob.com/api/jsonBlob/1142073037486415872")
           // .data.battleArenaRanking|.[]|{avataraddress: .avatarAddress,avatarname: .name,cp,currenttickets: 999,rankid: .ranking,roundid: 999,score}
           .done(function(mergedData) {
-            // Xử lý dữ liệu từ link khác
+            // Xử lý dữ liệu từ link dự phòng
             console.log("Sử dụng link dự phòng");
             creatTableArena(mergedData);
 
@@ -342,13 +342,26 @@ function refreshTableData() {
     })
     .fail(function(jqXHR, textStatus, error) {
       // Xử lý khi yêu cầu thất bại
-      console.log("Lỗi khi lấy dữ liệu từ API:", error);
+      console.log("Lỗi khi lấy dữ liệu từ 9capi:", error);
+      // Thực hiện lấy dữ liệu từ link dự phòng
+      $.getJSON("https://jsonblob.com/api/jsonBlob/1142073037486415872")
+        // .data.battleArenaRanking|.[]|{avataraddress: .avatarAddress,avatarname: .name,cp,currenttickets: 999,rankid: .ranking,roundid: 999,score}
+        .done(function(mergedData) {
+          // Xử lý dữ liệu từ link dự phòng
+          console.log("Sử dụng link dự phòng");
+          creatTableArena(mergedData);
+
+        })
+        .fail(function(jqXHR, textStatus, error) {
+          // Xử lý khi yêu cầu thất bại
+          console.log("Lỗi khi lấy dữ liệu từ link dự phòng:", error);
+        });
     });
 
   timeAutoResetTable = $("#timeAutoResetTable").val();
   $("#resetButton span").text(timeAutoResetTable);
   timerRefreshTableData = setTimeout(refreshTableData, timeAutoResetTable * 1000);
-};
+}
 
 function refreshTableDataAgain() {
   // Hủy định thời gian chờ hiện tại (nếu có)
