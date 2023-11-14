@@ -541,3 +541,11 @@ input[type=range]:focus::-ms-fill-upper {
   text-transform: uppercase;
   letter-spacing: 1px;
 }
+.table-container {
+  display: flex;
+  flex-direction: column;
+}
+
+#showMoreButton {
+  order: 1;
+}

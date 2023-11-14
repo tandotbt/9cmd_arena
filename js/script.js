@@ -71,15 +71,27 @@ function searchItemFun() {
   table = document.getElementById("myTable");
   tr = table.getElementsByTagName("tr");
 
-  // Loop through all table rows, and hide those who don't match the search query
-  for (i = 0; i < tr.length; i++) {
-    td = tr[i].getElementsByTagName("td")[2];
-    if (td) {
-      txtValue = td.textContent || td.innerText;
-      if (txtValue.toUpperCase().indexOf(filter) > -1) {
-        tr[i].style.display = "";
-      } else {
-        tr[i].style.display = "none";
+  // Kiểm tra nếu chuỗi tìm kiếm có ít hơn 3 ký tự
+  if (filter.length < 3) {
+    // Ẩn tất cả các hàng
+    for (i = 0; i < tr.length; i++) {
+      tr[i].style.display = "none";
+    }
+    // Hiển thị 10 hàng mặc định
+    for (i = 0; i < initialRows; i++) {
+      tr[i].style.display = "";
+    }
+  } else {
+    // Loop through all table rows, and hide those that don't match the search query
+    for (i = 0; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName("td")[2];
+      if (td) {
+        txtValue = td.textContent || td.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
       }
     }
   }
@@ -370,7 +382,9 @@ function refreshTableDataAgain() {
   // Gọi lại hàm fetchDataAvatar()
   refreshTableData();
 }
-
+var initialRows = 10; // Số hàng hiển thị ban đầu
+var rowsToAdd = 50; // Số hàng thêm khi nhấp vào nút "Xem thêm"
+var currentVisibleRows = initialRows; // Số hàng hiện tại đang được hiển thị
 function creatTableArena(data) {
   console.log(data);
   var student = "";
@@ -388,7 +402,7 @@ function creatTableArena(data) {
     student += "<td>" + "<label style='white-space: nowrap;' for='radio-" + student1 + "'>" + value.score + "</label></td>";
     student += "<td>" + "<label for='radio-" + student1 + "'>" + value.currenttickets + "</label></td>";
     student += "<td>" + "<label for='radio-" + student1 + "'>" + (typeof value.win !== "undefined" && value.win !== null ? value.win : "-") + "/" + (typeof value.lose !== "undefined" && value.lose !== null ? value.lose : "-") + "</label></td>";
-    student += "<td>" + "<label for='radio-" + student1 + "'>" + (typeof value.purchasedTicketCount !== "undefined" && value.purchasedTicketCount !== null ? value.purchasedTicketCount : "-") + " <br><span class='mute-text' style='white-space: nowrap;'>" + (typeof value.purchasedTicketNCG !== "undefined" && value.purchasedTicketNCG !== null ? value.purchasedTicketNCG.toFixed(1) : "-") + " ncg</span></label></td>";
+    student += "<td>" + "<label for='radio-" + student1 + "'>" + (typeof value.purchasedTicketCount !== "undefined" && value.purchasedTicketCount !== null && typeof value.purchasedTicketCountOld !== "undefined" && value.purchasedTicketCountOld !== null ? (value.purchasedTicketCount - value.purchasedTicketCountOld) : "-") + "/8" + " <br><span class='mute-text' style='white-space: nowrap;'>" + (typeof value.purchasedTicketCount !== "undefined" && value.purchasedTicketCount !== null ? value.purchasedTicketCount : "-") + " • " + (typeof value.purchasedTicketNCG !== "undefined" && value.purchasedTicketNCG !== null ? value.purchasedTicketNCG.toFixed(1) : "-") + " ncg</span></label></td>";
     student +=
       "<td><div class='radio-wrapper'><input id='radio-" +
       student1 +
@@ -413,6 +427,25 @@ function creatTableArena(data) {
 
   // Call API to get the number and replace the column with the image
   replaceColumnWithImage();
+
+
+
+  // Ẩn các hàng không được hiển thị ban đầu
+  $("#myTable tr:not(.notHide)").slice(initialRows).hide();
+
+  // Sự kiện click cho nút "Xem thêm"
+  $(document).on("click", "#showMoreButton", function() {
+    // Tăng số hàng hiển thị
+    currentVisibleRows += rowsToAdd;
+
+    // Hiển thị thêm số hàng
+    $("#myTable tr:not(.notHide)").slice(initialRows, currentVisibleRows).show();
+
+    // Kiểm tra nếu đã hiển thị hết tất cả hàng
+    if (currentVisibleRows >= $("#myTable tr:not(.notHide)").length) {
+      $(this).hide();
+    }
+  });
 
   // INPUT NUMBER CHANGE EVENT
   $("#numberInput").on("input", function() {
