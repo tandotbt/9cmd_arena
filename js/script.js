@@ -386,14 +386,28 @@ var initialRows = 10; // Số hàng hiển thị ban đầu
 var rowsToAdd = 50; // Số hàng thêm khi nhấp vào nút "Xem thêm"
 var currentVisibleRows = initialRows; // Số hàng hiện tại đang được hiển thị
 function creatTableArena(data) {
+  data.sort(function(a, b) {
+    return b.score - a.score;
+  });
   console.log(data);
   var student = "";
-  var student1 = 1;
+  // var student1 = 1;
   var totalRows = data.length;
+  var newRankid = 1;
+  var prevScore = -1;
+
   // ITERATING THROUGH OBJECTS
-  $.each(data, function(key, value) {
+  $.each(data, function(index, value) {
+    if (index > 0 && value.score !== prevScore) {
+      newRankid = index + 1;
+    }
+  
+    value.newRankid = newRankid;
+  
+    prevScore = value.score;
+	student1 = index + 1;
     student += "<tr>";
-    student += "<td>" + "<label for='radio-" + student1 + "'>" + student1 + "<br><span class='mute-text' style='white-space: nowrap;'>#" + value.rankid + "</span></label></td>";
+    student += "<td>" + "<label for='radio-" + student1 + "'>" + student1 + "<br><span class='mute-text' style='white-space: nowrap;'>#" + value.newRankid + "</span></label></td>";
     student += "<td style='width: 80px;height: 80px;' id='imgCell-" + value.avataraddress + "' data-index='" + student1 + "'><img src='assets/loading_small.gif'></td>";
     var avatarCode = value.avataraddress.substring(2, 6);
     student += "<td>" + "<label style='font-weight: bold;' for='radio-" + student1 + "'>" + value.avatarname + " <span class='mute-text'>#" + avatarCode + "</span></label></td>";
@@ -417,7 +431,7 @@ function creatTableArena(data) {
       "'></label></div></td>";
     student += "<td><div class='button-wrapper'><button class='button-11' id='button-" + student1 + "' onclick='handleButtonClick(this)' data-itemid='" + value.avataraddress + "'>-1%</button></div></td>";
     student += "</tr>";
-    student1 += 1;
+    
   });
   // Xóa dữ liệu trong bảng myTable, trừ hàng tiêu đề có lớp 'sticky notHide'
   $("#myTable tr:not(.sticky, .notHide)").remove();
@@ -573,7 +587,7 @@ function refreshInfoTableData() {
     var student1 = 1;
     // ITERATING THROUGH OBJECTS
     $.each(dataArray, function(key, value) {
-      student += "<tr>";
+      student += "<tr style='white-space: nowrap;'>";
       student += "<td style='white-space: nowrap;'>" + value.block + "</td>";
       student += "<td>" + value.avgBlock + " <b>s</b></td>";
       student += "<td>" + value.roundID + "/20</td>";
