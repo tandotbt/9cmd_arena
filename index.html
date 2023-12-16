@@ -94,7 +94,7 @@
           $.getJSON("https://jsonblob.com/api/jsonblob/1141252404015915008").done(function(data) {
             $("#Odin_urlImgSeason").attr("src", data.urlImgSeason);
             if (data.infoArena.includes('!')) {
-              $("#Odin_type").html('<img style="width: 20px;height: 20px;" src="assets/fire.gif"> ' + data.infoArena);
+              $("#Odin_type").html('<img style="width: 20px;height: 20px;" src="assets/fire.gif"><b> ' + data.infoArena + '</b>');
             } else {
               $("#Odin_type").html(data.infoArena);
             }
@@ -118,7 +118,7 @@
           $.getJSON("https://jsonblob.com/api/jsonblob/1179111804604637184").done(function(data) {
             $("#Heimdall_urlImgSeason").attr("src", data.urlImgSeason);
             if (data.infoArena.includes('!')) {
-              $("#Heimdall_type").html('<img style="width: 20px;height: 20px;" src="assets/fire.gif"> ' + data.infoArena);
+              $("#Heimdall_type").html('<img style="width: 20px;height: 20px;" src="assets/fire.gif"><b> ' + data.infoArena + '</b>');
             } else {
               $("#Heimdall_type").html(data.infoArena);
             }
@@ -180,7 +180,7 @@
           <td id="Heimdall_timeBlock"><span>-----</span></td>
           <td id="Heimdall_time"><span>--</span>h <span>--</span>m <span>--</span>s</td>
         </tr>
-        <tr>
+        <tr style="background-image: url('assets/cover.png'); background-repeat: no-repeat; background-attachment: fixed; background-size: cover;">
           <td colspan=10>
             Made with <svg viewBox="0 0 1792 1792" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="height: 0.8rem;">
               <path d="M896 1664q-26 0-44-18l-624-602q-10-8-27.5-26T145 952.5 77 855 23.5 734 0 596q0-220 127-344t351-124q62 0 126.5 21.5t120 58T820 276t76 68q36-36 76-68t95.5-68.5 120-58T1314 128q224 0 351 124t127 344q0 221-229 450l-623 600q-18 18-44 18z" fill="#e25555"></path>
@@ -190,9 +190,15 @@
             </div>
           </td>
         </tr>
+        <tr>
+          <td colspan=10>
+          <div class="commentbox" style="height: 225px;width: 100%;overflow: overlay;"></div>
+          <script src="https://unpkg.com/commentbox.io/dist/commentBox.min.js"></script>
+          <script>
+            commentBox('5678010745225216-proj')
+          </script>
+        </tr>
       </table>
-
-
     </div>
     <div style="
     display: flex;
@@ -205,10 +211,10 @@
     height: 70vh;
 ">
       <div class="tooltip">
-        <a href="odin/index.html"><button class="button-37">ODIN<span class="tooltiptext" style="width: unset;margin-left: -25vw;"><img id="Odin_urlImgSeason" style="width: 90vw;height: 70vh;" src="assets/loading_small.gif"></span></button></a>
+        <a href="odin"><button class="button-37">ODIN<span class="tooltiptext" style="width: unset;margin-left: -25vw;"><img id="Odin_urlImgSeason" style="width: 90vw;height: 70vh;" src="assets/loading_small.gif"></span></button></a>
       </div>
       <div class="tooltip">
-        <a href="heimdall/index.html"><button class="button-37">HEIMDALL<span class="tooltiptext" style="width: unset;margin-left: -63vw;"><img id="Heimdall_urlImgSeason" style="width: 90vw;height: 70vh;" src="assets/loading_small.gif"></span></button></a>
+        <a href="heimdall"><button class="button-37">HEIMDALL<span class="tooltiptext" style="width: unset;margin-left: -63vw;"><img id="Heimdall_urlImgSeason" style="width: 90vw;height: 70vh;" src="assets/loading_small.gif"></span></button></a>
       </div>
     </div>
   </body>
