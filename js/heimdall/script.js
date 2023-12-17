@@ -336,17 +336,32 @@ function refreshTableData() {
                   ...matchingData2
                 };
               });
-              // Bản lưu dự phòng
-              fetch('https://jsonblob.com/api/jsonBlob/1185163911346642944', {
-                method: 'PUT',
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(mergedData)
+			  // Chỉ lưu 600 đối tượng đầu tiên
+			  const first600Data = mergedData.slice(0, 600);
+			  
+			  // Bản lưu dự phòng
+			  fetch('https://jsonblob.com/api/jsonBlob/1185163911346642944', {
+				method: 'PUT',
+				headers: {
+				  'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(first600Data)
+
               });
               creatTableArena(mergedData);
             } else {
               console.log('API 2 không trả về một mảng hợp lệ');
+			  // Chỉ lưu 600 đối tượng đầu tiên
+			  const first600Data = apiData1.slice(0, 600);
+			  
+			  // Bản lưu dự phòng
+			  fetch('https://jsonblob.com/api/jsonBlob/1185163911346642944', {
+				method: 'PUT',
+				headers: {
+				  'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(first600Data)
+              });
               creatTableArena(apiData1);
             }
           });
