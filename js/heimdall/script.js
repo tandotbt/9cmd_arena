@@ -1,3 +1,4 @@
+const dataArenaError = [{"rankid":0,"score":0,"avatarname":"Error load data","avataraddress":"0xabcd","cp":0,"roundid":0,"currenttickets":0,"win":0,"lose":0,"purchasedTicketCount":0,"purchasedTicketNCG":0,"purchasedTicketCountOld":0}]
 function scrollToTop() {
   $("html, body").animate({
       scrollTop: 0,
@@ -305,7 +306,9 @@ function refreshTableData() {
       console.log("Lỗi khi lấy dữ liệu từ API DCC:", error);
     });
   $.getJSON("https://api.9capi.com/arenaLeaderboardHeimdall")
-    .done(function(apiData1) {
+    .done(function(apiData1Total) {
+	  // Chỉ xếp 3000 đối tượng đầu tiên
+	  const apiData1 = apiData1Total.slice(0, 3000);
       if (Array.isArray(apiData1) && apiData1.length === 0 && apiData1.length < 10) {
         // Dữ liệu trả về là một mảng rỗng
         // Thực hiện lấy dữ liệu từ link dự phòng
@@ -382,6 +385,7 @@ function refreshTableData() {
         .fail(function(jqXHR, textStatus, error) {
           // Xử lý khi yêu cầu thất bại
           console.log("Lỗi khi lấy dữ liệu từ link dự phòng:", error);
+		  creatTableArena(dataArenaError);
         });
     });
 
@@ -400,7 +404,9 @@ function refreshTableDataAgain() {
 var initialRows = 10; // Số hàng hiển thị ban đầu
 var rowsToAdd = 50; // Số hàng thêm khi nhấp vào nút "Xem thêm"
 var currentVisibleRows = initialRows; // Số hàng hiện tại đang được hiển thị
-function creatTableArena(data) {
+function creatTableArena(dataTotal) {
+  // Chỉ xếp 3000 đối tượng đầu tiên
+  var data = dataTotal.slice(0, 3000);
   data.sort(function(a, b) {
     return b.score - a.score;
   });
