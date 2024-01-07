@@ -55,21 +55,30 @@
     <section>
       <h1><a href="https://tan-dot-bt.gitbook.io/9cmd/" target="_blank"><img src="../assets/ArenaSimulatorTitle.png" alt="ArenaSimulatorTitle" style="width: 55vw;" /></a></h1>
 
-	<div style="font-weight: bold;padding: 10px;display: flex;flex-direction: row;align-items: center;flex-wrap: wrap;align-content: center;justify-content: center;">
-		<div class="tooltip">
-			<a href="https://t.me/viNineChronicles/629" target="_blank"><img src="../assets/telegram.png" alt="telegram" style="width: 30px;" /></a><span class="tooltiptext">Join group telegram for notification</span></button>
-		</div>
-		<div class="tooltip">
-			<img src="../assets/UI_icon_Popup_00.png" alt="news" style="width: 44px;" /><span class="tooltiptext">Có thể bị giới hạn số lần sử dụng từ 9cAPI!</span></button>
-		</div>
-		<div class="tooltip">
-			<img src="../assets/UI_icon_Popup_04.png" alt="news" style="width: 44px;" /><span class="tooltiptext">Tỉ lệ win sẽ được lưu và hiển thị lại, nếu CP đối thủ thay đổi sẽ bỏ qua</span></button>
-		</div>
-		<div class="tooltip">
-			<img src="../assets/UI_icon_Popup_04.png" alt="news" style="width: 44px;" /><span class="tooltiptext">Giới hạn dữ liệu từ top 3000 sẽ giúp load nhanh hơn, sorry ae dưới 3000 :D</span></button>
-		</div>
-	</div>
-		
+      <div style="font-weight: bold;padding: 10px;display: flex;flex-direction: row;align-items: center;flex-wrap: wrap;align-content: center;justify-content: center;">
+        <div class="tooltip">
+          <a href="https://t.me/viNineChronicles/629" target="_blank"><img src="../assets/telegram.png" alt="telegram" style="width: 30px;" /></a><span class="tooltiptext">Join group telegram for notification</span>
+        </div>
+        <div class="tooltip">
+          <img src="../assets/UI_icon_Popup_00.png" alt="news" style="width: 44px;" /><span class="tooltiptext">Có thể bị giới hạn số lần sử dụng % win từ 9cAPI!</span>
+        </div>
+        <div class="tooltip">
+          <img src="../assets/UI_icon_Popup_00.png" alt="news" style="width: 44px;" /><span class="tooltiptext">Thời gian làm mới danh sách nên cao hơn 60 giây, mặc định là 300 giây</span>
+        </div>
+        <div class="tooltip">
+          <img src="../assets/UI_icon_Popup_04.png" alt="news" style="width: 44px;" /><span class="tooltiptext">Thứ tự xếp hạng, điểm số và cp sẽ real time, còn lại 50/50 :v</span>
+        </div>
+        <div class="tooltip">
+          <img src="../assets/UI_icon_Popup_04.png" alt="news" style="width: 44px;" /><span class="tooltiptext">Tỉ lệ win sẽ được lưu và hiển thị lại, nếu CP đối thủ hoặc bản thân thay đổi sẽ bỏ qua</span>
+        </div>
+        <div class="tooltip">
+          <img src="../assets/UI_icon_Popup_04.png" alt="news" style="width: 44px;" /><span class="tooltiptext">Giới hạn dữ liệu từ top 3000 sẽ giúp load nhanh hơn, sorry ae dưới 3000 :D</span>
+        </div>
+        <div class="tooltip">
+          <img src="../assets/UI_icon_Popup_04.png" alt="news" style="width: 44px;" /><span class="tooltiptext">Click vào tiêu đề cột để sắp xếp từ nhỏ đến lớn, click lần 2 là lớn đến nhỏ</span>
+        </div>
+      </div>
+
       <div style="overflow-wrap: anywhere;display: flex;flex-direction: row;align-content: flex-start;flex-wrap: wrap;justify-content: center;align-items: flex-start;">
         <div style="display:flex;/* flex-direction: column; */align-items: flex-start;position: -webkit-sticky;position: sticky;top: 0;flex-wrap: wrap;align-content: flex-start;justify-content: space-around;width: 60vh;/* margin-right: 35px; */">
           <table id="infoTable" style="margin: 0;">
@@ -81,10 +90,14 @@
                 <input type="number" id="numberInput" value="1" /><br>
                 <input class="range-style" type="range" id="rangeInput" min="0" max="200" step="50" value="0" />
                 <input class="range-style" type="range" id="rangeInput2" min="0" max="200" step="50" value="0" /><br>
-                <input class="button-37" type="number" id="timeAutoResetTable" value="999" min="10" />
+                <input class="button-37" type="number" id="timeAutoResetTable" value="300" min="60" />
                 <button id="resetButton" onclick="refreshTableDataAgain()" class="button-37">Auto reset data <b>HEIMDALL</b> after <span></span>s</button>
-
                 <input list="item" type="text" id="searchItem" onkeyup="searchItemFun()" placeholder="Search for names.." />
+                <input id="messageImg" type="text" placeholder="Thông điệp 1.." />
+                <input id="messageButton" type="text" placeholder="Thông điệp 2.." />
+                <div class="tooltip">
+                  <button onclick="sentMessage()">Sent message<span class="tooltiptext">Thông điệp hiển thị trong 24h, để trống 2 trường nhập và nhấn gửi để xóa thông điệp.</span></button>
+                </div>
               </td>
 
               <!-- <td colspan="10" style="font-size: 2vw;"><input list="item" type="text" id="searchItem" onkeyup="searchItemFun()" placeholder="Search for names.." /></td> -->
@@ -108,6 +121,7 @@
           <script src="https://unpkg.com/commentbox.io/dist/commentBox.min.js"></script>
           <script>
             commentBox('5678010745225216-proj')
+
           </script>
         </div>
         <div class="table-container" style="width: 60%;white-space: nowrap;z-index: 10;">

@@ -1,4 +1,18 @@
-const dataArenaError = [{"rankid":0,"score":0,"avatarname":"Error load data","avataraddress":"0xabcd","cp":0,"roundid":0,"currenttickets":0,"win":0,"lose":0,"purchasedTicketCount":0,"purchasedTicketNCG":0,"purchasedTicketCountOld":0}]
+const dataArenaError = [{
+  "rankid": 0,
+  "score": 0,
+  "avatarname": "Error load data",
+  "avataraddress": "0xabcd",
+  "cp": 0,
+  "roundid": 0,
+  "currenttickets": 0,
+  "win": 0,
+  "lose": 0,
+  "purchasedTicketCount": 0,
+  "purchasedTicketNCG": 0,
+  "purchasedTicketCountOld": 0
+}]
+
 function scrollToTop() {
   $("html, body").animate({
       scrollTop: 0,
@@ -133,6 +147,7 @@ function handleButtonClick(button) {
   var enemyCP = $(button).data("cp");
   // Lấy giá trị của radio được chọn
   var selectedRadioValue = $('input[name="avatarSelection"]:checked').val();
+  var selectedRadioValue2 = $('input[name="avatarSelection"]:checked').data("cp");
 
   // Tạo đối tượng dữ liệu để gửi lệnh PUT
   var putData = {
@@ -142,7 +157,7 @@ function handleButtonClick(button) {
 
   // Lấy số thứ tự của sinh viên từ ID của button
   var studentId = button.id.split("-")[1];
-  var sessionDataArena = getDataFromLocalStorage("sessionDataArena", selectedRadioValue);
+  var sessionDataArena = getDataFromLocalStorage("sessionDataArena", selectedRadioValue + "/" + selectedRadioValue2);
 
   // Gửi lệnh POST tới URL xác định
   sendPostRequest("https://api.9capi.com/arenaSimHeimdall", putData, function(response, status) {
@@ -165,7 +180,7 @@ function handleButtonClick(button) {
       sessionDataArena[itemId] = "-1/0";
     }
 
-    addDataForLocalStorage("sessionDataArena", selectedRadioValue, sessionDataArena);
+    addDataForLocalStorage("sessionDataArena", selectedRadioValue + "/" + selectedRadioValue2, sessionDataArena);
   });
 }
 
@@ -207,7 +222,8 @@ function replaceColumnWithImage() {
         var avatarIndex = cell.getAttribute("data-index");
         var avatarAddress = avataraddress.toLowerCase();
         var imgDCC = checkAndGetAvatarDCC(avatarAddress);
-
+        var portraitId = cell.getAttribute("data-portraitId");
+		var myMessage = cell.getAttribute("data-message");
         $.getJSON("https://api-heimdall.9cscan.com/account?avatar=" + avataraddress).done(function(apiData) {
           var level; // New variable to store the level
           // Tìm kiếm trong mảng JSON để tìm giá trị phù hợp với avatarAddress
@@ -232,24 +248,32 @@ function replaceColumnWithImage() {
               armorId = armorEquipment.id;
             }
             if (imgDCC !== null) {
-              var imageUrl = "https://raw.githubusercontent.com/planetarium/NineChronicles/v200020-1/nekoyume/Assets/Resources/PFP/" + imgDCC + ".png";
-              var frameUrl = "https://raw.githubusercontent.com/planetarium/NineChronicles/v200020-1/nekoyume/Assets/Resources/UI/Icons/Item/character_frame_dcc.png"
+              var imageUrl = "https://raw.githubusercontent.com/planetarium/NineChronicles/development/nekoyume/Assets/Resources/PFP/" + imgDCC + ".png";
+              var frameUrl = "https://raw.githubusercontent.com/planetarium/NineChronicles/development/nekoyume/Assets/Resources/UI/Icons/Item/character_frame_dcc.png"
+            } else if (portraitId !== 0) {
+              var imageUrl = "https://raw.githubusercontent.com/planetarium/NineChronicles/development/nekoyume/Assets/Resources/UI/Icons/Item/" + portraitId + ".png";
+              var frameUrl = "https://raw.githubusercontent.com/planetarium/NineChronicles/development/nekoyume/Assets/Resources/UI/Icons/Item/character_frame.png"
             } else {
-              var imageUrl = "https://raw.githubusercontent.com/planetarium/NineChronicles/v200020-1/nekoyume/Assets/Resources/UI/Icons/Item/" + armorId + ".png";
-              var frameUrl = "https://raw.githubusercontent.com/planetarium/NineChronicles/v200020-1/nekoyume/Assets/Resources/UI/Icons/Item/character_frame.png"
+              var imageUrl = "https://raw.githubusercontent.com/planetarium/NineChronicles/development/nekoyume/Assets/Resources/UI/Icons/Item/" + armorId + ".png";
+              var frameUrl = "https://raw.githubusercontent.com/planetarium/NineChronicles/development/nekoyume/Assets/Resources/UI/Icons/Item/character_frame.png"
             }
+			if (myMessage !== "none") {
+				var myMess = "<span class='tooltiptext' style='z-index: 9999;margin-bottom: 35px;'>" + decodeURIComponent(myMessage) + "</span>"
+			} else {
+				var myMess = ""
+			}
             cell.innerHTML =
               "<label for='radio-" +
               avatarIndex +
-              "'><div class='image-container'>" +
-              "<div style='z-index: 1;position: absolute;padding-left: 25px;padding-bottom: 30px;font-size: 13px;font-family: monospace;color: lightyellow;'>" +
+              "'><div class='image-container tooltip'>" +
+              "<div style='z-index: 1;position: absolute;padding-left: 26px;padding-bottom: 35px;font-size: 13px;font-family: monospace;color: lightyellow;'>" +
               level +
               "</div>" +
               "<img class='lazyload image' src='../assets/loading_small.gif' data-src='" +
               imageUrl +
               "'>" +
-              "<img style='padding-left: 26px;padding-bottom: 30px;'class='lazyload image' src='../assets/loading_small.gif' data-src='https://raw.githubusercontent.com/planetarium/NineChronicles/v200020-1/nekoyume/Assets/Resources/UI/Icons/Item/Character_Level_Bg.png'>" +
-              "<img class='lazyload image' src='../assets/loading_small.gif' data-src='" + frameUrl + "'></div>" +
+              "<img style='padding-left: 26px;padding-bottom: 35px;'class='lazyload image' src='../assets/loading_small.gif' data-src='https://raw.githubusercontent.com/planetarium/NineChronicles/development/nekoyume/Assets/Resources/UI/Icons/Item/Character_Level_Bg.png'>" +
+              "<img class='lazyload image' src='../assets/loading_small.gif' data-src='" + frameUrl + "'>" + myMess + "</div>" +
               "<label>";
           }
         });
@@ -305,14 +329,82 @@ function refreshTableData() {
       console.log("Sử dụng ảnh thường");
       console.log("Lỗi khi lấy dữ liệu từ API DCC:", error);
     });
-  $.getJSON("https://api.9capi.com/arenaLeaderboardHeimdall")
-    .done(function(apiData1Total) {
-	  // Chỉ xếp 3000 đối tượng đầu tiên
-	  const apiData1 = apiData1Total.slice(0, 3000);
-      if (Array.isArray(apiData1) && apiData1.length === 0 && apiData1.length < 10) {
-        // Dữ liệu trả về là một mảng rỗng
+
+  function hop_nhat_data_phu(apiData1) {
+    fetch("https://jsonblob.com/api/1185162335211085824")
+      .then(response2 => response2.json())
+      .then(apiData2 => {
+        if (Array.isArray(apiData2) && apiData2.length > 0) {
+          // Hợp nhất dữ liệu từ hai API
+          const mergedData = apiData1.map(data1 => {
+            const matchingData2 = apiData2.find(data2 => data2.avataraddress.toLowerCase() === data1.avataraddress.toLowerCase());
+            return {
+              ...data1,
+              ...matchingData2
+            };
+          });
+          // Chỉ lưu 600 đối tượng đầu tiên
+          const first600Data = mergedData.slice(0, 600);
+
+          // Bản lưu dự phòng
+          fetch('https://jsonblob.com/api/jsonBlob/1185163911346642944', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(first600Data)
+
+          });
+          creatTableArena(mergedData);
+        } else {
+          console.log('API 2 không trả về một mảng hợp lệ');
+          // Chỉ lưu 600 đối tượng đầu tiên
+          const first600Data = apiData1.slice(0, 600);
+
+          // Bản lưu dự phòng
+          fetch('https://jsonblob.com/api/jsonBlob/1185163911346642944', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(first600Data)
+          });
+          creatTableArena(apiData1);
+        }
+      });
+  }
+
+  function get_data_arena_from_9capi() {
+    $.getJSON("https://api.9capi.com/arenaLeaderboardHeimdall")
+      .done(function(apiData1Total) {
+        // Chỉ xếp 3000 đối tượng đầu tiên
+        const apiData1 = apiData1Total.slice(0, 3000);
+        if (Array.isArray(apiData1) && apiData1.length === 0 && apiData1.length < 10) {
+          // Dữ liệu trả về là một mảng rỗng
+          // Thực hiện lấy dữ liệu từ link dự phòng
+          $.getJSON("https://jsonblob.com/api/jsonBlob/1185163911346642944")
+            // .data.battleArenaRanking|.[]|{avataraddress: .avatarAddress,avatarname: .name,cp,currenttickets: 999,rankid: .ranking,roundid: 999,score}
+            .done(function(mergedData) {
+              // Xử lý dữ liệu từ link dự phòng
+              console.log("Sử dụng link dự phòng");
+              creatTableArena(mergedData);
+
+            })
+            .fail(function(jqXHR, textStatus, error) {
+              // Xử lý khi yêu cầu thất bại
+              console.log("Lỗi khi lấy dữ liệu từ link dự phòng:", error);
+            });
+        } else {
+          // Xử lý dữ liệu từ API ban đầu
+          console.log("Sử dụng từ 9capi");
+          hop_nhat_data_phu(apiData1);
+        }
+      })
+      .fail(function(jqXHR, textStatus, error) {
+        // Xử lý khi yêu cầu thất bại
+        console.log("Lỗi khi lấy dữ liệu từ 9capi:", error);
         // Thực hiện lấy dữ liệu từ link dự phòng
-        $.getJSON("https://jsonblob.com/api/jsonBlob/1185163911346642944")
+        $.getJSON("https://jsonblob.com/api/jsonBlob/1142073037486415872")
           // .data.battleArenaRanking|.[]|{avataraddress: .avatarAddress,avatarname: .name,cp,currenttickets: 999,rankid: .ranking,roundid: 999,score}
           .done(function(mergedData) {
             // Xử lý dữ liệu từ link dự phòng
@@ -323,71 +415,51 @@ function refreshTableData() {
           .fail(function(jqXHR, textStatus, error) {
             // Xử lý khi yêu cầu thất bại
             console.log("Lỗi khi lấy dữ liệu từ link dự phòng:", error);
+            creatTableArena(dataArenaError);
           });
+      });
+  }
+  var post_data_json = {
+    query: 'query{stateQuery{arenaParticipants(avatarAddress:"0x0000000000000000000000000000000000000000",filterBounds: false){avatarAddr,score,rank,winScore,loseScore,cp,portraitId,level,nameWithHash}}}',
+  };
+  $.ajax({
+    url: "https://heimdall-rpc-1.nine-chronicles.com/graphql",
+    type: "POST",
+    data: JSON.stringify(post_data_json),
+    contentType: "application/json",
+    success: function(response, status) {
+
+      if (response && response.data && response.data.stateQuery) {} else if (response && response.errors && response.errors[0].message) {
+        console.log("Lỗi khi lấy dữ liệu từ api của game:", response.errors[0].message);
+        get_data_arena_from_9capi();
       } else {
-        // Xử lý dữ liệu từ API ban đầu
-        console.log("Sử dụng từ 9capi");
-        fetch("https://jsonblob.com/api/1185162335211085824")
-          .then(response2 => response2.json())
-          .then(apiData2 => {
-            if (Array.isArray(apiData2) && apiData2.length > 0) {
-              // Hợp nhất dữ liệu từ hai API
-              const mergedData = apiData1.map(data1 => {
-                const matchingData2 = apiData2.find(data2 => data2.avataraddress.toLowerCase() === data1.avataraddress.toLowerCase());
-                return {
-                  ...data1,
-                  ...matchingData2
-                };
-              });
-			  // Chỉ lưu 600 đối tượng đầu tiên
-			  const first600Data = mergedData.slice(0, 600);
-			  
-			  // Bản lưu dự phòng
-			  fetch('https://jsonblob.com/api/jsonBlob/1185163911346642944', {
-				method: 'PUT',
-				headers: {
-				  'Content-Type': 'application/json'
-				},
-				body: JSON.stringify(first600Data)
-
-              });
-              creatTableArena(mergedData);
-            } else {
-              console.log('API 2 không trả về một mảng hợp lệ');
-			  // Chỉ lưu 600 đối tượng đầu tiên
-			  const first600Data = apiData1.slice(0, 600);
-			  
-			  // Bản lưu dự phòng
-			  fetch('https://jsonblob.com/api/jsonBlob/1185163911346642944', {
-				method: 'PUT',
-				headers: {
-				  'Content-Type': 'application/json'
-				},
-				body: JSON.stringify(first600Data)
-              });
-              creatTableArena(apiData1);
-            }
-          });
+        console.log("Lỗi khi lấy dữ liệu từ api của game: Không xác định");
+        get_data_arena_from_9capi();
       }
-    })
-    .fail(function(jqXHR, textStatus, error) {
-      // Xử lý khi yêu cầu thất bại
-      console.log("Lỗi khi lấy dữ liệu từ 9capi:", error);
-      // Thực hiện lấy dữ liệu từ link dự phòng
-      $.getJSON("https://jsonblob.com/api/jsonBlob/1142073037486415872")
-        // .data.battleArenaRanking|.[]|{avataraddress: .avatarAddress,avatarname: .name,cp,currenttickets: 999,rankid: .ranking,roundid: 999,score}
-        .done(function(mergedData) {
-          // Xử lý dữ liệu từ link dự phòng
-          console.log("Sử dụng link dự phòng");
-          creatTableArena(mergedData);
 
-        })
-        .fail(function(jqXHR, textStatus, error) {
-          // Xử lý khi yêu cầu thất bại
-          console.log("Lỗi khi lấy dữ liệu từ link dự phòng:", error);
-		  creatTableArena(dataArenaError);
+      var processedData = response.data.stateQuery.arenaParticipants
+        .slice(0, 3000) // Giới hạn số lượng phần tử đầu tiên
+        .map(function(participant) {
+          var nameWithHash = participant.nameWithHash;
+          var startIndex = nameWithHash.indexOf('<size=80%>'); // Tìm vị trí bắt đầu của từ '<size=80%>'
+          var avatarName = nameWithHash.substring(0, startIndex).trim(); // Chỉ giữ lại phần trước của tên và loại bỏ khoảng trắng thừa
+          return {
+            rankid: participant.rank,
+            score: participant.score,
+            avatarname: avatarName,
+            avataraddress: participant.avatarAddr,
+            cp: participant.cp,
+            portraitId: participant.portraitId
+          };
         });
-    });
+      console.log("Sử dụng từ api game");
+      hop_nhat_data_phu(processedData);
+    },
+    error: function(xhr, status, error) {
+      console.log("Lỗi khi lấy dữ liệu từ api của game:", error);
+      get_data_arena_from_9capi();
+    },
+  });
 
   timeAutoResetTable = $("#timeAutoResetTable").val();
   $("#resetButton span").text(timeAutoResetTable);
@@ -422,27 +494,27 @@ function creatTableArena(dataTotal) {
     if (index > 0 && value.score !== prevScore) {
       newRankid = index + 1;
     }
-  
+
     value.newRankid = newRankid;
-  
+
     prevScore = value.score;
-	student1 = index + 1;
+    student1 = index + 1;
     student += "<tr>";
     student += "<td>" + "<label for='radio-" + student1 + "'>" + student1 + "<br><span class='mute-text' style='white-space: nowrap;'>#" + value.newRankid + "</span></label></td>";
-    student += "<td style='width: 80px;height: 80px;' id='imgCell-" + value.avataraddress + "' data-index='" + student1 + "'><img src='../assets/loading_small.gif'></td>";
+    student += "<td style='width: 80px;height: 80px;' id='imgCell-" + value.avataraddress + "' data-index='" + student1 + "' data-portraitId='" + (typeof value.portraitId !== "undefined" && value.portraitId !== null ? value.portraitId : 0) + "' data-message='" + (typeof value.messageImg !== "undefined" && value.messageImg !== null ? value.messageImg : "none") + "'><img src='../assets/loading_small.gif'></td>";
     var avatarCode = value.avataraddress.substring(2, 6);
     student += "<td>" + "<label style='font-weight: bold;' for='radio-" + student1 + "'>" + value.avatarname + " <span class='mute-text'>#" + avatarCode + "</span></label></td>";
     // student += "<td>" + "<label for='radio-" + student1 + "'>" + value.rankid + "</label></td>";
     student += "<td>" + "<label style='white-space: nowrap;' for='radio-" + student1 + "'>" + value.cp + "</label></td>";
     student += "<td>" + "<label style='white-space: nowrap;' for='radio-" + student1 + "'>" + value.score + "</label></td>";
     student += "<td>" + "<label for='radio-" + student1 + "'>" + (typeof value.stake !== "undefined" && value.stake !== null ? value.stake : "-") + " NCG</label></td>";
-    student += "<td>" + "<label style='white-space: nowrap;' for='radio-" + student1 + "'>" +  (typeof value.win !== "undefined" && value.win !== null ? value.win : "-") + "/" + (typeof value.lose !== "undefined" && value.lose !== null ? value.lose : "-") + "</label></td>";
-    student += "<td>" + "<label for='radio-" + student1 + "'>" + value.currenttickets + " • " + (typeof value.purchasedTicketCount !== "undefined" && value.purchasedTicketCount !== null && typeof value.purchasedTicketCountOld !== "undefined" && value.purchasedTicketCountOld !== null ? (value.purchasedTicketCount - value.purchasedTicketCountOld) : "-") + " <br><span class='mute-text' style='white-space: nowrap;'>" + (typeof value.purchasedTicketCount !== "undefined" && value.purchasedTicketCount !== null ? value.purchasedTicketCount : "-") + " • " + (typeof value.purchasedTicketNCG !== "undefined" && value.purchasedTicketNCG !== null ? value.purchasedTicketNCG.toFixed(1) : "-") + " ncg</span></label></td>";
+    student += "<td>" + "<label style='white-space: nowrap;' for='radio-" + student1 + "'>" + (typeof value.win !== "undefined" && value.win !== null ? value.win : "-") + "/" + (typeof value.lose !== "undefined" && value.lose !== null ? value.lose : "-") + "</label></td>";
+    student += "<td>" + "<label for='radio-" + student1 + "'>" + (typeof value.currenttickets !== "undefined" && value.currenttickets !== null ? value.currenttickets : "-") + " • " + (typeof value.purchasedTicketCount !== "undefined" && value.purchasedTicketCount !== null && typeof value.purchasedTicketCountOld !== "undefined" && value.purchasedTicketCountOld !== null ? (value.purchasedTicketCount - value.purchasedTicketCountOld) : "-") + " <br><span class='mute-text' style='white-space: nowrap;'>" + (typeof value.purchasedTicketCount !== "undefined" && value.purchasedTicketCount !== null ? value.purchasedTicketCount : "-") + " • " + (typeof value.purchasedTicketNCG !== "undefined" && value.purchasedTicketNCG !== null ? value.purchasedTicketNCG.toFixed(1) : "-") + " ncg</span></label></td>";
     student +=
       "<td><div class='radio-wrapper'><input id='radio-" +
       student1 +
-      "' type='radio' name='avatarSelection' data-avataraddress='" +
-      value.avataraddress +
+      "' type='radio' name='avatarSelection' data-cp='" +
+      value.cp +
       "' value='" +
       value.avataraddress +
       "'" +
@@ -450,9 +522,9 @@ function creatTableArena(dataTotal) {
       "/><label for='radio-" +
       student1 +
       "'></label></div></td>";
-    student += "<td><div class='button-wrapper'><button class='button-11' id='button-" + student1 + "' onclick='handleButtonClick(this)' data-itemid='" + value.avataraddress + "' data-cp='" + value.cp + "'>-1%</button></div></td>";
+    student += "<td><div class='button-wrapper tooltip'><button class='button-11' id='button-" + student1 + "' onclick='handleButtonClick(this)' data-itemid='" + value.avataraddress + "' data-cp='" + value.cp + "'>-1%</button>" + (typeof value.messageButton !== "undefined" && value.messageButton !== null && value.messageButton !== "none" ? "<span class='tooltiptext' style='z-index: 9999;margin-bottom: -15px;'>" + decodeURIComponent(value.messageButton) + "</span>" : "") + "</div></td>";
     student += "</tr>";
-    
+
   });
   // Xóa dữ liệu trong bảng myTable, trừ hàng tiêu đề có lớp 'sticky notHide'
   $("#myTable tr:not(.sticky, .notHide)").remove();
@@ -566,33 +638,34 @@ function creatTableArena(dataTotal) {
 
       // Sử dụng % win đã lưu nếu có
       var selectedRadioValue = $('input[name="avatarSelection"]:checked').val();
-      var sessionDataArena = getDataFromLocalStorage("sessionDataArena", selectedRadioValue);
+      var selectedRadioValue2 = $('input[name="avatarSelection"]:checked').data("cp");
+      var sessionDataArena = getDataFromLocalStorage("sessionDataArena", selectedRadioValue + "/" + selectedRadioValue2);
 
       if (sessionDataArena !== null && Object.keys(sessionDataArena).length !== 0) {
         $(".button-11").each(async function() {
           var itemId = $(this).data("itemid");
           var studentId = $(this).attr("id").split("-")[1];
-		  var enemyCP = $(this).data("cp");
+          var enemyCP = $(this).data("cp");
           // Duyệt qua từng khóa trong sessionDataArena
           for (var key in sessionDataArena) {
             if (key.toLowerCase() === itemId.toLowerCase()) {
-				var winRateOld = sessionDataArena[key].split("/")[0];
-				var enemyCPOld = sessionDataArena[key].split("/")[1];
-				if (parseInt(enemyCPOld) === parseInt(enemyCP)) {
-				  try {
-					// Sử dụng Promise để bao bọc hành động bất đồng bộ
-					await new Promise((resolve) => {
-					  setTimeout(resolve, 0); // Giữ nguyên luồng chính để tránh gây tắc nghẽn
-					});
+              var winRateOld = sessionDataArena[key].split("/")[0];
+              var enemyCPOld = sessionDataArena[key].split("/")[1];
+              if (parseInt(enemyCPOld) === parseInt(enemyCP)) {
+                try {
+                  // Sử dụng Promise để bao bọc hành động bất đồng bộ
+                  await new Promise((resolve) => {
+                    setTimeout(resolve, 0); // Giữ nguyên luồng chính để tránh gây tắc nghẽn
+                  });
 
-					// Nếu itemId trùng khóa trong sessionDataArena, thực hiện hành động tương ứng
-					$("#button-" + studentId).text(winRateOld + "%");
-					break; // Kết thúc vòng lặp sau khi tìm thấy khóa trùng
-				  } catch (error) {
-					// Xử lý lỗi nếu có
-					console.error(error);
-				  }
-				}
+                  // Nếu itemId trùng khóa trong sessionDataArena, thực hiện hành động tương ứng
+                  $("#button-" + studentId).text(winRateOld + "%");
+                  break; // Kết thúc vòng lặp sau khi tìm thấy khóa trùng
+                } catch (error) {
+                  // Xử lý lỗi nếu có
+                  console.error(error);
+                }
+              }
             }
           }
         });
@@ -615,7 +688,7 @@ function refreshInfoTableData() {
       student += "<tr style='white-space: nowrap;'>";
       student += "<td style='white-space: nowrap;'>" + value.block + "</td>";
       student += "<td>" + value.avgBlock + " <b>s</b></td>";
-      student += "<td>" + value.roundID + "/"+ value.totalRound +"</td>";
+      student += "<td>" + value.roundID + "/" + value.totalRound + "</td>";
       student += "<td>" + value.blockEndRound + "</td>";
       student += "<td>" + value.timeBlock + "</td>";
       student += "<td style='white-space: nowrap;'>" + value.h + ":" + value.m + ":" + value.s + "</td>";
@@ -752,3 +825,49 @@ function delDataFromLocalStorage(parentKey, childKey) {
     console.log("Dữ liệu cha '" + parentKey + "' không tồn tại trong localStorage.");
   }
 }
+function sentMessage() {
+  var selectedRadioValue = $('input[name="avatarSelection"]:checked').val();
+  var messageImg = $("#messageImg").val();
+  var messageButton = $("#messageButton").val();
+
+  // Tạo URL và lấy dữ liệu JSON
+  var url = "https://jsonblob.com/api/1193628388912128000";
+  $.getJSON(url, function(data) {
+	  // Chuyển đổi selectedRadioValue thành chữ in thường
+	  selectedRadioValue = selectedRadioValue.toLowerCase();
+
+	  // Kiểm tra xem selectedRadioValue có trong data hay không
+	  if (selectedRadioValue in data) {
+		var selectedData = data[selectedRadioValue];
+	  } else {
+		data[selectedRadioValue] = {};
+		var selectedData = data[selectedRadioValue];
+	  }
+
+	  // Tạo hoặc cập nhật key con messageImg
+	  selectedData.messageImg = encodeURIComponent(messageImg) || "none";
+
+	  // Tạo hoặc cập nhật key con messageButton
+	  selectedData.messageButton = encodeURIComponent(messageButton) || "none";
+
+	  // Lấy thời gian hiện tại theo đơn vị giây
+	  var currentTimeSeconds = Math.floor(Date.now() / 1000);
+
+	  // Gán giá trị thời gian vào key con time
+	  selectedData.time = currentTimeSeconds;
+      // Put lại dữ liệu lên URL
+      $.ajax({
+        url: url,
+        type: "PUT",
+        data: JSON.stringify(data),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function() {
+          console.log("Dữ liệu đã được cập nhật thành công");
+        },
+        error: function() {
+          console.log("Đã xảy ra lỗi khi cập nhật dữ liệu");
+        }
+      });
+    })
+  };
