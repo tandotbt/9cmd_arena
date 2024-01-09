@@ -317,6 +317,7 @@ function refreshTableData() {
 `;
   var newRow = $("<tr class='notHide infoYou'></tr>").html(resetDataInfoYou);
   $("#infoTable tr.infoYou").replaceWith(newRow);
+  var currentVisibleRows = initialRows;
   //Lấy dữ liệu DCC
   $.getJSON("https://api.dccnft.com/v1/9c/avatars/all")
     .done(function(apiDCCData) {
@@ -343,8 +344,8 @@ function refreshTableData() {
               ...matchingData2
             };
           });
-          // Chỉ lưu 600 đối tượng đầu tiên
-          const first600Data = mergedData.slice(0, 600);
+          // Chỉ lưu 3000 đối tượng đầu tiên
+          const first3000Data = mergedData.slice(0, 3000);
 
           // Bản lưu dự phòng
           fetch('https://jsonblob.com/api/jsonBlob/1185163911346642944', {
@@ -352,14 +353,14 @@ function refreshTableData() {
             headers: {
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify(first600Data)
+            body: JSON.stringify(first3000Data)
 
           });
           creatTableArena(mergedData);
         } else {
           console.log('API 2 không trả về một mảng hợp lệ');
-          // Chỉ lưu 600 đối tượng đầu tiên
-          const first600Data = apiData1.slice(0, 600);
+          // Chỉ lưu 3000 đối tượng đầu tiên
+          const first3000Data = apiData1.slice(0, 3000);
 
           // Bản lưu dự phòng
           fetch('https://jsonblob.com/api/jsonBlob/1185163911346642944', {
@@ -367,7 +368,7 @@ function refreshTableData() {
             headers: {
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify(first600Data)
+            body: JSON.stringify(first3000Data)
           });
           creatTableArena(apiData1);
         }
@@ -377,8 +378,8 @@ function refreshTableData() {
   function get_data_arena_from_9capi() {
     $.getJSON("https://api.9capi.com/arenaLeaderboardHeimdall")
       .done(function(apiData1Total) {
-        // Chỉ xếp 3000 đối tượng đầu tiên
-        const apiData1 = apiData1Total.slice(0, 3000);
+        // Chỉ xếp 30000 đối tượng đầu tiên
+        const apiData1 = apiData1Total.slice(0, 30000);
         if (Array.isArray(apiData1) && apiData1.length === 0 && apiData1.length < 10) {
           // Dữ liệu trả về là một mảng rỗng
           // Thực hiện lấy dữ liệu từ link dự phòng
@@ -438,7 +439,7 @@ function refreshTableData() {
       }
 
       var processedData = response.data.stateQuery.arenaParticipants
-        .slice(0, 3000) // Giới hạn số lượng phần tử đầu tiên
+        .slice(0, 30000) // Giới hạn số lượng phần tử đầu tiên
         .map(function(participant) {
           var nameWithHash = participant.nameWithHash;
           var startIndex = nameWithHash.indexOf('<size=80%>'); // Tìm vị trí bắt đầu của từ '<size=80%>'
@@ -477,30 +478,30 @@ var initialRows = 10; // Số hàng hiển thị ban đầu
 var rowsToAdd = 50; // Số hàng thêm khi nhấp vào nút "Xem thêm"
 var currentVisibleRows = initialRows; // Số hàng hiện tại đang được hiển thị
 function creatTableArena(dataTotal) {
-  // Chỉ xếp 3000 đối tượng đầu tiên
-  var data = dataTotal.slice(0, 3000);
-  data.sort(function(a, b) {
-    return b.score - a.score;
-  });
+  // Chỉ xếp 30000 đối tượng đầu tiên
+  var data = dataTotal.slice(0, 30000);
+  // data.sort(function(a, b) {
+    // return b.score - a.score;
+  // });
   console.log(data);
   var student = "";
   // var student1 = 1;
   var totalRows = data.length;
-  var newRankid = 1;
-  var prevScore = -1;
+  // var newRankid = 1;
+  // var prevScore = -1;
 
   // ITERATING THROUGH OBJECTS
   $.each(data, function(index, value) {
-    if (index > 0 && value.score !== prevScore) {
-      newRankid = index + 1;
-    }
+    // if (index > 0 && value.score !== prevScore) {
+      // newRankid = index + 1;
+    // }
 
-    value.newRankid = newRankid;
+    // value.newRankid = newRankid;
 
-    prevScore = value.score;
+    // prevScore = value.score;
     student1 = index + 1;
     student += "<tr>";
-    student += "<td>" + "<label for='radio-" + student1 + "'>" + student1 + "<br><span class='mute-text' style='white-space: nowrap;'>#" + value.newRankid + "</span></label></td>";
+    student += "<td>" + "<label for='radio-" + student1 + "'>" + student1 + "<br><span class='mute-text' style='white-space: nowrap;'>#" + value.rankid + "</span></label></td>";
     student += "<td style='width: 80px;height: 80px;' id='imgCell-" + value.avataraddress + "' data-index='" + student1 + "' data-portraitId='" + (typeof value.portraitId !== "undefined" && value.portraitId !== null ? value.portraitId : 0) + "' data-message='" + (typeof value.messageImg !== "undefined" && value.messageImg !== null ? value.messageImg : "none") + "'><img src='../assets/loading_small.gif'></td>";
     var avatarCode = value.avataraddress.substring(2, 6);
     student += "<td>" + "<label style='font-weight: bold;' for='radio-" + student1 + "'>" + value.avatarname + " <span class='mute-text'>#" + avatarCode + "</span></label></td>";
