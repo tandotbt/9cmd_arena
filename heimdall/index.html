@@ -7,7 +7,8 @@
     <script src="../js/lazysizes.min.js" async=""></script>
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="../js/heimdall/script.js"></script>
+    <script src="../js/script_arena.js"></script>
+	<script src="../js/heimdall/const.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/style.css" />
     <script src="https://cdn.counter.dev/script.js" data-id="7dc1b1a6-10c4-4a31-8fb1-817ef271b3f8" data-utcoffset="7"></script>
     <!-- CSS FOR STYLING THE PAGE -->
@@ -92,12 +93,13 @@
                 <input class="range-style" type="range" id="rangeInput2" min="0" max="200" step="50" value="0" /><br>
                 <input class="button-37" type="number" id="timeAutoResetTable" value="300" min="60" />
                 <button id="resetButton" onclick="refreshTableDataAgain()" class="button-37">Auto reset data <b>HEIMDALL</b> after <span></span>s</button>
-                <input list="item" type="text" id="searchItem" onkeyup="searchItemFun()" placeholder="Search for names.." />
-                <input id="messageImg" type="text" placeholder="Thông điệp 1.." />
-                <input id="messageButton" type="text" placeholder="Thông điệp 2.." />
-                <div class="tooltip">
-                  <button onclick="sentMessage()">Sent message<span class="tooltiptext">Thông điệp hiển thị trong 24h, để trống 2 trường nhập và nhấn gửi để xóa thông điệp.</span></button>
-                </div>
+                <input list="suggestList" type="text" id="searchItem" onkeyup="searchItemFun()" placeholder="Search for names.." /><button class="button-37" onclick='$("#searchItem").val("");searchItemFun();'>Clear</button>
+				  <datalist id="suggestList"></datalist>
+                <!-- <input id="messageImg" type="text" placeholder="Thông điệp 1.." /> -->
+                <!-- <input id="messageButton" type="text" placeholder="Thông điệp 2.." /> -->
+                <!-- <div class="tooltip"> -->
+                  <!-- <button onclick="sentMessage()">Sent message<span class="tooltiptext">Thông điệp hiển thị trong 24h, để trống 2 trường nhập và nhấn gửi để xóa thông điệp.</span></button> -->
+                <!-- </div> -->
               </td>
 
               <!-- <td colspan="10" style="font-size: 2vw;"><input list="item" type="text" id="searchItem" onkeyup="searchItemFun()" placeholder="Search for names.." /></td> -->
