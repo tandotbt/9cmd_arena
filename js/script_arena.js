@@ -10,10 +10,26 @@ const dataArenaError = [{
   "lose": 0,
   "purchasedTicketCount": 0,
   "purchasedTicketNCG": 0,
-  "stake":0,
-  "purchasedTicketCountOld":0,
-  "messageImg":null,
-  "messageButton":null
+  "stake": 0,
+  "purchasedTicketCountOld": 0,
+  "messageImg": null,
+  "messageButton": null
+}, {
+  "rankid": 0,
+  "score": 0,
+  "avatarname": "Error load data",
+  "avataraddress": "0xabcd",
+  "cp": 0,
+  "roundid": 0,
+  "currenttickets": 0,
+  "win": 0,
+  "lose": 0,
+  "purchasedTicketCount": 0,
+  "purchasedTicketNCG": 0,
+  "stake": 0,
+  "purchasedTicketCountOld": 0,
+  "messageImg": null,
+  "messageButton": null
 }]
 
 function scrollToTop() {
@@ -226,8 +242,8 @@ function replaceColumnWithImage() {
         var avatarAddress = avataraddress.toLowerCase();
         var imgDCC = checkAndGetAvatarDCC(avatarAddress);
         var portraitId = cell.getAttribute("data-portraitId");
-		var myMessage = cell.getAttribute("data-message");
-        $.getJSON(url_9cscan + "/account?avatar=" + avataraddress).done(function(apiData) {
+        var myMessage = cell.getAttribute("data-message");
+        $.getJSON(URL_9CSCAN + "/account?avatar=" + avataraddress).done(function(apiData) {
           var level; // New variable to store the level
           // Tìm kiếm trong mảng JSON để tìm giá trị phù hợp với avatarAddress
           var matchingAvatar = apiData.find(function(item) {
@@ -260,11 +276,11 @@ function replaceColumnWithImage() {
               var imageUrl = "https://raw.githubusercontent.com/planetarium/NineChronicles/development/nekoyume/Assets/Resources/UI/Icons/Item/" + armorId + ".png";
               var frameUrl = "https://raw.githubusercontent.com/planetarium/NineChronicles/development/nekoyume/Assets/Resources/UI/Icons/Item/character_frame.png"
             }
-			if (myMessage !== "none") {
-				var myMess = "<span class='tooltiptext' style='z-index: 9999;margin-bottom: 35px;'>" + decodeURIComponent(myMessage) + "</span>"
-			} else {
-				var myMess = ""
-			}
+            if (myMessage !== "none") {
+              var myMess = "<span class='tooltiptext' style='z-index: 9999;margin-bottom: 35px;'>" + decodeURIComponent(myMessage) + "</span>"
+            } else {
+              var myMess = ""
+            }
             cell.innerHTML =
               "<label for='radio-" +
               avatarIndex +
@@ -297,6 +313,18 @@ function replaceColumnWithImage() {
 }
 var timerRefreshTableData;
 
+function refreshTableData_infoEmeny() {
+
+
+  resetDataInfoYou = `
+	<td>-</td>
+	<td>-</td>
+	<td colspan="10">-</td>
+	`;
+  var newRow = $("<tr class='notHide infoEnemy'></tr>").html(resetDataInfoYou);
+  $("#infoTable tr.infoEnemy").replaceWith(newRow);
+}
+
 function refreshTableData() {
   // Thêm CSS dark-mode cho nút resetButton
   $("#resetButton").addClass("dark-mode");
@@ -320,6 +348,7 @@ function refreshTableData() {
 `;
   var newRow = $("<tr class='notHide infoYou'></tr>").html(resetDataInfoYou);
   $("#infoTable tr.infoYou").replaceWith(newRow);
+  refreshTableData_infoEmeny();
   var currentVisibleRows = initialRows;
   //Lấy dữ liệu DCC
   $.getJSON("https://api.dccnft.com/v1/9c/avatars/all")
@@ -385,8 +414,8 @@ function refreshTableData() {
         const apiData1 = apiData1Total.slice(0, 3000);
         if (Array.isArray(apiData1) && apiData1.length === 0 && apiData1.length < 10) {
           // Dữ liệu trả về là một mảng rỗng
-			console.log("Lỗi khi lấy dữ liệu từ 9capi:", apiData1Total);
-			creatTableArena(dataArenaError);
+          console.log("Lỗi khi lấy dữ liệu từ 9capi:", apiData1Total);
+          creatTableArena(dataArenaError);
         } else {
           // Xử lý dữ liệu từ API ban đầu
           console.log("Sử dụng từ 9capi");
@@ -396,15 +425,15 @@ function refreshTableData() {
       .fail(function(jqXHR, textStatus, error) {
         // Xử lý khi yêu cầu thất bại
         console.log("Lỗi khi lấy dữ liệu từ 9capi:", error);
-		creatTableArena(dataArenaError);
+        creatTableArena(dataArenaError);
       });
   }
   var post_data_json = {
     query: 'query{stateQuery{arenaParticipants(avatarAddress:"0x0000000000000000000000000000000000000000",filterBounds: false){avatarAddr,score,rank,winScore,loseScore,cp,portraitId,level,nameWithHash}}}',
   };
-  var random_url_node = urls_node[Math.floor(Math.random() * urls_node.length)];
+
   $.ajax({
-    url: random_url_node,
+    url: URL_NODE_USE,
     type: "POST",
     data: JSON.stringify(post_data_json),
     contentType: "application/json",
@@ -462,7 +491,7 @@ function creatTableArena(dataTotal) {
   var data = dataTotal.slice(0, 3000);
   addDataForSessionStorage("temp", "dataArena", data);
   // data.sort(function(a, b) {
-    // return b.score - a.score;
+  // return b.score - a.score;
   // });
   console.log(data);
   var student = "";
@@ -474,7 +503,7 @@ function creatTableArena(dataTotal) {
   // ITERATING THROUGH OBJECTS
   $.each(data, function(index, value) {
     // if (index > 0 && value.score !== prevScore) {
-      // newRankid = index + 1;
+    // newRankid = index + 1;
     // }
 
     // value.newRankid = newRankid;
@@ -482,29 +511,19 @@ function creatTableArena(dataTotal) {
     // prevScore = value.score;
     student1 = index + 1;
     student += "<tr>";
-    student += "<td>" + "<label for='radio-" + student1 + "'>" + student1 + "<br><span class='mute-text' style='white-space: nowrap;'>#" + value.rankid + "</span></label></td>";
+    student += "<td>" + "<label for='attackRadio-" + student1 + "'>" + student1 + "<br><span class='mute-text' style='white-space: nowrap;'>#" + value.rankid + "</span><br><img style='width: 1.6vw;' src='../assets/Arena_bg_21.png'/></label></td>";
     student += "<td style='width: 80px;height: 80px;' id='imgCell-" + value.avataraddress + "' data-index='" + student1 + "' data-portraitId='" + (typeof value.portraitId !== "undefined" && value.portraitId !== null ? value.portraitId : 0) + "' data-message='" + (typeof value.messageImg !== "undefined" && value.messageImg !== null ? value.messageImg : "none") + "'><img src='../assets/loading_small.gif'></td>";
     var avatarCode = value.avataraddress.substring(2, 6);
     student += "<td>" + "<label style='font-weight: bold;' for='radio-" + student1 + "'>" + value.avatarname + " <span class='mute-text'>#" + avatarCode + "</span></label></td>";
     // student += "<td>" + "<label for='radio-" + student1 + "'>" + value.rankid + "</label></td>";
     student += "<td>" + "<label style='white-space: nowrap;' for='radio-" + student1 + "'>" + value.cp + "</label></td>";
     student += "<td>" + "<label style='white-space: nowrap;' for='radio-" + student1 + "'>" + value.score + "</label></td>";
-    student += "<td>" + "<label for='radio-" + student1 + "'>" + (typeof value.stake !== "undefined" && value.stake !== null ? value.stake : "-") + " NCG</label></td>";
+    student += "<td>" + "<label style='display: flex;justify-content: center;align-items: center;flex-wrap: wrap;' for='radio-" + student1 + "'>" + (typeof value.stake !== "undefined" && value.stake !== null ? value.stake + "<img style='width: 1.6vw;' src='../assets/icon_Goods_0.png'/>" : "-") + "</label></td>";
     student += "<td>" + "<label style='white-space: nowrap;' for='radio-" + student1 + "'>" + (typeof value.win !== "undefined" && value.win !== null ? value.win : "-") + "/" + (typeof value.lose !== "undefined" && value.lose !== null ? value.lose : "-") + "</label></td>";
-    student += "<td>" + "<label for='radio-" + student1 + "'>" + (typeof value.currenttickets !== "undefined" && value.currenttickets !== null ? value.currenttickets : "-") + " • " + (typeof value.purchasedTicketCount !== "undefined" && value.purchasedTicketCount !== null && typeof value.purchasedTicketCountOld !== "undefined" && value.purchasedTicketCountOld !== null ? (value.purchasedTicketCount - value.purchasedTicketCountOld) : "-") + " <br><span class='mute-text' style='white-space: nowrap;'>" + (typeof value.purchasedTicketCount !== "undefined" && value.purchasedTicketCount !== null ? value.purchasedTicketCount : "-") + " • " + (typeof value.purchasedTicketNCG !== "undefined" && value.purchasedTicketNCG !== null ? value.purchasedTicketNCG.toFixed(1) : "-") + " ncg</span></label></td>";
-    student +=
-      "<td><div class='radio-wrapper'><input id='radio-" +
-      student1 +
-      "' type='radio' name='avatarSelection' data-cp='" +
-      value.cp +
-      "' value='" +
-      value.avataraddress +
-      "'" +
-      (student1 === 1 ? " checked" : "") +
-      "/><label for='radio-" +
-      student1 +
-      "'></label></div></td>";
+    student += "<td>" + "<label style='display: flex;justify-content: center;align-items: center;flex-wrap: wrap;' for='radio-" + student1 + "'>" + (typeof value.currenttickets !== "undefined" && value.currenttickets !== null ? value.currenttickets + "<img style='width: 1.6vw;' src='../assets/icon_Goods_3.png'/>" : "-") + " • " + (typeof value.purchasedTicketCount !== "undefined" && value.purchasedTicketCount !== null && typeof value.purchasedTicketCountOld !== "undefined" && value.purchasedTicketCountOld !== null ? (value.purchasedTicketCount - value.purchasedTicketCountOld) + "<img style='width: 1.6vw;' src='../assets/icon_Goods_3_mod.png'/>" : "-") + " <br><span class='mute-text' style='white-space: nowrap;'>" + (typeof value.purchasedTicketCount !== "undefined" && value.purchasedTicketCount !== null ? value.purchasedTicketCount : "-") + " • " + (typeof value.purchasedTicketNCG !== "undefined" && value.purchasedTicketNCG !== null ? value.purchasedTicketNCG.toFixed(1) : "-") + " ncg</span></label></td>";
+    student += "<td><div class='radio-wrapper'><input id='radio-" + student1 + "' type='radio' name='avatarSelection' data-cp='" + value.cp + "' value='" + value.avataraddress + "'" + (student1 === 1 ? " checked" : "") + "/><label for='radio-" + student1 + "'></label></div></td>";
     student += "<td><div class='button-wrapper tooltip'><button class='button-11' id='button-" + student1 + "' onclick='handleButtonClick(this)' data-itemid='" + value.avataraddress + "' data-cp='" + value.cp + "'>-1%</button>" + (typeof value.messageButton !== "undefined" && value.messageButton !== null && value.messageButton !== "none" ? "<span class='tooltiptext' style='z-index: 9999;margin-bottom: -15px;'>" + decodeURIComponent(value.messageButton) + "</span>" : "") + "</div></td>";
+    student += "<td><div class='radio-wrapper'><input id='attackRadio-" + student1 + "' type='radio' name='avatarSelectionAttack' data-cp='" + value.cp + "' value='" + value.avataraddress + "'" + (student1 === 1 ? " checked" : "") + "/><label for='attackRadio-" + student1 + "'></label></div></td>";
     student += "</tr>";
 
   });
@@ -601,10 +620,10 @@ function creatTableArena(dataTotal) {
   $(document).ready(function() {
     $('input[name="avatarSelection"]').change(function() {
       var selectedAvatarIndex = parseInt($(this).attr("id").split("-")[1]);
-
+      $("#infoTable tr.infoEnemy").removeClass("range1 range2");
       $("#numberInput").val(selectedAvatarIndex);
-	  $("#searchItem").val("");
-	  searchItemFun();
+      $("#searchItem").val("");
+      searchItemFun();
       // RESET CSS CLASSES
       $("#myTable tr").removeClass("range1 range2");
       // ADD CSS CLASS
@@ -619,10 +638,16 @@ function creatTableArena(dataTotal) {
       selectedColumns.eq(2).attr("colspan", "2");
       var newRow = $("<tr class='notHide infoYou'></tr>").append(selectedColumns);
       $("#infoTable tr.infoYou").replaceWith(newRow);
+      var enemyAvatarIndex = parseInt($('input[name="avatarSelectionAttack"]:checked').attr("id").split("-")[1]);
+      if (enemyAvatarIndex >= selectedAvatarIndex) {
+        $("#infoTable tr.infoEnemy").addClass("range2")
+      } else {
+        $("#infoTable tr.infoEnemy").addClass("range1")
+      }
 
       // Sử dụng % win đã lưu nếu có
       var selectedRadioValue = $('input[name="avatarSelection"]:checked').val();
-	  suggestList_func(selectedRadioValue);
+      suggestList_func(selectedRadioValue);
       var selectedRadioValue2 = $('input[name="avatarSelection"]:checked').data("cp");
       var sessionDataArena = getDataFromLocalStorage("sessionDataArena", selectedRadioValue + "/" + selectedRadioValue2);
 
@@ -655,7 +680,37 @@ function creatTableArena(dataTotal) {
           }
         });
       }
+      // Lấy agentAddress
+      $.getJSON(URL_9CSCAN + "/account?avatar=" + selectedRadioValue).done(function(apiData) {
+        if (apiData[0].address) {
+          $("#myAgentAddress").val(apiData[0].address);
+          $("#myAgentAddress").prop("disabled", true);
+        } else {
+          $("#myAgentAddress").val("");
+          $("#myAgentAddress").prop("disabled", false);
+        }
+      }).fail(function() {
+        $("#myAgentAddress").val("");
+        $("#myAgentAddress").prop("disabled", false);
+      });
     });
+
+    $('input[name="avatarSelectionAttack"]').change(function() {
+      var selectedAvatarIndex = parseInt($('input[name="avatarSelection"]:checked').attr("id").split("-")[1]);
+      var myAvatarIndex = parseInt($(this).attr("id").split("-")[1]);
+      var selectedRow = $(this).closest("tr");
+      var selectedColumns = selectedRow.find("th:lt(3), td:lt(5)").clone();
+      // Modify the third column
+      selectedColumns.eq(2).attr("colspan", "2");
+      var newRow = $("<tr class='notHide infoEnemy'></tr>").append(selectedColumns);
+      $("#infoTable tr.infoEnemy").replaceWith(newRow);
+      if (myAvatarIndex >= selectedAvatarIndex) {
+        $("#infoTable tr.infoEnemy").addClass("range2")
+      } else {
+        $("#infoTable tr.infoEnemy").addClass("range1")
+      }
+    });
+
   });
 }
 
@@ -681,8 +736,7 @@ function refreshInfoTableData() {
       student1 += 1;
     });
     // Xóa dữ liệu trong bảng infoTable, trừ hàng tiêu đề có lớp 'sticky notHide'
-    $("#infoTable tr:not(.sticky, .notHide, infoYou)").remove();
-
+    $("#infoTable tr:not(.sticky, .notHide)").remove();
     // INSERTING ROWS INTO TABLE
     $("#infoTable").append(student);
 
@@ -810,6 +864,7 @@ function delDataFromLocalStorage(parentKey, childKey) {
     console.log("Dữ liệu cha '" + parentKey + "' không tồn tại trong localStorage.");
   }
 }
+
 function sentMessage() {
   var selectedRadioValue = $('input[name="avatarSelection"]:checked').val();
   var messageImg = $("#messageImg").val();
@@ -817,132 +872,134 @@ function sentMessage() {
 
   // Tạo URL và lấy dữ liệu JSON
   $.getJSON(url_jsonblod_message, function(data) {
-	  // Chuyển đổi selectedRadioValue thành chữ in thường
-	  selectedRadioValue = selectedRadioValue.toLowerCase();
+    // Chuyển đổi selectedRadioValue thành chữ in thường
+    selectedRadioValue = selectedRadioValue.toLowerCase();
 
-	  // Kiểm tra xem selectedRadioValue có trong data hay không
-	  if (selectedRadioValue in data) {
-		var selectedData = data[selectedRadioValue];
-	  } else {
-		data[selectedRadioValue] = {};
-		var selectedData = data[selectedRadioValue];
-	  }
+    // Kiểm tra xem selectedRadioValue có trong data hay không
+    if (selectedRadioValue in data) {
+      var selectedData = data[selectedRadioValue];
+    } else {
+      data[selectedRadioValue] = {};
+      var selectedData = data[selectedRadioValue];
+    }
 
-	  // Tạo hoặc cập nhật key con messageImg
-	  selectedData.messageImg = encodeURIComponent(messageImg) || "none";
+    // Tạo hoặc cập nhật key con messageImg
+    selectedData.messageImg = encodeURIComponent(messageImg) || "none";
 
-	  // Tạo hoặc cập nhật key con messageButton
-	  selectedData.messageButton = encodeURIComponent(messageButton) || "none";
+    // Tạo hoặc cập nhật key con messageButton
+    selectedData.messageButton = encodeURIComponent(messageButton) || "none";
 
-	  // Lấy thời gian hiện tại theo đơn vị giây
-	  var currentTimeSeconds = Math.floor(Date.now() / 1000);
+    // Lấy thời gian hiện tại theo đơn vị giây
+    var currentTimeSeconds = Math.floor(Date.now() / 1000);
 
-	  // Gán giá trị thời gian vào key con time
-	  selectedData.time = currentTimeSeconds;
-      // Put lại dữ liệu lên URL
-      $.ajax({
-        url: url,
-        type: "PUT",
-        data: JSON.stringify(data),
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function() {
-          console.log("Dữ liệu đã được cập nhật thành công");
-        },
-        error: function() {
-          console.log("Đã xảy ra lỗi khi cập nhật dữ liệu");
-        }
-      });
-    })
-  };
-	function tinh_so_lan_attack(scoreA, scoreB) {
-	var attackCount = 1;
+    // Gán giá trị thời gian vào key con time
+    selectedData.time = currentTimeSeconds;
+    // Put lại dữ liệu lên URL
+    $.ajax({
+      url: url,
+      type: "PUT",
+      data: JSON.stringify(data),
+      contentType: "application/json; charset=utf-8",
+      dataType: "json",
+      success: function() {
+        console.log("Dữ liệu đã được cập nhật thành công");
+      },
+      error: function() {
+        console.log("Đã xảy ra lỗi khi cập nhật dữ liệu");
+      }
+    });
+  })
+}
 
-	while (scoreA - scoreB < 100) {
-	  if (scoreA - scoreB < 0) {
-		scoreA += 20;
-		scoreB -= 1;
-	  } else if (scoreA - scoreB >= 0 && scoreA - scoreB <= 99) {
-		scoreA += 18;
-		scoreB -= 1;
-	  } else if (scoreA - scoreB == 100) {
-		scoreA += 16;
-		scoreB -= 1;
-	  }
-	  
-	  attackCount++;
-	}
-	return attackCount
-	}
-  function suggestList_func(myAvatarAddress) {
-	// Dữ liệu ban đầu
-	var dataArena = getDataFromSessionStorage("temp", "dataArena");
-	var myScore;
-	var myCp;
+function tinh_so_lan_attack(scoreA, scoreB) {
+  var attackCount = 1;
 
-	// Tìm score và cp của my avatar
-	for (var i = 0; i < dataArena.length; i++) {
-	  if (dataArena[i].avataraddress === myAvatarAddress) {
-		myScore = dataArena[i].score;
-		myCp = dataArena[i].cp;
-		break;
-	  }
-	}
+  while (scoreA - scoreB < 100) {
+    if (scoreA - scoreB < 0) {
+      scoreA += 20;
+      scoreB -= 1;
+    } else if (scoreA - scoreB >= 0 && scoreA - scoreB <= 99) {
+      scoreA += 18;
+      scoreB -= 1;
+    } else if (scoreA - scoreB == 100) {
+      scoreA += 16;
+      scoreB -= 1;
+    }
 
-	// Chọn ra khoảng dữ liệu từ khoảng score + 200 đến score - 100
-	var selectedData = dataArena.filter(function(item) {
-	  return item.score <= (myScore + 200) && item.score >= (myScore - 100) && item.avataraddress !== myAvatarAddress;
-	});
-	// Sắp xếp dữ liệu theo cp tăng dần
-	selectedData.sort(function(a, b) {
-	  return a.cp - b.cp;
-	});
+    attackCount++;
+  }
+  return attackCount
+}
 
-	var suggestOptions = "";
+function suggestList_func(myAvatarAddress) {
+  // Dữ liệu ban đầu
+  var dataArena = getDataFromSessionStorage("temp", "dataArena");
+  var myScore;
+  var myCp;
 
-	var j = 1;
-	for (var i = 0; i < selectedData.length; i++) {
-	  if (j == 4) {
-		break;
-	  }
-	  var scoreDifference = selectedData[i].score - myScore;
-	  if (scoreDifference >= 1) {
-		// Từ khoảng +200 đến +1 score, chọn ra 3 nhân vật có cp thấp nhất là +20
-		var type="★★★"
-		var attackCount = tinh_so_lan_attack(myScore, selectedData[i].score);
-		suggestOptions += "<option value='" + selectedData[i].avatarname + " #" + selectedData[i].avataraddress.substring(2, 6) + "'>" + j + ") " + type + ", rank: #" + selectedData[i].rankid + ", cp: " + selectedData[i].cp + ", score: " + selectedData[i].score + ", canAttack: " + attackCount + "</option>";
-		j++;
-	  }
-	};
-	j = 1;
-	for (i = 0; i < selectedData.length; i++) {
-	  if (j == 4) {
-		break;
-	  }
-	  var scoreDifference = selectedData[i].score - myScore;
-	  if ((scoreDifference <= 0) && ((scoreDifference >= -99))) {
-		// Từ khoảng +0 đến -99 score, chọn ra 3 nhân vật có cp thấp nhất là +18
-		var type="★★"
-		var attackCount = tinh_so_lan_attack(myScore, selectedData[i].score);
-		suggestOptions += "<option value='" + selectedData[i].avatarname + " #" + selectedData[i].avataraddress.substring(2, 6) + "'>" + j + ") " + type + ", rank: #" + selectedData[i].rankid + ", cp: " + selectedData[i].cp + ", score: " + selectedData[i].score + ", canAttack: " + attackCount + "</option>";
-		j++;
-	  }
-	};
-	j = 1;
-	for (i = 0; i < selectedData.length; i++) {
-	  if (j == 4) {
-		break;
-	  }
-	  var scoreDifference = selectedData[i].score - myScore;
-	  if (scoreDifference == -100) {
-		// Từ khoảng +-100 score, chọn ra 3 nhân vật có cp thấp nhất là +16
-		var type="★"
-		var attackCount = tinh_so_lan_attack(myScore, selectedData[i].score);
-		suggestOptions += "<option value='" + selectedData[i].avatarname + " #" + selectedData[i].avataraddress.substring(2, 6) + "'>" + j + ") " + type + ", rank: #" + selectedData[i].rankid + ", cp: " + selectedData[i].cp + ", score: " + selectedData[i].score + ", canAttack: " + attackCount + "</option>";
-		j++;
-	  }
-	};
+  // Tìm score và cp của my avatar
+  for (var i = 0; i < dataArena.length; i++) {
+    if (dataArena[i].avataraddress === myAvatarAddress) {
+      myScore = dataArena[i].score;
+      myCp = dataArena[i].cp;
+      break;
+    }
+  }
 
-	// Chèn các phần tử vào danh sách
-	$("#suggestList").html(suggestOptions);
-  };
+  // Chọn ra khoảng dữ liệu từ khoảng score + 200 đến score - 100
+  var selectedData = dataArena.filter(function(item) {
+    return item.score <= (myScore + 200) && item.score >= (myScore - 100) && item.avataraddress !== myAvatarAddress;
+  });
+  // Sắp xếp dữ liệu theo cp tăng dần
+  selectedData.sort(function(a, b) {
+    return a.cp - b.cp;
+  });
+
+  var suggestOptions = "";
+
+  var j = 1;
+  for (var i = 0; i < selectedData.length; i++) {
+    if (j == 4) {
+      break;
+    }
+    var scoreDifference = selectedData[i].score - myScore;
+    if (scoreDifference >= 1) {
+      // Từ khoảng +200 đến +1 score, chọn ra 3 nhân vật có cp thấp nhất là +20
+      var type = "★★★"
+      var attackCount = tinh_so_lan_attack(myScore, selectedData[i].score);
+      suggestOptions += "<option value='" + selectedData[i].avatarname + " #" + selectedData[i].avataraddress.substring(2, 6) + "'>" + j + ") " + type + ", rank: #" + selectedData[i].rankid + ", cp: " + selectedData[i].cp + ", score: " + selectedData[i].score + ", canAttack: " + attackCount + "</option>";
+      j++;
+    }
+  }
+  j = 1;
+  for (i = 0; i < selectedData.length; i++) {
+    if (j == 4) {
+      break;
+    }
+    var scoreDifference = selectedData[i].score - myScore;
+    if ((scoreDifference <= 0) && ((scoreDifference >= -99))) {
+      // Từ khoảng +0 đến -99 score, chọn ra 3 nhân vật có cp thấp nhất là +18
+      var type = "★★"
+      var attackCount = tinh_so_lan_attack(myScore, selectedData[i].score);
+      suggestOptions += "<option value='" + selectedData[i].avatarname + " #" + selectedData[i].avataraddress.substring(2, 6) + "'>" + j + ") " + type + ", rank: #" + selectedData[i].rankid + ", cp: " + selectedData[i].cp + ", score: " + selectedData[i].score + ", canAttack: " + attackCount + "</option>";
+      j++;
+    }
+  }
+  j = 1;
+  for (i = 0; i < selectedData.length; i++) {
+    if (j == 4) {
+      break;
+    }
+    var scoreDifference = selectedData[i].score - myScore;
+    if (scoreDifference == -100) {
+      // Từ khoảng +-100 score, chọn ra 3 nhân vật có cp thấp nhất là +16
+      var type = "★"
+      var attackCount = tinh_so_lan_attack(myScore, selectedData[i].score);
+      suggestOptions += "<option value='" + selectedData[i].avatarname + " #" + selectedData[i].avataraddress.substring(2, 6) + "'>" + j + ") " + type + ", rank: #" + selectedData[i].rankid + ", cp: " + selectedData[i].cp + ", score: " + selectedData[i].score + ", canAttack: " + attackCount + "</option>";
+      j++;
+    }
+  }
+
+  // Chèn các phần tử vào danh sách
+  $("#suggestList").html(suggestOptions);
+}
