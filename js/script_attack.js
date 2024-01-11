@@ -34,6 +34,7 @@ async function handleResponseBuoc09cscan(agentAddress, typeUseNode) {
 
 async function tryAttackArenaLite() {
   try {
+	$("#tryAttackArenaLite_button").prop("disabled", true);
     $("#runGifBarUseNode").attr("src", "../assets/run.gif");
     $("#TXOutput").val("Step 0...")
     $("#taskOutput").text(0)
@@ -75,10 +76,12 @@ async function tryAttackArenaLite() {
     let plainValue = data.message;
     console.log(`Done step 0: ${plainValue}`);
     await tryUseNode(agentAddress, password, plainValue, myServer9cmd);
+	$("#tryAttackArenaLite_button").prop("disabled", false);
     $("#runGifBarUseNode").attr("src", "../assets/run.png");
   } catch (error) {
     console.log(error);
     $("#TXOutput").val(error);
+	$("#tryAttackArenaLite_button").prop("disabled", false);
     $("#runGifBarUseNode").attr("src", "../assets/run.png");
   }
 }

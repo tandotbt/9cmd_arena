@@ -94,7 +94,7 @@
                 <input class="range-style" type="range" id="rangeInput" min="0" max="200" step="50" value="0" />
                 <input class="range-style" type="range" id="rangeInput2" min="0" max="200" step="50" value="0" /><br>
                 <input class="button-37" type="number" id="timeAutoResetTable" value="300" min="60" />
-                <button id="resetButton" onclick="refreshTableDataAgain()" class="button-37">Auto reset data <b>ODIN</b> after <span></span>s</button>
+                <button id="resetButton" onclick="$('#suggestList').empty();refreshTableDataAgain()" class="button-37">Auto reset data <b>ODIN</b> after <span></span>s</button>
                 <input list="suggestList" type="text" id="searchItem" onkeyup="searchItemFun()" placeholder="Search for names..." /><button class="button-37" onclick='$("#searchItem").val("");refreshTableData_infoEmeny();searchItemFun();'>Clear</button>
                 <datalist id="suggestList"></datalist>
                 <!-- <input id="messageImg" type="text" placeholder="Thông điệp 1.." /> -->
@@ -125,7 +125,7 @@
                 <div class="tooltip">
                   <img src="../assets/UI_icon_Popup_00.png" alt="news" style="width: 30px;" /><span class="tooltiptext">Code còn non ae dùng mất acc botay :v</span>
                 </div>
-                <button onclick="tryAttackArenaLite()">Attack!</button>
+                <button onclick="tryAttackArenaLite()" id="tryAttackArenaLite_button">Attack!</button>
                 <div class="tooltip">
                   <img src="../assets/UI_icon_Popup_00.png" alt="news" style="width: 30px;" /><span class="tooltiptext">At your own risk!</span>
                 </div>
