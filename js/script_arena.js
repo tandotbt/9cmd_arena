@@ -266,15 +266,72 @@ function replaceColumnWithImage() {
             if (armorEquipment) {
               armorId = armorEquipment.id;
             }
+            // Kiểm tra cache trong localStorage
+            var cachedImage, cachedFrameUrl;
             if (imgDCC !== null) {
-              var imageUrl = "https://raw.githubusercontent.com/planetarium/NineChronicles/development/nekoyume/Assets/Resources/PFP/" + imgDCC + ".png";
-              var frameUrl = "https://raw.githubusercontent.com/planetarium/NineChronicles/development/nekoyume/Assets/Resources/UI/Icons/Item/character_frame_dcc.png"
+              cachedImage = getDataFromSessionStorage("myCache", imgDCC);
+              cachedFrameUrl = getDataFromSessionStorage("myCache", "character_frame_dcc");
             } else if (portraitId !== 0) {
-              var imageUrl = "https://raw.githubusercontent.com/planetarium/NineChronicles/development/nekoyume/Assets/Resources/UI/Icons/Item/" + portraitId + ".png";
-              var frameUrl = "https://raw.githubusercontent.com/planetarium/NineChronicles/development/nekoyume/Assets/Resources/UI/Icons/Item/character_frame.png"
+              cachedImage = getDataFromSessionStorage("myCache", portraitId);
+              cachedFrameUrl = getDataFromSessionStorage("myCache", "character_frame");
             } else {
-              var imageUrl = "https://raw.githubusercontent.com/planetarium/NineChronicles/development/nekoyume/Assets/Resources/UI/Icons/Item/" + armorId + ".png";
-              var frameUrl = "https://raw.githubusercontent.com/planetarium/NineChronicles/development/nekoyume/Assets/Resources/UI/Icons/Item/character_frame.png"
+              cachedImage = getDataFromSessionStorage("myCache", armorId);
+              cachedFrameUrl = getDataFromSessionStorage("myCache", "character_frame");
+            }
+
+            function saveImageToCache(imageUrl, cacheKey) {
+              if (cachedImage) {
+                return cachedImage;
+              } else {
+                // Tạo một XMLHttpRequest để tải ảnh
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', imageUrl, true);
+                xhr.responseType = 'blob';
+
+                xhr.onload = function() {
+                  if (xhr.status === 200) {
+                    var blob = xhr.response;
+
+                    // Tạo một FileReader để đọc dữ liệu từ blob thành base64
+                    var reader = new FileReader();
+                    reader.onloadend = function() {
+                      var imageData = reader.result;
+
+                      addDataForSessionStorage("myCache", cacheKey, imageData);
+                    };
+                    reader.readAsDataURL(blob);
+                  }
+                };
+
+                xhr.send();
+              }
+            }
+
+            if (cachedImage) {
+              imageUrl = cachedImage;
+            } else {
+              if (imgDCC !== null) {
+                imageUrl = "https://raw.githubusercontent.com/planetarium/NineChronicles/development/nekoyume/Assets/Resources/PFP/" + imgDCC + ".png";
+                saveImageToCache(imageUrl, imgDCC);
+              } else if (portraitId !== 0) {
+                imageUrl = "https://raw.githubusercontent.com/planetarium/NineChronicles/development/nekoyume/Assets/Resources/UI/Icons/Item/" + portraitId + ".png";
+                saveImageToCache(imageUrl, portraitId);
+              } else {
+                imageUrl = "https://raw.githubusercontent.com/planetarium/NineChronicles/development/nekoyume/Assets/Resources/UI/Icons/Item/" + armorId + ".png";
+                saveImageToCache(imageUrl, armorId);
+              }
+            }
+
+            if (cachedFrameUrl) {
+              frameUrl = cachedFrameUrl;
+            } else {
+              if (imgDCC !== null) {
+                frameUrl = "https://raw.githubusercontent.com/planetarium/NineChronicles/development/nekoyume/Assets/Resources/UI/Icons/Item/character_frame_dcc.png";
+                saveImageToCache(frameUrl, "character_frame_dcc");
+              } else {
+                frameUrl = "https://raw.githubusercontent.com/planetarium/NineChronicles/development/nekoyume/Assets/Resources/UI/Icons/Item/character_frame.png";
+                saveImageToCache(frameUrl, "character_frame");
+              }
             }
             if (myMessage !== "none") {
               var myMess = "<span class='tooltiptext' style='z-index: 9999;margin-bottom: 35px;'>" + decodeURIComponent(myMessage) + "</span>"
@@ -299,6 +356,53 @@ function replaceColumnWithImage() {
 
         // Dừng quan sát ô hiện tại sau khi đã áp dụng hàm replaceColumnWithImage()
         observer.unobserve(cell);
+      }
+    });
+  });
+
+  // Lấy tất cả các ô trong cột 2
+  var cells = document.querySelectorAll("#myTable td:nth-child(2)");
+
+  // Quan sát mỗi ô
+  cells.forEach(function(cell) {
+    observer.observe(cell);
+  });
+}
+
+function replaceColumnWith_PhanTramWin() {
+  // Tạo một IntersectionObserver
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      // Kiểm tra xem ô có trong khung nhìn hay không
+      if (entry.isIntersecting) {
+        var cell = entry.target;
+        // Lấy giá trị số thứ tự student1
+        var avatarIndex = cell.getAttribute("data-index");
+
+        // Sử dụng % win đã lưu nếu có
+        var selectedRadioValue = $('input[name="avatarSelection"]:checked').val();
+        var selectedRadioValue2 = $('input[name="avatarSelection"]:checked').data("cp");
+        var sessionDataArena = getDataFromLocalStorage("sessionDataArena", selectedRadioValue + "/" + selectedRadioValue2);
+
+        if (sessionDataArena && Object.keys(sessionDataArena).length !== 0) {
+          var button = $("#button-" + avatarIndex);
+          var itemId = button.data("itemid");
+          var studentId = avatarIndex;
+          var enemyCP = button.data("cp");
+
+          for (var key in sessionDataArena) {
+            if (key.toLowerCase() === itemId.toLowerCase()) {
+              var [winRateOld, enemyCPOld] = sessionDataArena[key].split("/");
+
+              if (parseInt(enemyCPOld) === parseInt(enemyCP)) {
+                button.text(winRateOld + "%");
+                break;
+              }
+            }
+          }
+        }
+        // Dừng quan sát ô hiện tại sau khi đã áp dụng hàm replaceColumnWithImage()
+        //observer.unobserve(cell);
       }
     });
   });
@@ -535,7 +639,7 @@ function creatTableArena(dataTotal) {
 
   // Call API to get the number and replace the column with the image
   replaceColumnWithImage();
-
+  replaceColumnWith_PhanTramWin();
 
 
   // Ẩn các hàng không được hiển thị ban đầu
@@ -645,41 +749,8 @@ function creatTableArena(dataTotal) {
         $("#infoTable tr.infoEnemy").addClass("range1")
       }
 
-      // Sử dụng % win đã lưu nếu có
       var selectedRadioValue = $('input[name="avatarSelection"]:checked').val();
       suggestList_func(selectedRadioValue);
-      var selectedRadioValue2 = $('input[name="avatarSelection"]:checked').data("cp");
-      var sessionDataArena = getDataFromLocalStorage("sessionDataArena", selectedRadioValue + "/" + selectedRadioValue2);
-
-      if (sessionDataArena !== null && Object.keys(sessionDataArena).length !== 0) {
-        $(".button-11").each(async function() {
-          var itemId = $(this).data("itemid");
-          var studentId = $(this).attr("id").split("-")[1];
-          var enemyCP = $(this).data("cp");
-          // Duyệt qua từng khóa trong sessionDataArena
-          for (var key in sessionDataArena) {
-            if (key.toLowerCase() === itemId.toLowerCase()) {
-              var winRateOld = sessionDataArena[key].split("/")[0];
-              var enemyCPOld = sessionDataArena[key].split("/")[1];
-              if (parseInt(enemyCPOld) === parseInt(enemyCP)) {
-                try {
-                  // Sử dụng Promise để bao bọc hành động bất đồng bộ
-                  await new Promise((resolve) => {
-                    setTimeout(resolve, 0); // Giữ nguyên luồng chính để tránh gây tắc nghẽn
-                  });
-
-                  // Nếu itemId trùng khóa trong sessionDataArena, thực hiện hành động tương ứng
-                  $("#button-" + studentId).text(winRateOld + "%");
-                  break; // Kết thúc vòng lặp sau khi tìm thấy khóa trùng
-                } catch (error) {
-                  // Xử lý lỗi nếu có
-                  console.error(error);
-                }
-              }
-            }
-          }
-        });
-      }
       // Lấy agentAddress
       $.getJSON(URL_9CSCAN + "/account?avatar=" + selectedRadioValue).done(function(apiData) {
         if (apiData[0].address) {
