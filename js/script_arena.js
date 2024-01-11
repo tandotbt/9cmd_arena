@@ -340,7 +340,7 @@ function refreshTableData() {
   $("#numberInput").val("1");
   $("#rangeInput").val("0");
   $("#rangeInput2").val("0");
-
+  $("#searchItem").val("")
   var resetDataInfoYou = `
 <td>-</td>
 <td><img src='../assets/loading_small.gif'></td>
@@ -547,7 +547,7 @@ function creatTableArena(dataTotal) {
     currentVisibleRows += rowsToAdd;
 
     // Hiển thị thêm số hàng
-    $("#myTable tr:not(.notHide)").slice(initialRows, currentVisibleRows).show();
+    $("#myTable tr:not(.notHide)").slice(initialRows - 1, currentVisibleRows).show();
 
     // Kiểm tra nếu đã hiển thị hết tất cả hàng
     if (currentVisibleRows >= $("#myTable tr:not(.notHide)").length) {
