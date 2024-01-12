@@ -549,3 +549,15 @@ input[type=range]:focus::-ms-fill-upper {
 #showMoreButton {
   order: 1;
 }
+.clickMeCSS {
+  cursor: pointer;
+}
+.blink {
+  animation: blink-animation 1s infinite;
+}
+
+@keyframes blink-animation {
+  0% { background-color: #ffa19a; }
+  50% { background-color: #e4f5d4; }
+  100% { background-color: #ffa19a; }
+}

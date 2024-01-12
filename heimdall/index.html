@@ -95,7 +95,7 @@
                 <input class="range-style" type="range" id="rangeInput2" min="0" max="200" step="50" value="0" /><br>
                 <input class="button-37" type="number" id="timeAutoResetTable" value="300" min="60" />
                 <button id="resetButton" onclick="$('#suggestList').empty();refreshTableDataAgain()" class="button-37">Auto reset data <b>HEIMDALL</b> after <span></span>s</button>
-                <input list="suggestList" type="text" id="searchItem" onkeyup="searchItemFun()" placeholder="Search for names..." /><button class="button-37" onclick='$("#searchItem").val("");refreshTableData_infoEmeny();searchItemFun();'>Clear</button>
+                <input list="suggestList" type="text" id="searchItem" onkeyup="searchItemFun()" placeholder="Search for names..." /><button class="button-37" onclick='$("#searchItem").val("");searchItemFun();'>Clear</button>
                 <datalist id="suggestList"></datalist>
                 <!-- <input id="messageImg" type="text" placeholder="Thông điệp 1.." /> -->
                 <!-- <input id="messageButton" type="text" placeholder="Thông điệp 2.." /> -->
@@ -125,7 +125,7 @@
                 <div class="tooltip">
                   <img src="../assets/UI_icon_Popup_00.png" alt="news" style="width: 30px;" /><span class="tooltiptext">Code còn non ae dùng mất acc botay :v</span>
                 </div>
-                <button onclick="tryAttackArenaLite()" id="tryAttackArenaLite_button">Attack!</button>
+                <button onclick="tryAttackArenaLite()" id="tryAttackArenaLite_button">Attack! <span>-1%</span></button>
                 <div class="tooltip">
                   <img src="../assets/UI_icon_Popup_00.png" alt="news" style="width: 30px;" /><span class="tooltiptext">At your own risk!</span>
                 </div>
@@ -162,17 +162,17 @@
           <table id="myTable">
             <tbody>
               <tr class="sticky notHide">
-                <th>Rank</th>
+                <th class='clickMeCSS'>Rank</th>
                 <th>Avatar</th>
-                <th>Name</th>
+                <th class='clickMeCSS'>Name</th>
                 <!-- <th>Rank</th> -->
-                <th>CP</th>
-                <th><img style="width: 2vw;" src="../assets/Arena_bg_19.png" /></th>
-                <th>Stake</th>
-                <th>W/L</th>
-                <th>Tickets</th>
+                <th class='clickMeCSS'>CP</th>
+                <th class='clickMeCSS'><img style="width: 2vw;" src="../assets/Arena_bg_19.png" /></th>
+                <th class='clickMeCSS'>Stake</th>
+                <th class='clickMeCSS'>W/L</th>
+                <th class='clickMeCSS'>Tickets</th>
                 <th>You</th>
-                <th><img style="width: 3vw;" src="../assets/bg_pvp_vs.png" /></th>
+                <th class='clickMeCSS'><img style="width: 3vw;" src="../assets/bg_pvp_vs.png" /></th>
                 <th>Enemy</th>
               </tr>
               <tr>

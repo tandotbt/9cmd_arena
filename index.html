@@ -91,7 +91,7 @@
       $(document).ready(function() {
         function Odin_refreshInfoTableData() {
 
-          $.getJSON("https://jsonblob.com/api/jsonblob/1141252404015915008").done(function(data) {
+          $.getJSON("https://api.tanvpn.tk/block?serverPlanet=odin").done(function(data) {
             $("#Odin_urlImgSeason").attr("src", data.urlImgSeason);
             if (data.infoArena.includes('!')) {
               $("#Odin_type").html('<img style="width: 20px;height: 20px;" src="assets/fire.gif"><b> ' + data.infoArena + '</b>');
@@ -115,7 +115,7 @@
 
         function Heimdall_refreshInfoTableData() {
 
-          $.getJSON("https://jsonblob.com/api/jsonblob/1179111804604637184").done(function(data) {
+          $.getJSON("https://api.tanvpn.tk/block?serverPlanet=heimdall").done(function(data) {
             $("#Heimdall_urlImgSeason").attr("src", data.urlImgSeason);
             if (data.infoArena.includes('!')) {
               $("#Heimdall_type").html('<img style="width: 20px;height: 20px;" src="assets/fire.gif"><b> ' + data.infoArena + '</b>');

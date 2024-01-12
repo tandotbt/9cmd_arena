@@ -245,6 +245,7 @@ function replaceColumnWithImage() {
         var myMessage = cell.getAttribute("data-message");
         $.getJSON(URL_9CSCAN + "/account?avatar=" + avataraddress).done(function(apiData) {
           var level; // New variable to store the level
+          var NCGBalance;
           // Tìm kiếm trong mảng JSON để tìm giá trị phù hợp với avatarAddress
           var matchingAvatar = apiData.find(function(item) {
             return item.avatarAddress.toLowerCase() === avatarAddress;
@@ -252,6 +253,8 @@ function replaceColumnWithImage() {
 
           if (matchingAvatar) {
             level = matchingAvatar.avatar.level; // Assign the level value
+            NCGBalance = matchingAvatar.goldBalance;
+            $("#showNCGBalance-" + avatarIndex).text(NCGBalance);
             var armorId = 10200000; // ID mặc định
             // Kiểm tra xem mảng equipments có tồn tại hay không
             if (!matchingAvatar.avatar.inventory || matchingAvatar.avatar.inventory.equipments.length === 0) {
@@ -339,7 +342,7 @@ function replaceColumnWithImage() {
               var myMess = ""
             }
             cell.innerHTML =
-              "<label for='radio-" +
+              "<label class='clickMeCSS' for='radio-" +
               avatarIndex +
               "'><div class='image-container tooltip'>" +
               "<div style='z-index: 1;position: absolute;padding-left: 26px;padding-bottom: 35px;font-size: 13px;font-family: monospace;color: lightyellow;white-space: nowrap;'>" +
@@ -361,8 +364,16 @@ function replaceColumnWithImage() {
   });
 
   // Lấy tất cả các ô trong cột 2
-  var cells = document.querySelectorAll("#myTable td:nth-child(2)");
+  //var cells = document.querySelectorAll("#myTable td:nth-child(2)");
+  var rows = document.querySelectorAll("#myTable tr:not([style*='display: none;'])");
+  var cells = [];
 
+  rows.forEach(function(row) {
+    var cell = row.querySelector("td:nth-child(2)");
+    if (cell) {
+      cells.push(cell);
+    }
+  });
   // Quan sát mỗi ô
   cells.forEach(function(cell) {
     observer.observe(cell);
@@ -371,22 +382,26 @@ function replaceColumnWithImage() {
 
 function replaceColumnWith_PhanTramWin() {
   // Tạo một IntersectionObserver
+  // Sử dụng % win đã lưu nếu có
   var observer = new IntersectionObserver(function(entries) {
     entries.forEach(function(entry) {
       // Kiểm tra xem ô có trong khung nhìn hay không
       if (entry.isIntersecting) {
         var cell = entry.target;
         // Lấy giá trị số thứ tự student1
-        var avatarIndex = cell.getAttribute("data-index");
-
-        // Sử dụng % win đã lưu nếu có
+        avatarIndex = cell.getAttribute("data-index");
         var selectedRadioValue = $('input[name="avatarSelection"]:checked').val();
         var selectedRadioValue2 = $('input[name="avatarSelection"]:checked').data("cp");
         var sessionDataArena = getDataFromLocalStorage("sessionDataArena", selectedRadioValue + "/" + selectedRadioValue2);
-
+        var button = $("#button-" + avatarIndex);
+        var itemId = button.data("itemid");
+        var selectedAvatarEmenyIndex = parseInt($('input[name="avatarSelectionAttack"]:checked').attr("id").split("-")[1]);
+        if (selectedAvatarEmenyIndex == avatarIndex) {
+          var phanTramWin = $("#button-" + avatarIndex).text();
+          $("#tryAttackArenaLite_button span").text(phanTramWin);
+        }
         if (sessionDataArena && Object.keys(sessionDataArena).length !== 0) {
-          var button = $("#button-" + avatarIndex);
-          var itemId = button.data("itemid");
+
           var studentId = avatarIndex;
           var enemyCP = button.data("cp");
 
@@ -408,8 +423,16 @@ function replaceColumnWith_PhanTramWin() {
   });
 
   // Lấy tất cả các ô trong cột 2
-  var cells = document.querySelectorAll("#myTable td:nth-child(2)");
+  //var cells = document.querySelectorAll("#myTable td:nth-child(2)");
+  var rows = document.querySelectorAll("#myTable tr:not([style*='display: none;'])");
+  var cells = [];
 
+  rows.forEach(function(row) {
+    var cell = row.querySelector("td:nth-child(2)");
+    if (cell) {
+      cells.push(cell);
+    }
+  });
   // Quan sát mỗi ô
   cells.forEach(function(cell) {
     observer.observe(cell);
@@ -420,12 +443,12 @@ var timerRefreshTableData;
 function refreshTableData_infoEmeny() {
 
 
-  resetDataInfoYou = `
+  resetData = `
 	<td>-</td>
 	<td>-</td>
 	<td colspan="10">-</td>
 	`;
-  var newRow = $("<tr class='notHide infoEnemy'></tr>").html(resetDataInfoYou);
+  var newRow = $("<tr class='notHide infoEnemy'></tr>").html(resetData);
   $("#infoTable tr.infoEnemy").replaceWith(newRow);
 }
 
@@ -445,15 +468,36 @@ function refreshTableData() {
   $("#rangeInput").val("0");
   $("#rangeInput2").val("0");
   $("#searchItem").val("")
-  var resetDataInfoYou = `
+  var resetData = `
 <td>-</td>
 <td><img src='../assets/loading_small.gif'></td>
 <td colspan="10">-</td>
 `;
-  var newRow = $("<tr class='notHide infoYou'></tr>").html(resetDataInfoYou);
+  var newRow = $("<tr class='notHide infoYou'></tr>").html(resetData);
   $("#infoTable tr.infoYou").replaceWith(newRow);
   refreshTableData_infoEmeny();
+  var resetData = `
+	<tr>
+	<td>-</td>
+	<td><img src="../assets/loading_small.gif" /></td>
+	<td>-------------------------</td>
+	<!-- <td>-</td> -->
+	<td>--------</td>
+	<td>-----</td>
+	<td>-</td>
+	<td>---/---</td>
+	<td>------</td>
+	<td>-</td>
+	<td>---</td>
+	<td>-</td>
+	</tr>
+`;
+  $("#myTable tr:not(.sticky, .notHide)").remove();
+  $("#myTable").append(resetData);
+  // Đặt số lượng hiển thị của More+ về mặc định
   var currentVisibleRows = initialRows;
+  // Xóa gợi ý
+  $('#suggestList').empty();
   //Lấy dữ liệu DCC
   $.getJSON("https://api.dccnft.com/v1/9c/avatars/all")
     .done(function(apiDCCData) {
@@ -615,19 +659,19 @@ function creatTableArena(dataTotal) {
     // prevScore = value.score;
     student1 = index + 1;
     student += "<tr>";
-    student += "<td>" + "<label for='attackRadio-" + student1 + "'>" + student1 + "<br><span class='mute-text' style='white-space: nowrap;'>#" + value.rankid + "</span><br><img style='width: 1.6vw;' src='../assets/Arena_bg_21.png'/></label></td>";
+    student += "<td>" + "<label class='clickMeCSS' for='attackRadio-" + student1 + "'>" + student1 + "<br><span class='mute-text' style='white-space: nowrap;'>#" + value.rankid + "</span><br><img style='width: 1.6vw;' src='../assets/Arena_bg_21.png'/></label></td>";
     student += "<td style='width: 80px;height: 80px;' id='imgCell-" + value.avataraddress + "' data-index='" + student1 + "' data-portraitId='" + (typeof value.portraitId !== "undefined" && value.portraitId !== null ? value.portraitId : 0) + "' data-message='" + (typeof value.messageImg !== "undefined" && value.messageImg !== null ? value.messageImg : "none") + "'><img src='../assets/loading_small.gif'></td>";
     var avatarCode = value.avataraddress.substring(2, 6);
-    student += "<td>" + "<label style='font-weight: bold;' for='radio-" + student1 + "'>" + value.avatarname + " <span class='mute-text'>#" + avatarCode + "</span></label></td>";
-    // student += "<td>" + "<label for='radio-" + student1 + "'>" + value.rankid + "</label></td>";
-    student += "<td>" + "<label style='white-space: nowrap;' for='radio-" + student1 + "'>" + value.cp + "</label></td>";
-    student += "<td>" + "<label style='white-space: nowrap;' for='radio-" + student1 + "'>" + value.score + "</label></td>";
-    student += "<td>" + "<label style='display: flex;justify-content: center;align-items: center;flex-wrap: wrap;' for='radio-" + student1 + "'>" + (typeof value.stake !== "undefined" && value.stake !== null ? value.stake + "<img style='width: 1.6vw;' src='../assets/icon_Goods_0.png'/>" : "-") + "</label></td>";
-    student += "<td>" + "<label style='white-space: nowrap;' for='radio-" + student1 + "'>" + (typeof value.win !== "undefined" && value.win !== null ? value.win : "-") + "/" + (typeof value.lose !== "undefined" && value.lose !== null ? value.lose : "-") + "</label></td>";
-    student += "<td>" + "<label style='display: flex;justify-content: center;align-items: center;flex-wrap: wrap;' for='radio-" + student1 + "'>" + (typeof value.currenttickets !== "undefined" && value.currenttickets !== null ? value.currenttickets + "<img style='width: 1.6vw;' src='../assets/icon_Goods_3.png'/>" : "-") + " • " + (typeof value.purchasedTicketCount !== "undefined" && value.purchasedTicketCount !== null && typeof value.purchasedTicketCountOld !== "undefined" && value.purchasedTicketCountOld !== null ? (value.purchasedTicketCount - value.purchasedTicketCountOld) + "<img style='width: 1.6vw;' src='../assets/icon_Goods_3_mod.png'/>" : "-") + " <br><span class='mute-text' style='white-space: nowrap;'>" + (typeof value.purchasedTicketCount !== "undefined" && value.purchasedTicketCount !== null ? value.purchasedTicketCount : "-") + " • " + (typeof value.purchasedTicketNCG !== "undefined" && value.purchasedTicketNCG !== null ? value.purchasedTicketNCG.toFixed(1) : "-") + " ncg</span></label></td>";
-    student += "<td><div class='radio-wrapper'><input id='radio-" + student1 + "' type='radio' name='avatarSelection' data-cp='" + value.cp + "' value='" + value.avataraddress + "'" + (student1 === 1 ? " checked" : "") + "/><label for='radio-" + student1 + "'></label></div></td>";
+    student += "<td>" + "<div class='clickMeCSS' " + `onclick='funcSelectByName("${value.avatarname} #${avatarCode}")'` + " style='font-weight: bold;' for='radio-" + student1 + "'>" + value.avatarname + " <span class='mute-text'>#" + avatarCode + "</span></div></td>";
+    // student += "<td>" + "<div for='radio-" + student1 + "'>" + value.rankid + "</div></td>";
+    student += "<td>" + "<div style='white-space: nowrap;' for='radio-" + student1 + "'>" + value.cp + "</div></td>";
+    student += "<td>" + "<div style='white-space: nowrap;' for='radio-" + student1 + "'>" + value.score + "</div></td>";
+    student += "<td>" + "<div style='display: flex;justify-content: center;align-items: center;flex-wrap: wrap;' for='radio-" + student1 + "'>" + (typeof value.stake !== "undefined" && value.stake !== null ? "<span class='mute-text' style='display: flex;justify-content: center;align-items: center;flex-wrap: nowrap;white-space: nowrap;'>" + value.stake + "<img style='width: 1.6vw;' src='../assets/icon_Goods_0_mod.png'/></span>" : "-") + "<br><div style='display: flex;justify-content: center;align-items: center;flex-wrap: nowrap;white-space: nowrap;'>" + "<span id='showNCGBalance-" + student1 + "'>---</span>" + " <img style='width: 1.6vw;' src='../assets/icon_Goods_0.png'/></div></div></td>";
+    student += "<td>" + "<div style='white-space: nowrap;' for='radio-" + student1 + "'>" + (typeof value.win !== "undefined" && value.win !== null ? value.win : "-") + "/" + (typeof value.lose !== "undefined" && value.lose !== null ? value.lose : "-") + "</div></td>";
+    student += "<td>" + "<div style='display: flex;justify-content: center;align-items: center;flex-wrap: wrap;' for='radio-" + student1 + "'>" + (typeof value.currenttickets !== "undefined" && value.currenttickets !== null ? value.currenttickets + "<img style='width: 1.6vw;' src='../assets/icon_Goods_3.png'/>" : "-") + " • " + (typeof value.purchasedTicketCount !== "undefined" && value.purchasedTicketCount !== null && typeof value.purchasedTicketCountOld !== "undefined" && value.purchasedTicketCountOld !== null ? (value.purchasedTicketCount - value.purchasedTicketCountOld) + "<img style='width: 1.6vw;' src='../assets/icon_Goods_3_mod.png'/>" : "-") + " " + (typeof value.nextPTNCG !== "undefined" && value.nextPTNCG !== null ? value.nextPTNCG.toFixed(1) + "<img style='width: 1.6vw;' src='../assets/icon_Goods_0.png'/>" : "-") + "<br><span class='mute-text' style='white-space: nowrap;'>" + (typeof value.purchasedTicketCount !== "undefined" && value.purchasedTicketCount !== null ? value.purchasedTicketCount : "-") + " • " + (typeof value.purchasedTicketNCG !== "undefined" && value.purchasedTicketNCG !== null ? value.purchasedTicketNCG.toFixed(1) : "-") + " ncg</span></div></td>";
+    student += "<td><div class='radio-wrapper'><input id='radio-" + student1 + "' type='radio' name='avatarSelection' data-cp='" + value.cp + "' data-score='" + value.score + "' value='" + value.avataraddress + "'" + (student1 === 1 ? " checked" : "") + "/><label for='radio-" + student1 + "'></label></div></td>";
     student += "<td><div class='button-wrapper tooltip'><button class='button-11' id='button-" + student1 + "' onclick='handleButtonClick(this)' data-itemid='" + value.avataraddress + "' data-cp='" + value.cp + "'>-1%</button>" + (typeof value.messageButton !== "undefined" && value.messageButton !== null && value.messageButton !== "none" ? "<span class='tooltiptext' style='z-index: 9999;margin-bottom: -15px;'>" + decodeURIComponent(value.messageButton) + "</span>" : "") + "</div></td>";
-    student += "<td><div class='radio-wrapper'><input id='attackRadio-" + student1 + "' type='radio' name='avatarSelectionAttack' data-cp='" + value.cp + "' value='" + value.avataraddress + "'" + (student1 === 1 ? " checked" : "") + "/><label for='attackRadio-" + student1 + "'></label></div></td>";
+    student += "<td><div class='radio-wrapper'><input id='attackRadio-" + student1 + "' type='radio' name='avatarSelectionAttack' data-cp='" + value.cp + "' data-score='" + value.score + "' value='" + value.avataraddress + "'" + (student1 === 1 ? " checked" : "") + "/><label for='attackRadio-" + student1 + "'></label></div></td>";
     student += "</tr>";
 
   });
@@ -742,11 +786,13 @@ function creatTableArena(dataTotal) {
       selectedColumns.eq(2).attr("colspan", "2");
       var newRow = $("<tr class='notHide infoYou'></tr>").append(selectedColumns);
       $("#infoTable tr.infoYou").replaceWith(newRow);
-      var enemyAvatarIndex = parseInt($('input[name="avatarSelectionAttack"]:checked').attr("id").split("-")[1]);
-      if (enemyAvatarIndex >= selectedAvatarIndex) {
-        $("#infoTable tr.infoEnemy").addClass("range2")
-      } else {
+      var scoreA = $(this).data("score");
+      var scoreB = $('input[name="avatarSelectionAttack"]:checked').data("score");
+      // Kiểm tra điểm đối thủ có trong range score +200 đến -100 so với điểm của mình
+      if ((scoreA - scoreB <= 100) && (scoreB - scoreA <= 200)) {
         $("#infoTable tr.infoEnemy").addClass("range1")
+      } else {
+        $("#infoTable tr.infoEnemy").addClass("range2")
       }
 
       var selectedRadioValue = $('input[name="avatarSelection"]:checked').val();
@@ -767,24 +813,30 @@ function creatTableArena(dataTotal) {
     });
 
     $('input[name="avatarSelectionAttack"]').change(function() {
-      var selectedAvatarIndex = parseInt($('input[name="avatarSelection"]:checked').attr("id").split("-")[1]);
-      var myAvatarIndex = parseInt($(this).attr("id").split("-")[1]);
+      $("#searchItem").val("");
+      searchItemFun();
+      var selectedAvatarEmenyIndex = parseInt($('input[name="avatarSelectionAttack"]:checked').attr("id").split("-")[1]);
+
+      var phanTramWin = $("#button-" + selectedAvatarEmenyIndex).text();
+      $("#tryAttackArenaLite_button span").text(phanTramWin);
       var selectedRow = $(this).closest("tr");
       var selectedColumns = selectedRow.find("th:lt(3), td:lt(5)").clone();
       // Modify the third column
       selectedColumns.eq(2).attr("colspan", "2");
       var newRow = $("<tr class='notHide infoEnemy'></tr>").append(selectedColumns);
       $("#infoTable tr.infoEnemy").replaceWith(newRow);
-      if (myAvatarIndex >= selectedAvatarIndex) {
-        $("#infoTable tr.infoEnemy").addClass("range2")
-      } else {
+      var scoreA = $('input[name="avatarSelection"]:checked').data("score");
+      var scoreB = $(this).data("score");
+      // Kiểm tra điểm đối thủ có trong range score +200 đến -100 so với điểm của mình
+      if ((scoreA - scoreB <= 100) && (scoreB - scoreA <= 200)) {
         $("#infoTable tr.infoEnemy").addClass("range1")
+      } else {
+        $("#infoTable tr.infoEnemy").addClass("range2")
       }
     });
 
   });
 }
-
 
 function refreshInfoTableData() {
   $.getJSON(url_jsonblod_time_block).done(function(data) {
@@ -801,7 +853,7 @@ function refreshInfoTableData() {
       student += "<td>" + value.avgBlock + " <b>s</b></td>";
       student += "<td>" + value.roundID + "/" + value.totalRound + "</td>";
       student += "<td>" + value.blockEndRound + "</td>";
-      student += "<td>" + value.timeBlock + "</td>";
+      student += "<td class='" + (value.timeBlock < BLOCK_WARNING ? "blink" : "") + "'>" + value.timeBlock + "</td>";
       student += "<td style='white-space: nowrap;'>" + value.h.toString().padStart(2, "0") + ":" + value.m.toString().padStart(2, "0") + ":" + value.s.toString().padStart(2, "0") + "</td>";
       student += "</tr>";
       student1 += 1;
@@ -1073,4 +1125,9 @@ function suggestList_func(myAvatarAddress) {
 
   // Chèn các phần tử vào danh sách
   $("#suggestList").html(suggestOptions);
+}
+
+function funcSelectByName(nameAndTag) {
+  $("#searchItem").val(nameAndTag);
+  searchItemFun();
 }

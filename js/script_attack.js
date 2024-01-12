@@ -34,17 +34,19 @@ async function handleResponseBuoc09cscan(agentAddress, typeUseNode) {
 
 async function tryAttackArenaLite() {
   try {
-	$("#tryAttackArenaLite_button").prop("disabled", true);
+    $("#tryAttackArenaLite_button").prop("disabled", true);
     $("#runGifBarUseNode").attr("src", "../assets/run.gif");
     $("#TXOutput").val("Step 0...")
     $("#taskOutput").text(0)
     var agentAddress = document.getElementById('myAgentAddress').value.trim();
     var password = document.getElementById('myPassword').value;
     var myServer9cmd = document.getElementById('myServer9cmd').value.trim();
+    var usernameAPI = $("#usernameAPI").val().trim();
+    var passwordAPI = $("#passwordAPI").val().trim();
     var avatarAddress = document.querySelector('input[name="avatarSelection"]:checked').value;
     var avatarAddressEnemy = document.querySelector('input[name="avatarSelectionAttack"]:checked').value;
 
-    if (agentAddress === "" || password === "" || myServer9cmd === "") {
+    if (agentAddress === "" || password === "" || myServer9cmd === "" || usernameAPI === "" || passwordAPI === "") {
       throw ("Missing data");
     }
     await handleResponseBuoc09cscan(agentAddress, CHECK_SUCCESS_ARENA_ATTACK);
@@ -75,13 +77,13 @@ async function tryAttackArenaLite() {
 
     let plainValue = data.message;
     console.log(`Done step 0: ${plainValue}`);
-    await tryUseNode(agentAddress, password, plainValue, myServer9cmd);
-	$("#tryAttackArenaLite_button").prop("disabled", false);
+    await tryUseNode(agentAddress, password, plainValue, myServer9cmd, usernameAPI, passwordAPI);
+    $("#tryAttackArenaLite_button").prop("disabled", false);
     $("#runGifBarUseNode").attr("src", "../assets/run.png");
   } catch (error) {
     console.log(error);
     $("#TXOutput").val(error);
-	$("#tryAttackArenaLite_button").prop("disabled", false);
+    $("#tryAttackArenaLite_button").prop("disabled", false);
     $("#runGifBarUseNode").attr("src", "../assets/run.png");
   }
 }
@@ -103,10 +105,7 @@ async function send_request_QUERY(url, body) {
   return await response.json();
 }
 
-async function get_publicKey(myServer9cmd, agentAddress, password) {
-  let usernameAPI = $("#usernameAPI").val().trim();
-  let passwordAPI = $("#passwordAPI").val().trim();
-
+async function get_publicKey(myServer9cmd, agentAddress, password, usernameAPI, passwordAPI) {
   let url = `https://${myServer9cmd}/publicKey`;
 
   let body = {
@@ -131,10 +130,7 @@ async function get_publicKey(myServer9cmd, agentAddress, password) {
   return await response.json();
 }
 
-async function get_signature(myServer9cmd, agentAddress, password, unsignedTransaction) {
-  let usernameAPI = $("#usernameAPI").val().trim();
-  let passwordAPI = $("#passwordAPI").val().trim();
-
+async function get_signature(myServer9cmd, agentAddress, password, unsignedTransaction, usernameAPI, passwordAPI) {
   let url = `https://${myServer9cmd}/signature`;
 
   let body = {
@@ -156,7 +152,7 @@ async function get_signature(myServer9cmd, agentAddress, password, unsignedTrans
   return await response.json();
 }
 
-async function tryUseNode(agentAddress, password, plainValue, myServer9cmd) {
+async function tryUseNode(agentAddress, password, plainValue, myServer9cmd, usernameAPI, passwordAPI) {
   try {
     function handle_response_QUERY_transaction(data, error_message) {
       if (data === null) {
@@ -209,7 +205,7 @@ async function tryUseNode(agentAddress, password, plainValue, myServer9cmd) {
     $("#taskOutput").text(2)
     _temp = "=== Step 2: Get publicKey";
     console.log(_temp);
-    let publicKeyData = await get_publicKey(myServer9cmd, agentAddress, password);
+    let publicKeyData = await get_publicKey(myServer9cmd, agentAddress, password, usernameAPI, passwordAPI);
     let publicKey = typeof publicKeyData.message !== "undefined" && publicKeyData.message !== null ? publicKeyData.message : publicKeyData;
     if (publicKeyData.error !== 0) {
       throw publicKey;
@@ -239,7 +235,7 @@ async function tryUseNode(agentAddress, password, plainValue, myServer9cmd) {
     $("#taskOutput").text(4)
     _temp = "=== Step 4: Get signature";
     console.log(_temp);
-    let signatureData = await get_signature(myServer9cmd, agentAddress, password, unsignedTransaction);
+    let signatureData = await get_signature(myServer9cmd, agentAddress, password, unsignedTransaction, usernameAPI, passwordAPI);
     let signature = typeof signatureData.message !== "undefined" && signatureData.message !== null ? signatureData.message : signatureData;
     if (signatureData.error !== 0) {
       throw signature;
