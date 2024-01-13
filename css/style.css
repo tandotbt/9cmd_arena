@@ -329,6 +329,7 @@ td {
   transform: translateY(0);
   transition: transform 150ms, box-shadow 150ms;
   transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
+  white-space: nowrap;
 }
 
 .button-11:focus {
@@ -551,6 +552,16 @@ input[type=range]:focus::-ms-fill-upper {
 }
 .clickMeCSS {
   cursor: pointer;
+}
+.notChoiceMeCSS {
+  user-select: none;
+}
+.showIconBeuty {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
 }
 .blink {
   animation: blink-animation 1s infinite;
