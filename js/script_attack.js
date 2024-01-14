@@ -88,8 +88,10 @@ async function tryAttackArenaLite() {
   }
 }
 
-function wait(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+function wait() {
+  var TIMEOUT = parseInt($('#setTimeout').val()) * 1000 || 12000;
+  console.log(`Chờ ${TIMEOUT} ms`)
+  return new Promise((resolve) => setTimeout(resolve, TIMEOUT));
 }
 
 async function send_request_QUERY(url, body) {
@@ -196,7 +198,7 @@ async function tryUseNode(agentAddress, password, plainValue, myServer9cmd, user
         }
       }
     `;
-    await wait(TIMEOUT);
+    await wait();
     let response = await send_request_QUERY(URL_NODE_USE, body);
     let nextTxNonce = handle_response_QUERY_transaction(response, "nextTxNonce");
     console.log(`Done nextTxNonce: ${nextTxNonce}`);
@@ -227,7 +229,7 @@ async function tryUseNode(agentAddress, password, plainValue, myServer9cmd, user
         }
       }
     `;
-    await wait(TIMEOUT);
+    await wait();
     response = await send_request_QUERY(URL_NODE_USE, body);
     let unsignedTransaction = handle_response_QUERY_transaction(response, "unsignedTransaction");
     console.log(`Done unsignedTransaction: ${unsignedTransaction}`);
@@ -255,7 +257,7 @@ async function tryUseNode(agentAddress, password, plainValue, myServer9cmd, user
         }
       }
     `;
-    await wait(TIMEOUT);
+    await wait();
     response = await send_request_QUERY(URL_NODE_USE, body);
     let signTransaction = handle_response_QUERY_transaction(response, "signTransaction");
     console.log(`Done signTransaction: ${signTransaction}`);
@@ -271,7 +273,7 @@ async function tryUseNode(agentAddress, password, plainValue, myServer9cmd, user
         )
       }
     `;
-    await wait(TIMEOUT);
+    await wait();
     response = await send_request_QUERY(URL_NODE_USE, body);
     let payload = handle_response_QUERY_stageTransaction(response, "payload");
     console.log(`Done payload: ${URL_9CSCAN_WEB}/tx/${payload}`);

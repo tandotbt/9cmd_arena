@@ -32,6 +32,7 @@ const dataArenaError = [{
   "messageButton": null
 }]
 
+
 function scrollToTop() {
   $("html, body").animate({
       scrollTop: 0,
@@ -524,32 +525,9 @@ function refreshTableData() {
               ...matchingData2
             };
           });
-          // Chỉ lưu 3000 đối tượng đầu tiên
-          const first3000Data = mergedData.slice(0, 3000);
-
-          // Bản lưu dự phòng
-          fetch(url_jsonblod_leadboard_2, {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(first3000Data)
-
-          });
           creatTableArena(mergedData);
         } else {
           console.log('API 2 không trả về một mảng hợp lệ');
-          // Chỉ lưu 3000 đối tượng đầu tiên
-          const first3000Data = apiData1.slice(0, 3000);
-
-          // Bản lưu dự phòng
-          fetch(url_jsonblod_leadboard_2, {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(first3000Data)
-          });
           creatTableArena(apiData1);
         }
       });
@@ -567,7 +545,22 @@ function refreshTableData() {
         } else {
           // Xử lý dữ liệu từ API ban đầu
           console.log("Sử dụng từ 9capi");
-          hop_nhat_data_phu(apiData1);
+          // Chỉ lưu 3000 đối tượng đầu tiên
+          const first3000Data = apiData1.slice(0, 3000);
+
+          // Bản lưu dự phòng
+          fetch(url_jsonblod_leadboard_2, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(first3000Data)
+
+          });
+		  // Chỉ xếp SHOW_BXH_MAX đối tượng đầu tiên
+		  var SHOW_BXH_MAX = parseInt($('#setRankDisplay').val()) || 3000;
+		  var data = apiData1.slice(0, SHOW_BXH_MAX);
+		  hop_nhat_data_phu(data);
         }
       })
       .fail(function(jqXHR, textStatus, error) {
@@ -611,7 +604,22 @@ function refreshTableData() {
           };
         });
       console.log("Sử dụng từ api game");
-      hop_nhat_data_phu(processedData);
+	  // Chỉ lưu 3000 đối tượng đầu tiên
+	  const first3000Data = processedData.slice(0, 3000);
+
+	  // Bản lưu dự phòng
+	  fetch(url_jsonblod_leadboard_2, {
+		method: 'PUT',
+		headers: {
+		  'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(first3000Data)
+
+	  });
+	  // Chỉ xếp SHOW_BXH_MAX đối tượng đầu tiên
+	  var SHOW_BXH_MAX = parseInt($('#setRankDisplay').val()) || 3000;
+	  var data = processedData.slice(0, SHOW_BXH_MAX);
+      hop_nhat_data_phu(data);
     },
     error: function(xhr, status, error) {
       console.log("Lỗi khi lấy dữ liệu từ api của game:", error);
@@ -634,9 +642,11 @@ function refreshTableDataAgain() {
 var initialRows = 10; // Số hàng hiển thị ban đầu
 var rowsToAdd = 50; // Số hàng thêm khi nhấp vào nút "Xem thêm"
 var currentVisibleRows = initialRows; // Số hàng hiện tại đang được hiển thị
+
 function creatTableArena(dataTotal) {
-  // Chỉ xếp 3000 đối tượng đầu tiên
-  var data = dataTotal.slice(0, 3000);
+  // Chỉ xếp SHOW_BXH_MAX đối tượng đầu tiên
+  var SHOW_BXH_MAX = parseInt($('#setRankDisplay').val()) || 3000;
+  var data = dataTotal.slice(0, SHOW_BXH_MAX);
   addDataForSessionStorage("temp", "dataArena", data);
   // data.sort(function(a, b) {
   // return b.score - a.score;

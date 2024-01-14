@@ -14,6 +14,5 @@ const urls_node = [
 ];
 const URL_9CSCAN_WEB = "https://heimdall.9cscan.com"
 const CHECK_SUCCESS_ARENA_ATTACK = "battle_arena15";
-const TIMEOUT = 12000
 const URL_NODE_USE = urls_node[Math.floor(Math.random() * urls_node.length)];
 const BLOCK_WARNING = 150

@@ -90,10 +90,16 @@
               <!-- <a href="https://cors-anywhere.herokuapp.com/corsdemo/" target="_blank"><button class="button-37">https://cors-anywhere.herokuapp.com/corsdemo</button></a> -->
               <!-- </td> -->
               <td colspan="10" style="width: 400px; height: 250px;">
-                <input type="number" id="numberInput" value="1" /><br>
+			    <label for="numberInput">No.:</label>
+				<input type="number" id="numberInput" value="1" min="0"/>
+			    <label for="setTimeout">Wait(s):</label>
+				<input type="number" id="setTimeout" value="12" min="0" />
+			    <label for="setRankDisplay">Leadboard:</label>
+				<input type="number" id="setRankDisplay" value="500" min="0" />
+				<br>
                 <input class="range-style" type="range" id="rangeInput" min="0" max="200" step="50" value="0" />
                 <input class="range-style" type="range" id="rangeInput2" min="0" max="200" step="50" value="0" /><br>
-                <input class="button-37" type="number" id="timeAutoResetTable" value="300" min="60" />
+                <input type="number" id="timeAutoResetTable" value="300" min="60" />
                 <button id="resetButton" onclick="$('#suggestList').empty();refreshTableDataAgain()" class="button-37">Auto reset data <b>HEIMDALL</b> after <span></span>s</button>
                 <input list="suggestList" type="text" id="searchItem" onkeyup="searchItemFun()" placeholder="Search for names..." /><button class="button-37" onclick='$("#searchItem").val("");searchItemFun();'>Clear</button>
                 <datalist id="suggestList"></datalist>
@@ -213,20 +219,6 @@
           } else {
             btn.removeClass("show");
           }
-        });
-
-        $(document).ready(function() {
-          // Cập nhật giá trị trong nút thành "0"
-          $(".button-11").text("-1%");
-
-          // Thêm sự kiện change cho radio buttons
-          $(document).on("change", 'input[name="avatarSelection"]', function() {
-            // Lấy giá trị của radio được chọn
-            var selectedRadioValue = $(this).val();
-
-            // Cập nhật giá trị trong nút thành "0"
-            $(".button-11").text("-1%");
-          });
         });
 
         $(document).ready(function() {
