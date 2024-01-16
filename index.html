@@ -109,8 +109,8 @@
             $("#Odin_time span").eq(2).numberAnimate("set", data.s);
 
           });
-          // Lập lịch chạy lại hàm sau 5 giây
-          setTimeout(Odin_refreshInfoTableData, 5000);
+          // Lập lịch chạy lại hàm sau 10 giây
+          setTimeout(Odin_refreshInfoTableData, 10000);
         }
 
         function Heimdall_refreshInfoTableData() {
@@ -133,11 +133,14 @@
             $("#Heimdall_time span").eq(2).numberAnimate("set", data.s);
 
           });
-          // Lập lịch chạy lại hàm sau 5 giây
-          setTimeout(Heimdall_refreshInfoTableData, 5000);
+          // Lập lịch chạy lại hàm sau 10 giây
+          setTimeout(Heimdall_refreshInfoTableData, 10000);
         }
         Odin_refreshInfoTableData();
-        Heimdall_refreshInfoTableData();
+		setTimeout(function() {
+			// Hành động tiếp theo sau khi đợi 5 giây
+			Heimdall_refreshInfoTableData();
+		}, 5000);
 
       });
 

@@ -778,7 +778,7 @@ function creatTableArena(dataTotal) {
   $(document).ready(function() {
     $('input[name="avatarSelection"]').change(function() {
       var selectedAvatarIndex = parseInt($(this).attr("id").split("-")[1]);
-      $("#infoTable tr.infoEnemy").removeClass("range1 range2");
+      $("#infoTable tr.infoEnemy").removeClass("range1 blink");
       $("#numberInput").val(selectedAvatarIndex);
       $("#searchItem").val("");
       searchItemFun();
@@ -802,7 +802,7 @@ function creatTableArena(dataTotal) {
       if ((scoreA - scoreB <= 100) && (scoreB - scoreA <= 200)) {
         $("#infoTable tr.infoEnemy").addClass("range1")
       } else {
-        $("#infoTable tr.infoEnemy").addClass("range2")
+        $("#infoTable tr.infoEnemy").addClass("blink")
       }
 
       var selectedRadioValue = $('input[name="avatarSelection"]:checked').val();
@@ -841,7 +841,7 @@ function creatTableArena(dataTotal) {
       if ((scoreA - scoreB <= 100) && (scoreB - scoreA <= 200)) {
         $("#infoTable tr.infoEnemy").addClass("range1")
       } else {
-        $("#infoTable tr.infoEnemy").addClass("range2")
+        $("#infoTable tr.infoEnemy").addClass("blink")
       }
     });
 
