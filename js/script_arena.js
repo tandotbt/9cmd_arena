@@ -679,7 +679,7 @@ function creatTableArena(dataTotal) {
     student += "<td>" + "<label class='clickMeCSS' for='attackRadio-" + student1 + "'>#" + value.rankid + "<br><span class='mute-text' style='white-space: nowrap;'>no." + student1 + "</span><br><img class='notChoiceMeCSS' style='width: 1.6vw;' src='../assets/Arena_bg_21.png'/></label></td>";
     student += "<td style='width: 80px;height: 80px;' id='imgCell-" + value.avataraddress + "' data-index='" + student1 + "' data-portraitId='" + (typeof value.portraitId !== "undefined" && value.portraitId !== null ? value.portraitId : 0) + "' data-message='" + (typeof value.messageImg !== "undefined" && value.messageImg !== null ? value.messageImg : "none") + "'><img src='../assets/loading_small.gif'></td>";
     var avatarCode = value.avataraddress.substring(2, 6);
-    student += "<td>" + "<div class='clickMeCSS' " + `onclick='funcSelectByName("${value.avatarname} #${avatarCode}")'` + " style='font-weight: bold;' for='radio-" + student1 + "'>" + value.avatarname + " <span class='mute-text'>#" + avatarCode + "</span></div></td>";
+    student += "<td>" + "<div class='clickMeCSS showIconBeuty' " + `onclick='funcSelectByName("${value.avatarname} #${avatarCode}")'` + " style='font-weight: bold;' for='radio-" + student1 + "'><span class='showIconBeuty'>" + value.avatarname + "</span><span class='mute-text showIconBeuty'>#" + avatarCode + "</span></div></td>";
     // student += "<td>" + "<div for='radio-" + student1 + "'>" + value.rankid + "</div></td>";
     student += "<td>" + "<div style='white-space: nowrap;' for='radio-" + student1 + "'>" + value.cp + "</div></td>";
     student += "<td>" + "<div style='white-space: nowrap;' for='radio-" + student1 + "'>" + value.score + "</div></td>";
