@@ -169,39 +169,69 @@ function handleButtonClick(button) {
   var selectedRadioValue = $('input[name="avatarSelection"]:checked').val();
   var selectedRadioValue2 = $('input[name="avatarSelection"]:checked').data("cp");
 
-  // Tạo đối tượng dữ liệu để gửi lệnh PUT
-  var putData = {
-    avatarAddress: selectedRadioValue,
-    enemyAddress: itemId,
-  };
 
   // Lấy số thứ tự của sinh viên từ ID của button
   var studentId = button.id.split("-")[1];
   var sessionDataArena = getDataFromLocalStorage("sessionDataArena", selectedRadioValue + "/" + selectedRadioValue2);
+  if (document.getElementById('chooseTypeSim').checked) {
+    // Dùng ares sim
+    var putData = {
+      myAvatarAddress: selectedRadioValue,
+      enemyAvatarAddress: itemId,
+      seed: 0
+    };
+    sendPostRequest(url_ares_sim, putData, function(response, status) {
+      var resultButton = $("#button-" + studentId);
+      if (status === "success") {
+        resultButton.text((response.winRate * 100).toFixed(2) + "%");
 
-  // Gửi lệnh POST tới URL xác định
-  sendPostRequest(url_9capi_sim, putData, function(response, status) {
-    var resultButton = $("#button-" + studentId);
-    if (status === "success") {
-      resultButton.text(response.winPercentage + "%");
+        if (sessionDataArena === null) {
+          sessionDataArena = {};
+        }
 
-      if (sessionDataArena === null) {
-        sessionDataArena = {};
+        sessionDataArena[itemId] = (response.winRate * 100).toFixed(2) + "/" + enemyCP;
+      } else {
+        resultButton.text("-1%");
+
+        if (sessionDataArena === null) {
+          sessionDataArena = {};
+        }
+
+        sessionDataArena[itemId] = "-1/0";
       }
 
-      sessionDataArena[itemId] = response.winPercentage + "/" + enemyCP;
-    } else {
-      resultButton.text("-1%");
+      addDataForLocalStorage("sessionDataArena", selectedRadioValue + "/" + selectedRadioValue2, sessionDataArena);
+    });
+  } else {
+    // Dùng 9capi sim
+    var putData = {
+      avatarAddress: selectedRadioValue,
+      enemyAddress: itemId,
+    };
+    sendPostRequest(url_9capi_sim, putData, function(response, status) {
+      var resultButton = $("#button-" + studentId);
+      if (status === "success") {
+        resultButton.text(response.winPercentage + "%");
 
-      if (sessionDataArena === null) {
-        sessionDataArena = {};
+        if (sessionDataArena === null) {
+          sessionDataArena = {};
+        }
+
+        sessionDataArena[itemId] = response.winPercentage + "/" + enemyCP;
+      } else {
+        resultButton.text("-1%");
+
+        if (sessionDataArena === null) {
+          sessionDataArena = {};
+        }
+
+        sessionDataArena[itemId] = "-1/0";
       }
 
-      sessionDataArena[itemId] = "-1/0";
-    }
+      addDataForLocalStorage("sessionDataArena", selectedRadioValue + "/" + selectedRadioValue2, sessionDataArena);
+    });
 
-    addDataForLocalStorage("sessionDataArena", selectedRadioValue + "/" + selectedRadioValue2, sessionDataArena);
-  });
+  }
 }
 
 function sendPostRequest(url, data, callback) {

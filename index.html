@@ -89,9 +89,13 @@
         });
       });
       $(document).ready(function() {
+	  
+		const URL_API_9CMD_LIST = ["https://api-1.9cmd.top", "https://api-2.9cmd.top", "https://api-3.9cmd.top"]
+		const URL_API_9CMD = URL_API_9CMD_LIST[Math.floor(Math.random() * URL_API_9CMD_LIST.length)]
+	  
         function Odin_refreshInfoTableData() {
 
-          $.getJSON("https://jsonblob.com/api/1194552728394522624").done(function(data) {
+          $.getJSON(`${URL_API_9CMD}/arenaTime?network=odin`).done(function(data) {
             $("#Odin_urlImgSeason").attr("src", data.urlImgSeason);
             if (data.infoArena.includes('!')) {
               $("#Odin_type").html('<img style="width: 20px;height: 20px;" src="assets/fire.gif"><b> ' + data.infoArena + '</b>');
@@ -115,7 +119,7 @@
 
         function Heimdall_refreshInfoTableData() {
 
-          $.getJSON("https://jsonblob.com/api/1194552651059945472").done(function(data) {
+          $.getJSON(`${URL_API_9CMD}/arenaTime?network=heimdall`).done(function(data) {
             $("#Heimdall_urlImgSeason").attr("src", data.urlImgSeason);
             if (data.infoArena.includes('!')) {
               $("#Heimdall_type").html('<img style="width: 20px;height: 20px;" src="assets/fire.gif"><b> ' + data.infoArena + '</b>');
