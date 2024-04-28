@@ -50,13 +50,14 @@ async function tryAttackArenaLite() {
       throw ("Missing data");
     }
     await handleResponseBuoc09cscan(agentAddress, CHECK_SUCCESS_ARENA_ATTACK);
-    let url = `${URL_API_9CMD}/attackArena_lite`;
+    let url = `${URL_API_9CMD}/attackArena`;
     let bodyRaw = {
       agentAddress: agentAddress,
       avatarAddress: avatarAddress,
       avatarAddressEnemy: avatarAddressEnemy,
       serverPlanet: SERVER_PLANET_USE,
-      locale: "en"
+      locale: "en",
+      isLimit: true
     };
     let response = await fetch(url, {
       method: "POST",
