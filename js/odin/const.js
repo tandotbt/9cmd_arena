@@ -12,8 +12,7 @@ const url_jsonblod_time_block = `${URL_API_9CMD}/arenaTime?network=${SERVER_PLAN
 const url_jsonblod_message = "https://jsonblob.com/api/1193642586002022400";
 const urls_node = [
   "https://odin-rpc-1.nine-chronicles.com/graphql",
-  "https://odin-rpc-2.nine-chronicles.com/graphql",
-  "https://odin-rpc-3.nine-chronicles.com/graphql"
+  "https://odin-rpc-2.nine-chronicles.com/graphql"
 ];
 const URL_9CSCAN_WEB = "https://9cscan.com"
 const CHECK_SUCCESS_ARENA_ATTACK = "battle_arena15";

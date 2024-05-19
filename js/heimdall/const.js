@@ -12,8 +12,7 @@ const url_jsonblod_time_block = `${URL_API_9CMD}/arenaTime?network=${SERVER_PLAN
 const url_jsonblod_message = "https://jsonblob.com/api/1193628388912128000";
 const urls_node = [
   "https://heimdall-rpc-1.nine-chronicles.com/graphql",
-  "https://heimdall-rpc-2.nine-chronicles.com/graphql",
-  "https://heimdall-rpc-3.nine-chronicles.com/graphql"
+  "https://heimdall-rpc-2.nine-chronicles.com/graphql"
 ];
 const URL_9CSCAN_WEB = "https://heimdall.9cscan.com"
 const CHECK_SUCCESS_ARENA_ATTACK = "battle_arena15";
