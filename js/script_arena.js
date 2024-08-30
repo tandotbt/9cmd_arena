@@ -35,8 +35,8 @@ const dataArenaError = [{
 
 function scrollToTop() {
   $("html, body").animate({
-      scrollTop: 0,
-    },
+    scrollTop: 0,
+  },
     "300"
   );
 }
@@ -137,24 +137,24 @@ function handleButtonClick(button) {
   var radioInputs = document.querySelectorAll("input[type='radio']");
 
   // Vòng lặp qua từng button và tắt khả năng nhấp lại bằng cách thêm thuộc tính "disabled"
-  buttons.forEach(function(button) {
+  buttons.forEach(function (button) {
     button.disabled = true;
     button.classList.add("dark-mode");
   });
 
   // Vòng lặp qua từng input radio và tắt khả năng chọn bằng cách thêm thuộc tính "disabled"
-  radioInputs.forEach(function(radioInput) {
+  radioInputs.forEach(function (radioInput) {
     radioInput.disabled = true;
   });
 
   // Sau 6 giây, cho phép nhấp lại các button và input radio, và xóa thuộc tính "disabled"
-  setTimeout(function() {
-    buttons.forEach(function(button) {
+  setTimeout(function () {
+    buttons.forEach(function (button) {
       button.disabled = false;
       button.classList.remove("dark-mode");
     });
 
-    radioInputs.forEach(function(radioInput) {
+    radioInputs.forEach(function (radioInput) {
       radioInput.disabled = false;
     });
   }, 6000);
@@ -180,7 +180,7 @@ function handleButtonClick(button) {
       enemyAvatarAddress: itemId,
       seed: 0
     };
-    sendPostRequest(url_ares_sim, putData, function(response, status) {
+    sendPostRequest(url_ares_sim, putData, function (response, status) {
       var resultButton = $("#button-" + studentId);
       if (status === "success") {
         resultButton.text((response.winRate * 100).toFixed(2) + "%");
@@ -208,7 +208,7 @@ function handleButtonClick(button) {
       avatarAddress: selectedRadioValue,
       enemyAddress: itemId,
     };
-    sendPostRequest(url_9capi_sim, putData, function(response, status) {
+    sendPostRequest(url_9capi_sim, putData, function (response, status) {
       var resultButton = $("#button-" + studentId);
       if (status === "success") {
         resultButton.text(response.winPercentage + "%");
@@ -240,10 +240,10 @@ function sendPostRequest(url, data, callback) {
     type: "POST",
     data: JSON.stringify(data),
     contentType: "application/json",
-    success: function(response, status) {
+    success: function (response, status) {
       callback(response, status);
     },
-    error: function(xhr, status, error) {
+    error: function (xhr, status, error) {
       console.log("Error:", error);
     },
   });
@@ -266,13 +266,13 @@ function saveImageToCache(imageUrl, cacheKey) {
   xhr.open('GET', imageUrl, true);
   xhr.responseType = 'blob';
 
-  xhr.onload = function() {
+  xhr.onload = function () {
     if (xhr.status === 200) {
       var blob = xhr.response;
 
       // Tạo một FileReader để đọc dữ liệu từ blob thành base64
       var reader = new FileReader();
-      reader.onloadend = function() {
+      reader.onloadend = function () {
         var imageData = reader.result;
 
         addDataForSessionStorage("myCache", cacheKey, imageData);
@@ -288,8 +288,8 @@ function saveImageToCache(imageUrl, cacheKey) {
 
 function replaceColumnWithImage() {
   // Tạo một IntersectionObserver
-  var observer = new IntersectionObserver(function(entries) {
-    entries.forEach(function(entry) {
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
       // Kiểm tra xem ô có trong khung nhìn hay không
       if (entry.isIntersecting) {
         var cell = entry.target;
@@ -300,11 +300,11 @@ function replaceColumnWithImage() {
         var imgDCC = checkAndGetAvatarDCC(avatarAddress);
         var portraitId = cell.getAttribute("data-portraitId");
         var myMessage = cell.getAttribute("data-message");
-        $.getJSON(URL_9CSCAN + "/account?avatar=" + avataraddress).done(function(apiData) {
+        $.getJSON(URL_9CSCAN + "/account?avatar=" + avataraddress).done(function (apiData) {
           var level; // New variable to store the level
           var NCGBalance;
           // Tìm kiếm trong mảng JSON để tìm giá trị phù hợp với avatarAddress
-          var matchingAvatar = apiData.find(function(item) {
+          var matchingAvatar = apiData.find(function (item) {
             return item.avatarAddress.toLowerCase() === avatarAddress;
           });
 
@@ -318,7 +318,7 @@ function replaceColumnWithImage() {
               var armorEquipment = false;
             } else {
               // Tìm trong mảng equipments để tìm giá trị id của "itemSubType": "ARMOR"
-              var armorEquipment = matchingAvatar.avatar.inventory.equipments.find(function(equipment) {
+              var armorEquipment = matchingAvatar.avatar.inventory.equipments.find(function (equipment) {
                 return equipment.itemSubType === "ARMOR";
               });
             }
@@ -406,14 +406,14 @@ function replaceColumnWithImage() {
   var rows = document.querySelectorAll("#myTable tr:not([style*='display: none;'])");
   var cells = [];
 
-  rows.forEach(function(row) {
+  rows.forEach(function (row) {
     var cell = row.querySelector("td:nth-child(2)");
     if (cell) {
       cells.push(cell);
     }
   });
   // Quan sát mỗi ô
-  cells.forEach(function(cell) {
+  cells.forEach(function (cell) {
     observer.observe(cell);
   });
 }
@@ -421,8 +421,8 @@ function replaceColumnWithImage() {
 function replaceColumnWith_PhanTramWin() {
   // Tạo một IntersectionObserver
   // Sử dụng % win đã lưu nếu có
-  var observer = new IntersectionObserver(function(entries) {
-    entries.forEach(function(entry) {
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
       // Kiểm tra xem ô có trong khung nhìn hay không
       if (entry.isIntersecting) {
         var cell = entry.target;
@@ -465,14 +465,14 @@ function replaceColumnWith_PhanTramWin() {
   var rows = document.querySelectorAll("#myTable tr:not([style*='display: none;'])");
   var cells = [];
 
-  rows.forEach(function(row) {
+  rows.forEach(function (row) {
     var cell = row.querySelector("td:nth-child(2)");
     if (cell) {
       cells.push(cell);
     }
   });
   // Quan sát mỗi ô
-  cells.forEach(function(cell) {
+  cells.forEach(function (cell) {
     observer.observe(cell);
   });
 }
@@ -496,7 +496,7 @@ function refreshTableData() {
 
   // Tắt khả dụng của nút resetButton trong 5 giây
   $("#resetButton").prop("disabled", true);
-  setTimeout(function() {
+  setTimeout(function () {
     $("#resetButton").prop("disabled", false);
     $("#resetButton").removeClass("dark-mode");
   }, 5000);
@@ -538,11 +538,11 @@ function refreshTableData() {
   $('#suggestList').empty();
   //Lấy dữ liệu DCC
   $.getJSON("https://api.dccnft.com/v1/9c/avatars/all")
-    .done(function(apiDCCData) {
+    .done(function (apiDCCData) {
       addDataForLocalStorage("sessionDataArena", "dataAvatarDCC", apiDCCData.avatars)
       console.log("Sử dụng ảnh DCC");
     })
-    .fail(function(jqXHR, textStatus, error) {
+    .fail(function (jqXHR, textStatus, error) {
       // Xử lý khi yêu cầu thất bại
       addDataForLocalStorage("sessionDataArena", "dataAvatarDCC", {})
       console.log("Sử dụng ảnh thường");
@@ -572,7 +572,7 @@ function refreshTableData() {
 
   function get_data_arena_from_9capi() {
     $.getJSON(url_9capi_leadboard)
-      .done(function(apiData1Total) {
+      .done(function (apiData1Total) {
         // Chỉ xếp 3000 đối tượng đầu tiên
         const apiData1 = apiData1Total.slice(0, 3000);
         if (Array.isArray(apiData1) && apiData1.length === 0 && apiData1.length < 10) {
@@ -600,7 +600,7 @@ function refreshTableData() {
           hop_nhat_data_phu(data);
         }
       })
-      .fail(function(jqXHR, textStatus, error) {
+      .fail(function (jqXHR, textStatus, error) {
         // Xử lý khi yêu cầu thất bại
         console.log("Lỗi khi lấy dữ liệu từ 9capi:", error);
         creatTableArena(dataArenaError);
@@ -611,13 +611,13 @@ function refreshTableData() {
   };
 
   $.ajax({
-    url: URL_NODE_USE,
+    url: URL_NODE_ARENA_USE,
     type: "POST",
     data: JSON.stringify(post_data_json),
     contentType: "application/json",
-    success: function(response, status) {
+    success: function (response, status) {
 
-      if (response && response.data && response.data.stateQuery) {} else if (response && response.errors && response.errors[0].message) {
+      if (response && response.data && response.data.stateQuery) { } else if (response && response.errors && response.errors[0].message) {
         console.log("Lỗi khi lấy dữ liệu từ api của game:", response.errors[0].message);
         get_data_arena_from_9capi();
       } else {
@@ -627,7 +627,7 @@ function refreshTableData() {
 
       var processedData = response.data.stateQuery.arenaParticipants
         .slice(0, 3000) // Giới hạn số lượng phần tử đầu tiên
-        .map(function(participant) {
+        .map(function (participant) {
           var nameWithHash = participant.nameWithHash;
           var startIndex = nameWithHash.indexOf('<size=80%>'); // Tìm vị trí bắt đầu của từ '<size=80%>'
           var avatarName = nameWithHash.substring(0, startIndex).trim(); // Chỉ giữ lại phần trước của tên và loại bỏ khoảng trắng thừa
@@ -658,7 +658,7 @@ function refreshTableData() {
       var data = processedData.slice(0, SHOW_BXH_MAX);
       hop_nhat_data_phu(data);
     },
-    error: function(xhr, status, error) {
+    error: function (xhr, status, error) {
       console.log("Lỗi khi lấy dữ liệu từ api của game:", error);
       get_data_arena_from_9capi();
     },
@@ -696,7 +696,7 @@ function creatTableArena(dataTotal) {
   // var prevScore = -1;
 
   // ITERATING THROUGH OBJECTS
-  $.each(data, function(index, value) {
+  $.each(data, function (index, value) {
     // if (index > 0 && value.score !== prevScore) {
     // newRankid = index + 1;
     // }
@@ -737,7 +737,7 @@ function creatTableArena(dataTotal) {
   $("#myTable tr:not(.notHide)").slice(initialRows).hide();
 
   // Sự kiện click cho nút "Xem thêm"
-  $(document).on("click", "#showMoreButton", function() {
+  $(document).on("click", "#showMoreButton", function () {
     // Tăng số hàng hiển thị
     currentVisibleRows += rowsToAdd;
 
@@ -751,7 +751,7 @@ function creatTableArena(dataTotal) {
   });
 
   // INPUT NUMBER CHANGE EVENT
-  $("#numberInput").on("input", function() {
+  $("#numberInput").on("input", function () {
     var number = parseInt($(this).val());
 
     // FILTERING ROWS
@@ -768,7 +768,7 @@ function creatTableArena(dataTotal) {
   });
 
   // RANGE INPUT CHANGE EVENT
-  $("#rangeInput").on("input", function() {
+  $("#rangeInput").on("input", function () {
     var range = parseInt($(this).val());
     var number = parseInt($("#numberInput").val());
 
@@ -792,7 +792,7 @@ function creatTableArena(dataTotal) {
   });
 
   // RANGE INPUT 2 CHANGE EVENT
-  $("#rangeInput2").on("input", function() {
+  $("#rangeInput2").on("input", function () {
     var range2 = parseInt($(this).val());
     var number = parseInt($("#numberInput").val());
 
@@ -812,8 +812,8 @@ function creatTableArena(dataTotal) {
     $("#myTable tr:not(.notHide)").slice(number, endRow2).addClass("range2");
   });
 
-  $(document).ready(function() {
-    $('input[name="avatarSelection"]').change(function() {
+  $(document).ready(function () {
+    $('input[name="avatarSelection"]').change(function () {
       var selectedAvatarIndex = parseInt($(this).attr("id").split("-")[1]);
       $("#infoTable tr.infoEnemy").removeClass("range1 blink");
       $("#numberInput").val(selectedAvatarIndex);
@@ -845,7 +845,7 @@ function creatTableArena(dataTotal) {
       var selectedRadioValue = $('input[name="avatarSelection"]:checked').val();
       suggestList_func(selectedRadioValue);
       // Lấy agentAddress
-      $.getJSON(URL_9CSCAN + "/account?avatar=" + selectedRadioValue).done(function(apiData) {
+      $.getJSON(URL_9CSCAN + "/account?avatar=" + selectedRadioValue).done(function (apiData) {
         if (apiData[0].address) {
           $("#myAgentAddress").val(apiData[0].address);
           $("#myAgentAddress").prop("disabled", true);
@@ -853,13 +853,13 @@ function creatTableArena(dataTotal) {
           $("#myAgentAddress").val("");
           $("#myAgentAddress").prop("disabled", false);
         }
-      }).fail(function() {
+      }).fail(function () {
         $("#myAgentAddress").val("");
         $("#myAgentAddress").prop("disabled", false);
       });
     });
 
-    $('input[name="avatarSelectionAttack"]').change(function() {
+    $('input[name="avatarSelectionAttack"]').change(function () {
       $("#searchItem").val("");
       searchItemFun();
       var selectedAvatarEmenyIndex = parseInt($('input[name="avatarSelectionAttack"]:checked').attr("id").split("-")[1]);
@@ -886,7 +886,7 @@ function creatTableArena(dataTotal) {
 }
 
 function refreshInfoTableData() {
-  $.getJSON(url_jsonblod_time_block).done(function(data) {
+  $.getJSON(url_jsonblod_time_block).done(function (data) {
     var dataArray = []; // Khởi tạo một mảng mới
 
     // Chuyển đổi đối tượng JSON thành một mảng
@@ -894,7 +894,7 @@ function refreshInfoTableData() {
     var student = "";
     var student1 = 1;
     // ITERATING THROUGH OBJECTS
-    $.each(dataArray, function(key, value) {
+    $.each(dataArray, function (key, value) {
       student += "<tr style='white-space: nowrap;'>";
       student += "<td style='white-space: nowrap;'>" + value.block + "</td>";
       student += "<td>" + value.avgBlock + " <b>s</b></td>";
@@ -1041,7 +1041,7 @@ function sentMessage() {
   var messageButton = $("#messageButton").val();
 
   // Tạo URL và lấy dữ liệu JSON
-  $.getJSON(url_jsonblod_message, function(data) {
+  $.getJSON(url_jsonblod_message, function (data) {
     // Chuyển đổi selectedRadioValue thành chữ in thường
     selectedRadioValue = selectedRadioValue.toLowerCase();
 
@@ -1071,10 +1071,10 @@ function sentMessage() {
       data: JSON.stringify(data),
       contentType: "application/json; charset=utf-8",
       dataType: "json",
-      success: function() {
+      success: function () {
         console.log("Dữ liệu đã được cập nhật thành công");
       },
-      error: function() {
+      error: function () {
         console.log("Đã xảy ra lỗi khi cập nhật dữ liệu");
       }
     });

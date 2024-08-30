@@ -17,4 +17,5 @@ const urls_node = [
 const URL_9CSCAN_WEB = "https://9cscan.com"
 const CHECK_SUCCESS_ARENA_ATTACK = "battle_arena15";
 const URL_NODE_USE = urls_node[Math.floor(Math.random() * urls_node.length)];
+const URL_NODE_ARENA_USE = "https://odin-arena.9c.gg/graphql";
 const BLOCK_WARNING = 150
