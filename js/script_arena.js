@@ -611,7 +611,7 @@ function refreshTableData() {
   };
 
   $.ajax({
-    url: URL_NODE_ARENA_USE,
+    url: "https://proxy.cors.sh/" + URL_NODE_ARENA_USE,
     type: "POST",
     data: JSON.stringify(post_data_json),
     contentType: "application/json",
