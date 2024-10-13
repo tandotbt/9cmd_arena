@@ -1,214 +1,221 @@
 <html lang="en">
 
-  <head>
-    <meta charset="UTF-8" />
-    <title>9CMD Arena - by tanbt</title>
-    <link rel="shortcut icon" href="assets/favicon.png" />
-    <link rel="stylesheet" type="text/css" href="css/style.css" />
+<head>
+  <meta charset="UTF-8" />
+  <title>9CMD Arena - by tanbt</title>
+  <link rel="shortcut icon" href="assets/favicon.png" />
+  <link rel="stylesheet" type="text/css" href="css/style.css" />
 
-    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-    <script src="https://cdn.counter.dev/script.js" data-id="7dc1b1a6-10c4-4a31-8fb1-817ef271b3f8" data-utcoffset="7"></script>
-    <script src="js/numberAnimate.js"></script>
-    <style>
-      tr.sticky {
-        position: -webkit-sticky;
-        position: sticky;
-        top: 0px;
-        z-index: 999;
-        background-image: url('../assets/cover.png');
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-        background-size: cover;
-      }
+  <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+  <script src="https://cdn.counter.dev/script.js" data-id="7dc1b1a6-10c4-4a31-8fb1-817ef271b3f8"
+    data-utcoffset="7"></script>
+  <script src="js/numberAnimate.js"></script>
+  <style>
+    tr.sticky {
+      position: -webkit-sticky;
+      position: sticky;
+      top: 0px;
+      z-index: 999;
+      background-image: url('../assets/cover.png');
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-size: cover;
+    }
 
-      tr.range1 {
-        background-color: #4caf5087;
-        border: 1px solid black;
-      }
+    tr.range1 {
+      background-color: #4caf5087;
+      border: 1px solid black;
+    }
 
-      tr.row_pick {
-        background-color: #e4f5d4;
-        border: 1px solid black;
-      }
+    tr.row_pick {
+      background-color: #e4f5d4;
+      border: 1px solid black;
+    }
 
 
-      tr.range2 {
-        background-color: #f4433663;
-        border: 1px solid black;
-      }
+    tr.range2 {
+      background-color: #f4433663;
+      border: 1px solid black;
+    }
 
-      td.pickAndEquip {
-        background-color: #ffffff00;
-        background-image: linear-gradient(to right, #ffeb3bb0, #9c27b085);
-        border: 1px solid black;
-      }
+    td.pickAndEquip {
+      background-color: #ffffff00;
+      background-image: linear-gradient(to right, #ffeb3bb0, #9c27b085);
+      border: 1px solid black;
+    }
 
-      td {
-        font-size: 2vh;
-      }
-
-    </style>
-    <script>
-      $(document).ready(function() {
-        $("#Odin_block span").numberAnimate({
-          animationTimes: [500, 1000, 500]
-        });
-        $("#Odin_avg span").numberAnimate({
-          animationTimes: [500, 1000, 500]
-        });
-        $("#Odin_round span").numberAnimate({
-          animationTimes: [500, 1000, 500]
-        });
-        $("#Odin_blockEnd span").numberAnimate({
-          animationTimes: [500, 1000, 500]
-        });
-        $("#Odin_timeBlock span").numberAnimate({
-          animationTimes: [500, 1000, 500]
-        });
-        $("#Odin_time span").numberAnimate({
-          animationTimes: [500, 1000, 500]
-        });
-
-        $("#Heimdall_block span").numberAnimate({
-          animationTimes: [500, 1000, 500]
-        });
-        $("#Heimdall_avg span").numberAnimate({
-          animationTimes: [500, 1000, 500]
-        });
-        $("#Heimdall_round span").numberAnimate({
-          animationTimes: [500, 1000, 500]
-        });
-        $("#Heimdall_blockEnd span").numberAnimate({
-          animationTimes: [500, 1000, 500]
-        });
-        $("#Heimdall_timeBlock span").numberAnimate({
-          animationTimes: [500, 1000, 500]
-        });
-        $("#Heimdall_time span").numberAnimate({
-          animationTimes: [500, 1000, 500]
-        });
+    td {
+      font-size: 2vh;
+    }
+  </style>
+  <script>
+    $(document).ready(function () {
+      $("#Odin_block span").numberAnimate({
+        animationTimes: [500, 1000, 500]
       });
-      $(document).ready(function() {
-	  
-		const URL_API_9CMD_LIST = ["https://api-1.9cmd.top", "https://api-2.9cmd.top", "https://api-3.9cmd.top"]
-		const URL_API_9CMD = URL_API_9CMD_LIST[Math.floor(Math.random() * URL_API_9CMD_LIST.length)]
-	  
-        function Odin_refreshInfoTableData() {
-
-          $.getJSON(`${URL_API_9CMD}/arenaTime?network=odin`).done(function(data) {
-            $("#Odin_urlImgSeason").attr("src", data.urlImgSeason);
-            if (data.infoArena.includes('!')) {
-              $("#Odin_type").html('<img style="width: 20px;height: 20px;" src="assets/fire.gif"><b> ' + data.infoArena + '</b>');
-            } else {
-              $("#Odin_type").html(data.infoArena);
-            }
-            $("#Odin_block span").eq(0).numberAnimate("set", data.block);
-            $("#Odin_avg span").eq(0).numberAnimate("set", data.avgBlock);
-            $("#Odin_round span").eq(0).numberAnimate("set", data.roundID);
-            $("#Odin_round span").eq(1).numberAnimate("set", data.totalRound);
-            $("#Odin_blockEnd span").eq(0).numberAnimate("set", data.blockEndRound);
-            $("#Odin_timeBlock span").eq(0).numberAnimate("set", data.timeBlock);
-            $("#Odin_time span").eq(0).numberAnimate("set", data.h);
-            $("#Odin_time span").eq(1).numberAnimate("set", data.m);
-            $("#Odin_time span").eq(2).numberAnimate("set", data.s);
-
-          });
-          // Lập lịch chạy lại hàm sau 10 giây
-          setTimeout(Odin_refreshInfoTableData, 10000);
-        }
-
-        function Heimdall_refreshInfoTableData() {
-
-          $.getJSON(`${URL_API_9CMD}/arenaTime?network=heimdall`).done(function(data) {
-            $("#Heimdall_urlImgSeason").attr("src", data.urlImgSeason);
-            if (data.infoArena.includes('!')) {
-              $("#Heimdall_type").html('<img style="width: 20px;height: 20px;" src="assets/fire.gif"><b> ' + data.infoArena + '</b>');
-            } else {
-              $("#Heimdall_type").html(data.infoArena);
-            }
-            $("#Heimdall_block span").eq(0).numberAnimate("set", data.block);
-            $("#Heimdall_avg span").eq(0).numberAnimate("set", data.avgBlock);
-            $("#Heimdall_round span").eq(0).numberAnimate("set", data.roundID);
-            $("#Heimdall_round span").eq(1).numberAnimate("set", data.totalRound);
-            $("#Heimdall_blockEnd span").eq(0).numberAnimate("set", data.blockEndRound);
-            $("#Heimdall_timeBlock span").eq(0).numberAnimate("set", data.timeBlock);
-            $("#Heimdall_time span").eq(0).numberAnimate("set", data.h);
-            $("#Heimdall_time span").eq(1).numberAnimate("set", data.m);
-            $("#Heimdall_time span").eq(2).numberAnimate("set", data.s);
-
-          });
-          // Lập lịch chạy lại hàm sau 10 giây
-          setTimeout(Heimdall_refreshInfoTableData, 10000);
-        }
-        Odin_refreshInfoTableData();
-        setTimeout(function() {
-          // Hành động tiếp theo sau khi đợi 5 giây
-          Heimdall_refreshInfoTableData();
-        }, 5000);
-
+      $("#Odin_avg span").numberAnimate({
+        animationTimes: [500, 1000, 500]
+      });
+      $("#Odin_round span").numberAnimate({
+        animationTimes: [500, 1000, 500]
+      });
+      $("#Odin_blockEnd span").numberAnimate({
+        animationTimes: [500, 1000, 500]
+      });
+      $("#Odin_timeBlock span").numberAnimate({
+        animationTimes: [500, 1000, 500]
+      });
+      $("#Odin_time span").numberAnimate({
+        animationTimes: [500, 1000, 500]
       });
 
-    </script>
-  </head>
+      $("#Heimdall_block span").numberAnimate({
+        animationTimes: [500, 1000, 500]
+      });
+      $("#Heimdall_avg span").numberAnimate({
+        animationTimes: [500, 1000, 500]
+      });
+      $("#Heimdall_round span").numberAnimate({
+        animationTimes: [500, 1000, 500]
+      });
+      $("#Heimdall_blockEnd span").numberAnimate({
+        animationTimes: [500, 1000, 500]
+      });
+      $("#Heimdall_timeBlock span").numberAnimate({
+        animationTimes: [500, 1000, 500]
+      });
+      $("#Heimdall_time span").numberAnimate({
+        animationTimes: [500, 1000, 500]
+      });
+    });
+    $(document).ready(function () {
 
-  <body>
+      // const URL_API_9CMD_LIST = ["https://api-1.9cmd.top", "https://api-2.9cmd.top", "https://api-3.9cmd.top"]
+      // const URL_API_9CMD = URL_API_9CMD_LIST[Math.floor(Math.random() * URL_API_9CMD_LIST.length)]
+
+      function Odin_refreshInfoTableData() {
+
+        $.getJSON("https://jsonblob.com/api/1194552728394522624").done(function (data) {
+          $("#Odin_urlImgSeason").attr("src", data.urlImgSeason);
+          if (data.infoArena.includes('!')) {
+            $("#Odin_type").html('<img style="width: 20px;height: 20px;" src="assets/fire.gif"><b> ' + data.infoArena + '</b>');
+          } else {
+            $("#Odin_type").html(data.infoArena);
+          }
+          $("#Odin_block span").eq(0).numberAnimate("set", data.block);
+          $("#Odin_avg span").eq(0).numberAnimate("set", data.avgBlock);
+          $("#Odin_round span").eq(0).numberAnimate("set", data.roundID);
+          $("#Odin_round span").eq(1).numberAnimate("set", data.totalRound);
+          $("#Odin_blockEnd span").eq(0).numberAnimate("set", data.blockEndRound);
+          $("#Odin_timeBlock span").eq(0).numberAnimate("set", data.timeBlock);
+          $("#Odin_time span").eq(0).numberAnimate("set", data.h);
+          $("#Odin_time span").eq(1).numberAnimate("set", data.m);
+          $("#Odin_time span").eq(2).numberAnimate("set", data.s);
+
+        });
+        // Lập lịch chạy lại hàm sau 10 giây
+        setTimeout(Odin_refreshInfoTableData, 10000);
+      }
+
+      function Heimdall_refreshInfoTableData() {
+
+        $.getJSON("https://jsonblob.com/api/1194552651059945472").done(function (data) {
+          $("#Heimdall_urlImgSeason").attr("src", data.urlImgSeason);
+          if (data.infoArena.includes('!')) {
+            $("#Heimdall_type").html('<img style="width: 20px;height: 20px;" src="assets/fire.gif"><b> ' + data.infoArena + '</b>');
+          } else {
+            $("#Heimdall_type").html(data.infoArena);
+          }
+          $("#Heimdall_block span").eq(0).numberAnimate("set", data.block);
+          $("#Heimdall_avg span").eq(0).numberAnimate("set", data.avgBlock);
+          $("#Heimdall_round span").eq(0).numberAnimate("set", data.roundID);
+          $("#Heimdall_round span").eq(1).numberAnimate("set", data.totalRound);
+          $("#Heimdall_blockEnd span").eq(0).numberAnimate("set", data.blockEndRound);
+          $("#Heimdall_timeBlock span").eq(0).numberAnimate("set", data.timeBlock);
+          $("#Heimdall_time span").eq(0).numberAnimate("set", data.h);
+          $("#Heimdall_time span").eq(1).numberAnimate("set", data.m);
+          $("#Heimdall_time span").eq(2).numberAnimate("set", data.s);
+
+        });
+        // Lập lịch chạy lại hàm sau 10 giây
+        setTimeout(Heimdall_refreshInfoTableData, 10000);
+      }
+      Odin_refreshInfoTableData();
+      setTimeout(function () {
+        // Hành động tiếp theo sau khi đợi 5 giây
+        Heimdall_refreshInfoTableData();
+      }, 5000);
+
+    });
+
+  </script>
+</head>
+
+<body>
 
 
 
-    <div style="display: flex;justify-content: center;flex-direction: column;flex-wrap: wrap;align-items: center;width: 100vw;height: 20vh;align-content: center;">
-      <table style="margin-top: 70vh;">
-        <tr style="background-image: url('assets/cover.png'); background-repeat: no-repeat; background-attachment: fixed; background-size: cover;">
-          <th>Server</th>
-          <th>Type</th>
-          <th>Block</th>
-          <th>Avg Block Time</th>
-          <th>Round ID</th>
-          <th>Block end round</th>
-          <th>Time block</th>
-          <th>Time</th>
-        </tr>
-        <tr>
-          <td>Odin</td>
-          <td id="Odin_type">-----</td>
-          <td id="Odin_block"><span>------</span></td>
-          <td id="Odin_avg"><span>---</span> s</td>
-          <td id="Odin_round"><span>--</span>/<span>--</span></td>
-          <td id="Odin_blockEnd"><span>------</span></td>
-          <td id="Odin_timeBlock"><span>-----</span></td>
-          <td id="Odin_time"><span>--</span>h <span>--</span>m <span>--</span>s</td>
-        </tr>
-        <tr>
-          <td>Heimdall</td>
-          <td id="Heimdall_type">-----</td>
-          <td id="Heimdall_block"><span>------</span></td>
-          <td id="Heimdall_avg"><span>---</span> s</td>
-          <td id="Heimdall_round"><span>--</span>/<span>--</span></td>
-          <td id="Heimdall_blockEnd"><span>------</span></td>
-          <td id="Heimdall_timeBlock"><span>-----</span></td>
-          <td id="Heimdall_time"><span>--</span>h <span>--</span>m <span>--</span>s</td>
-        </tr>
-        <tr style="background-image: url('assets/cover.png'); background-repeat: no-repeat; background-attachment: fixed; background-size: cover;">
-          <td colspan=10>
-            Made with <svg viewBox="0 0 1792 1792" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="height: 0.8rem;">
-              <path d="M896 1664q-26 0-44-18l-624-602q-10-8-27.5-26T145 952.5 77 855 23.5 734 0 596q0-220 127-344t351-124q62 0 126.5 21.5t120 58T820 276t76 68q36-36 76-68t95.5-68.5 120-58T1314 128q224 0 351 124t127 344q0 221-229 450l-623 600q-18 18-44 18z" fill="#e25555"></path>
-            </svg> by tanbt
-            <div class="tooltip">
-              <img src="assets/npcArenaIdle.gif"><span class="tooltiptext" style="bottom: 100px;">Don't be afraid of the enemy in front of you. Have faith in yourself!</span>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td colspan=10>
-            <div class="commentbox" style="height: 225px;width: 100%;overflow: overlay;"></div>
-            <script src="https://unpkg.com/commentbox.io/dist/commentBox.min.js"></script>
-            <script>
-              commentBox('5678010745225216-proj')
+  <div
+    style="display: flex;justify-content: center;flex-direction: column;flex-wrap: wrap;align-items: center;width: 100vw;height: 20vh;align-content: center;">
+    <table style="margin-top: 70vh;">
+      <tr
+        style="background-image: url('assets/cover.png'); background-repeat: no-repeat; background-attachment: fixed; background-size: cover;">
+        <th>Server</th>
+        <th>Type</th>
+        <th>Block</th>
+        <th>Avg Block Time</th>
+        <th>Round ID</th>
+        <th>Block end round</th>
+        <th>Time block</th>
+        <th>Time</th>
+      </tr>
+      <tr>
+        <td>Odin</td>
+        <td id="Odin_type">-----</td>
+        <td id="Odin_block"><span>------</span></td>
+        <td id="Odin_avg"><span>---</span> s</td>
+        <td id="Odin_round"><span>--</span>/<span>--</span></td>
+        <td id="Odin_blockEnd"><span>------</span></td>
+        <td id="Odin_timeBlock"><span>-----</span></td>
+        <td id="Odin_time"><span>--</span>h <span>--</span>m <span>--</span>s</td>
+      </tr>
+      <tr>
+        <td>Heimdall</td>
+        <td id="Heimdall_type">-----</td>
+        <td id="Heimdall_block"><span>------</span></td>
+        <td id="Heimdall_avg"><span>---</span> s</td>
+        <td id="Heimdall_round"><span>--</span>/<span>--</span></td>
+        <td id="Heimdall_blockEnd"><span>------</span></td>
+        <td id="Heimdall_timeBlock"><span>-----</span></td>
+        <td id="Heimdall_time"><span>--</span>h <span>--</span>m <span>--</span>s</td>
+      </tr>
+      <tr
+        style="background-image: url('assets/cover.png'); background-repeat: no-repeat; background-attachment: fixed; background-size: cover;">
+        <td colspan=10>
+          Made with <svg viewBox="0 0 1792 1792" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg"
+            style="height: 0.8rem;">
+            <path
+              d="M896 1664q-26 0-44-18l-624-602q-10-8-27.5-26T145 952.5 77 855 23.5 734 0 596q0-220 127-344t351-124q62 0 126.5 21.5t120 58T820 276t76 68q36-36 76-68t95.5-68.5 120-58T1314 128q224 0 351 124t127 344q0 221-229 450l-623 600q-18 18-44 18z"
+              fill="#e25555"></path>
+          </svg> by tanbt
+          <div class="tooltip">
+            <img src="assets/npcArenaIdle.gif"><span class="tooltiptext" style="bottom: 100px;">Don't be afraid of the
+              enemy in front of you. Have faith in yourself!</span>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td colspan=10>
+          <div class="commentbox" style="height: 225px;width: 100%;overflow: overlay;"></div>
+          <script src="https://unpkg.com/commentbox.io/dist/commentBox.min.js"></script>
+          <script>
+            commentBox('5678010745225216-proj')
 
-            </script>
-        </tr>
-      </table>
-    </div>
-    <div style="
+          </script>
+      </tr>
+    </table>
+  </div>
+  <div style="
     display: flex;
     align-items: center;
     justify-content: space-evenly;
@@ -218,16 +225,23 @@
     width: 100vw;
     height: 70vh;
 ">
-      <div class="tooltip">
-        <a href="odin"><button class="button-37">ODIN<span class="tooltiptext" style="width: unset;margin-left: -17vw;"><img id="Odin_urlImgSeason" style="width: 90vw;height: 70vh;" src="assets/loading_small.gif"></span></button></a>
-      </div>
-      <div class="tooltip">
-        <a href="https://counter.dev/dashboard.html?user=tanbt&token=ujb6LnK6MZA%3D"><button class="button-37">Thống kê<span class="tooltiptext" style="width: unset;margin-left: -35vw;background-color: white;"><iframe width="500vw" height="300vh" src="https://counter.dev/dashboard.html?user=tanbt&token=ujb6LnK6MZA%3D"></iframe></span></button></a>
-      </div>
-      <div class="tooltip">
-        <a href="heimdall"><button class="button-37">HEIMDALL<span class="tooltiptext" style="width: unset;margin-left: -74vw;"><img id="Heimdall_urlImgSeason" style="width: 90vw;height: 70vh;" src="assets/loading_small.gif"></span></button></a>
-      </div>
+    <div class="tooltip">
+      <a href="odin"><button class="button-37">ODIN<span class="tooltiptext"
+            style="width: unset;margin-left: -17vw;"><img id="Odin_urlImgSeason" style="width: 90vw;height: 70vh;"
+              src="assets/loading_small.gif"></span></button></a>
     </div>
-  </body>
+    <div class="tooltip">
+      <a href="https://counter.dev/dashboard.html?user=tanbt&token=ujb6LnK6MZA%3D"><button class="button-37">Thống
+          kê<span class="tooltiptext" style="width: unset;margin-left: -35vw;background-color: white;"><iframe
+              width="500vw" height="300vh"
+              src="https://counter.dev/dashboard.html?user=tanbt&token=ujb6LnK6MZA%3D"></iframe></span></button></a>
+    </div>
+    <div class="tooltip">
+      <a href="heimdall"><button class="button-37">HEIMDALL<span class="tooltiptext"
+            style="width: unset;margin-left: -74vw;"><img id="Heimdall_urlImgSeason" style="width: 90vw;height: 70vh;"
+              src="assets/loading_small.gif"></span></button></a>
+    </div>
+  </div>
+</body>
 
 </html>

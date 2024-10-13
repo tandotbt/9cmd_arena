@@ -490,7 +490,7 @@ function refreshTableData_infoEmeny() {
   $("#infoTable tr.infoEnemy").replaceWith(newRow);
 }
 
-function refreshTableData() {
+function refreshTableData(isPreRound = false) {
   // Thêm CSS dark-mode cho nút resetButton
   $("#resetButton").addClass("dark-mode");
 
@@ -507,10 +507,10 @@ function refreshTableData() {
   $("#rangeInput2").val("0");
   $("#searchItem").val("")
   var resetData = `
-<td>-</td>
-<td><img src='../assets/loading_small.gif'></td>
-<td colspan="10">-</td>
-`;
+  <td>-</td>
+  <td><img src='../assets/loading_small.gif'></td>
+  <td colspan="10">-</td>
+  `;
   var newRow = $("<tr class='notHide infoYou'></tr>").html(resetData);
   $("#infoTable tr.infoYou").replaceWith(newRow);
   refreshTableData_infoEmeny();
@@ -559,7 +559,16 @@ function refreshTableData() {
             const matchingData2 = apiData2.find(data2 => data2.avataraddress.toLowerCase() === data1.avataraddress.toLowerCase());
             return {
               ...data1,
-              ...matchingData2
+              win: matchingData2.win,
+              lose: matchingData2.lose,
+              currenttickets: matchingData2.currenttickets,
+              purchasedTicketCount: matchingData2.purchasedTicketCount,
+              purchasedTicketNCG: matchingData2.purchasedTicketNCG,
+              nextPTNCG: matchingData2.nextPTNCG,
+              stake: matchingData2.stake,
+              purchasedTicketCountOld: matchingData2.purchasedTicketCountOld,
+              cp: matchingData2.cp,
+              portraitId: matchingData2.portraitId
             };
           });
           creatTableArena(mergedData);
@@ -606,75 +615,134 @@ function refreshTableData() {
         creatTableArena(dataArenaError);
       });
   }
-  var post_data_json = {
-    query: 'query{stateQuery{arenaParticipants(avatarAddress:"0x0000000000000000000000000000000000000000",filterBounds: false){avatarAddr,score,rank,winScore,loseScore,cp,portraitId,level,nameWithHash}}}',
-  };
+  function get_data_arena_pre_round(url) {
+    $.getJSON(url)
+      .done(function (apiData1Total) {
+        // Chỉ xếp 3000 đối tượng đầu tiên
+        const apiData1 = apiData1Total.slice(0, 3000);
+        if (Array.isArray(apiData1) && apiData1.length === 0 && apiData1.length < 10) {
+          // Dữ liệu trả về là một mảng rỗng
+          console.log("Lỗi khi lấy dữ liệu mùa trước:", apiData1Total);
+          creatTableArena(dataArenaError);
+        } else {
+          // Xử lý dữ liệu từ API ban đầu
+          console.log("Sử dụng data mùa trước");
+          // Chỉ lưu 3000 đối tượng đầu tiên
+          const first3000Data = apiData1.slice(0, 3000);
 
-  $.ajax({
-    url: "https://cors-proxy.fringe.zone/" + URL_NODE_ARENA_USE,
-    type: "POST",
-    data: JSON.stringify(post_data_json),
-    contentType: "application/json",
-    success: function (response, status) {
-
-      if (response && response.data && response.data.stateQuery) { } else if (response && response.errors && response.errors[0].message) {
-        console.log("Lỗi khi lấy dữ liệu từ api của game:", response.errors[0].message);
-        get_data_arena_from_9capi();
-      } else {
-        console.log("Lỗi khi lấy dữ liệu từ api của game: Không xác định");
-        get_data_arena_from_9capi();
-      }
-
-      var processedData = response.data.stateQuery.arenaParticipants
-        .slice(0, 3000) // Giới hạn số lượng phần tử đầu tiên
-        .map(function (participant) {
-          var nameWithHash = participant.nameWithHash;
-          var startIndex = nameWithHash.indexOf('<size=80%>'); // Tìm vị trí bắt đầu của từ '<size=80%>'
-          var avatarName = nameWithHash.substring(0, startIndex).trim(); // Chỉ giữ lại phần trước của tên và loại bỏ khoảng trắng thừa
-          return {
-            rankid: participant.rank,
-            score: participant.score,
-            avatarname: avatarName,
-            avataraddress: participant.avatarAddr,
-            cp: participant.cp,
-            portraitId: participant.portraitId
-          };
-        });
-      console.log("Sử dụng từ api game");
-      // Chỉ lưu 3000 đối tượng đầu tiên
-      const first3000Data = processedData.slice(0, 3000);
-
-      // Bản lưu dự phòng
-      fetch(url_jsonblod_leadboard_2, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(first3000Data)
-
+          // Chỉ xếp SHOW_BXH_MAX đối tượng đầu tiên
+          var SHOW_BXH_MAX = parseInt($('#setRankDisplay').val()) || 3000;
+          var data = apiData1.slice(0, SHOW_BXH_MAX);
+          creatTableArena(data)
+        }
+      })
+      .fail(function (jqXHR, textStatus, error) {
+        // Xử lý khi yêu cầu thất bại
+        console.log("Lỗi khi lấy dữ liệu từ mùa trước:", error);
+        creatTableArena(dataArenaError);
       });
-      // Chỉ xếp SHOW_BXH_MAX đối tượng đầu tiên
-      var SHOW_BXH_MAX = parseInt($('#setRankDisplay').val()) || 3000;
-      var data = processedData.slice(0, SHOW_BXH_MAX);
-      hop_nhat_data_phu(data);
-    },
-    error: function (xhr, status, error) {
-      console.log("Lỗi khi lấy dữ liệu từ api của game:", error);
-      get_data_arena_from_9capi();
-    },
-  });
+  }
+  var post_data_json = {
+    query: 'query{arena{rank_100:leaderboard(ranking:1,length:100){rank,address,simpleAvatar{agentAddress,name},arenaScore{score}}rank_200:leaderboard(ranking:101,length:100){rank,address,simpleAvatar{agentAddress,name},arenaScore{score}}rank_300:leaderboard(ranking:201,length:100){rank,address,simpleAvatar{agentAddress,name},arenaScore{score}}rank_400:leaderboard(ranking:301,length:100){rank,address,simpleAvatar{agentAddress,name},arenaScore{score}}rank_500:leaderboard(ranking:401,length:100){rank,address,simpleAvatar{agentAddress,name},arenaScore{score}}rank_600:leaderboard(ranking:501,length:100){rank,address,simpleAvatar{agentAddress,name},arenaScore{score}}rank_700:leaderboard(ranking:601,length:100){rank,address,simpleAvatar{agentAddress,name},arenaScore{score}}rank_800:leaderboard(ranking:701,length:100){rank,address,simpleAvatar{agentAddress,name},arenaScore{score}}rank_900:leaderboard(ranking:801,length:100){rank,address,simpleAvatar{agentAddress,name},arenaScore{score}}rank_1000:leaderboard(ranking:901,length:100){rank,address,simpleAvatar{agentAddress,name},arenaScore{score}}rank_1100:leaderboard(ranking:1001,length:100){rank,address,simpleAvatar{agentAddress,name},arenaScore{score}}rank_1200:leaderboard(ranking:1101,length:100){rank,address,simpleAvatar{agentAddress,name},arenaScore{score}}rank_1300:leaderboard(ranking:1201,length:100){rank,address,simpleAvatar{agentAddress,name},arenaScore{score}}rank_1400:leaderboard(ranking:1301,length:100){rank,address,simpleAvatar{agentAddress,name},arenaScore{score}}rank_1500:leaderboard(ranking:1401,length:100){rank,address,simpleAvatar{agentAddress,name},arenaScore{score}}rank_1600:leaderboard(ranking:1501,length:100){rank,address,simpleAvatar{agentAddress,name},arenaScore{score}}rank_1700:leaderboard(ranking:1601,length:100){rank,address,simpleAvatar{agentAddress,name},arenaScore{score}}rank_1800:leaderboard(ranking:1701,length:100){rank,address,simpleAvatar{agentAddress,name},arenaScore{score}}rank_1900:leaderboard(ranking:1801,length:100){rank,address,simpleAvatar{agentAddress,name},arenaScore{score}}rank_2000:leaderboard(ranking:1901,length:100){rank,address,simpleAvatar{agentAddress,name},arenaScore{score}}rank_2100:leaderboard(ranking:2001,length:100){rank,address,simpleAvatar{agentAddress,name},arenaScore{score}}rank_2200:leaderboard(ranking:2101,length:100){rank,address,simpleAvatar{agentAddress,name},arenaScore{score}}rank_2300:leaderboard(ranking:2201,length:100){rank,address,simpleAvatar{agentAddress,name},arenaScore{score}}rank_2400:leaderboard(ranking:2301,length:100){rank,address,simpleAvatar{agentAddress,name},arenaScore{score}}rank_2500:leaderboard(ranking:2401,length:100){rank,address,simpleAvatar{agentAddress,name},arenaScore{score}}rank_2600:leaderboard(ranking:2501,length:100){rank,address,simpleAvatar{agentAddress,name},arenaScore{score}}rank_2700:leaderboard(ranking:2601,length:100){rank,address,simpleAvatar{agentAddress,name},arenaScore{score}}rank_2800:leaderboard(ranking:2701,length:100){rank,address,simpleAvatar{agentAddress,name},arenaScore{score}}rank_2900:leaderboard(ranking:2801,length:100){rank,address,simpleAvatar{agentAddress,name},arenaScore{score}}rank_3000:leaderboard(ranking:2901,length:100){rank,address,simpleAvatar{agentAddress,name},arenaScore{score}}}}',
+  };
+  if (isPreRound) {
+    $.ajax({
+      url: url_jsonblod_all_pre_round,
+      type: "GET",
+      dataType: "json",
+      success: function (data) {
+        const linkObj = data.link;
+        const keyList = Object.keys(linkObj).filter(key => {
+          const value = linkObj[key];
+          return value.split("_").length === 4;
+        });
 
+        const maxKey = keyList.reduce((prev, current) => {
+          const prevNums = prev.split("_").map(str => parseInt(str));
+          const currentNums = current.split("_").map(str => parseInt(str));
+          if (prevNums[0] < currentNums[0]) return current;
+          if (prevNums[0] === currentNums[0] && prevNums[1] < currentNums[1]) return current;
+          if (prevNums[0] === currentNums[0] && prevNums[1] === currentNums[1] && prevNums[2] < currentNums[2]) return current;
+          return prev;
+        });
+        const url = `https://jsonblob.com/api/${linkObj[maxKey].split("_")[0]}`;
+        console.log(`Lấy từ mùa cũ: ${maxKey} - ${url} - ${linkObj[maxKey]}`);
+        get_data_arena_pre_round(url);
+      },
+      error: function (xhr, status, error) {
+        console.log("Lỗi khi lấy dữ liệu từ mùa cũ: ", error);
+        creatTableArena(dataArenaError)
+      },
+    });
+  } else {
+    $.ajax({
+      url: URL_MIMIR_GRAPHQL,
+      type: "POST",
+      data: JSON.stringify(post_data_json),
+      contentType: "application/json",
+      success: function (response, status) {
+        if (response && response.data && response.data.arena) { } else if (response && response.errors && response.errors[0].message) {
+          console.log("Lỗi khi lấy dữ liệu từ api của game:", response.errors[0].message);
+          get_data_arena_from_9capi();
+        } else {
+          console.log("Lỗi khi lấy dữ liệu từ api của game: Không xác định");
+          get_data_arena_from_9capi();
+        }
+        let arenaList = [];
+        for (let key in response.data.arena) {
+          arenaList = arenaList.concat(response.data.arena[key]);
+        }
+        var processedData = arenaList
+          .slice(0, 3000) // Giới hạn số lượng phần tử đầu tiên
+          .map(function (participant) {
+            // var nameWithHash = participant.nameWithHash;
+            // var startIndex = nameWithHash.indexOf('<size=80%>'); // Tìm vị trí bắt đầu của từ '<size=80%>'
+            // var avatarName = nameWithHash.substring(0, startIndex).trim(); // Chỉ giữ lại phần trước của tên và loại bỏ khoảng trắng thừa          
+            return {
+              rankid: participant.rank,
+              score: participant.arenaScore.score,
+              avatarname: participant.simpleAvatar.name,
+              avataraddress: participant.address,
+              // cp: 1,
+              // portraitId: 10200000
+            };
+          });
+        console.log("Sử dụng từ api game");
+        // Chỉ lưu 3000 đối tượng đầu tiên
+        const first3000Data = processedData.slice(0, 3000);
+
+        // Bản lưu dự phòng
+        fetch(url_jsonblod_leadboard_2, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(first3000Data)
+
+        });
+        // Chỉ xếp SHOW_BXH_MAX đối tượng đầu tiên
+        var SHOW_BXH_MAX = parseInt($('#setRankDisplay').val()) || 3000;
+        var data = processedData.slice(0, SHOW_BXH_MAX);
+        hop_nhat_data_phu(data);
+      },
+      error: function (xhr, status, error) {
+        console.log("Lỗi khi lấy dữ liệu từ api của game:", error);
+        if (isPreRound) creatTableArena(dataArenaError)
+        else get_data_arena_from_9capi();
+      },
+    });
+  }
   timeAutoResetTable = $("#timeAutoResetTable").val();
   $("#resetButton span").text(timeAutoResetTable);
   timerRefreshTableData = setTimeout(refreshTableData, timeAutoResetTable * 1000);
 }
 
-function refreshTableDataAgain() {
+function refreshTableDataAgain(isPreRound) {
   // Hủy định thời gian chờ hiện tại (nếu có)
   clearTimeout(timerRefreshTableData);
 
   // Gọi lại hàm fetchDataAvatar()
-  refreshTableData();
+  refreshTableData(isPreRound);
 }
 var initialRows = 10; // Số hàng hiển thị ban đầu
 var rowsToAdd = 50; // Số hàng thêm khi nhấp vào nút "Xem thêm"
