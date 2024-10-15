@@ -173,65 +173,34 @@ function handleButtonClick(button) {
   // Lấy số thứ tự của sinh viên từ ID của button
   var studentId = button.id.split("-")[1];
   var sessionDataArena = getDataFromLocalStorage("sessionDataArena", selectedRadioValue + "/" + selectedRadioValue2);
-  if (document.getElementById('chooseTypeSim').checked) {
-    // Dùng ares sim
-    var putData = {
-      myAvatarAddress: selectedRadioValue,
-      enemyAvatarAddress: itemId,
-      seed: 0
-    };
-    sendPostRequest(url_ares_sim, putData, function (response, status) {
-      var resultButton = $("#button-" + studentId);
-      if (status === "success") {
-        resultButton.text((response.winRate * 100).toFixed(2) + "%");
 
-        if (sessionDataArena === null) {
-          sessionDataArena = {};
-        }
+  // Dùng 9capi sim
+  var putData = {
+    avatarAddress: selectedRadioValue,
+    enemyAddress: itemId,
+  };
+  sendPostRequest(url_9capi_sim, putData, function (response, status) {
+    var resultButton = $("#button-" + studentId);
+    if (status === "success") {
+      resultButton.text(response.winPercentage + "%");
 
-        sessionDataArena[itemId] = (response.winRate * 100).toFixed(2) + "/" + enemyCP;
-      } else {
-        resultButton.text("-1%");
-
-        if (sessionDataArena === null) {
-          sessionDataArena = {};
-        }
-
-        sessionDataArena[itemId] = "-1/0";
+      if (sessionDataArena === null) {
+        sessionDataArena = {};
       }
 
-      addDataForLocalStorage("sessionDataArena", selectedRadioValue + "/" + selectedRadioValue2, sessionDataArena);
-    });
-  } else {
-    // Dùng 9capi sim
-    var putData = {
-      avatarAddress: selectedRadioValue,
-      enemyAddress: itemId,
-    };
-    sendPostRequest(url_9capi_sim, putData, function (response, status) {
-      var resultButton = $("#button-" + studentId);
-      if (status === "success") {
-        resultButton.text(response.winPercentage + "%");
+      sessionDataArena[itemId] = response.winPercentage + "/" + enemyCP;
+    } else {
+      resultButton.text("-1%");
 
-        if (sessionDataArena === null) {
-          sessionDataArena = {};
-        }
-
-        sessionDataArena[itemId] = response.winPercentage + "/" + enemyCP;
-      } else {
-        resultButton.text("-1%");
-
-        if (sessionDataArena === null) {
-          sessionDataArena = {};
-        }
-
-        sessionDataArena[itemId] = "-1/0";
+      if (sessionDataArena === null) {
+        sessionDataArena = {};
       }
 
-      addDataForLocalStorage("sessionDataArena", selectedRadioValue + "/" + selectedRadioValue2, sessionDataArena);
-    });
+      sessionDataArena[itemId] = "-1/0";
+    }
 
-  }
+    addDataForLocalStorage("sessionDataArena", selectedRadioValue + "/" + selectedRadioValue2, sessionDataArena);
+  });
 }
 
 function sendPostRequest(url, data, callback) {
@@ -559,7 +528,7 @@ function refreshTableData(isPreRound = false) {
             const matchingData2 = apiData2.find(data2 => data2.avataraddress.toLowerCase() === data1.avataraddress.toLowerCase());
             return {
               ...data1,
-              win: matchingData2.win,
+              win: matchingData2.win || 0,
               lose: matchingData2.lose,
               currenttickets: matchingData2.currenttickets,
               purchasedTicketCount: matchingData2.purchasedTicketCount,
