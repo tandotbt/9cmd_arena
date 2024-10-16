@@ -401,12 +401,13 @@ function replaceColumnWith_PhanTramWin() {
         var selectedRadioValue2 = $('input[name="avatarSelection"]:checked').data("cp");
         var sessionDataArena = getDataFromLocalStorage("sessionDataArena", selectedRadioValue + "/" + selectedRadioValue2);
         var button = $("#button-" + avatarIndex);
+        button.text("-1%")
         var itemId = button.data("itemid");
         var selectedAvatarEmenyIndex = parseInt($('input[name="avatarSelectionAttack"]:checked').attr("id").split("-")[1]);
-        if (selectedAvatarEmenyIndex == avatarIndex) {
-          var phanTramWin = $("#button-" + avatarIndex).text();
-          $("#tryAttackArenaLite_button span").text(phanTramWin);
-        }
+        // if (selectedAvatarEmenyIndex == avatarIndex) {
+        //   var phanTramWin = $("#button-" + avatarIndex).text();
+        //   $("#tryAttackArenaLite_button span").text(phanTramWin);
+        // }
         if (sessionDataArena && Object.keys(sessionDataArena).length !== 0) {
 
           var studentId = avatarIndex;
@@ -427,6 +428,10 @@ function replaceColumnWith_PhanTramWin() {
         //observer.unobserve(cell);
       }
     });
+  }, {
+    root: null,
+    rootMargin: "0px",
+    threshold: 0.25
   });
 
   // Lấy tất cả các ô trong cột 2
@@ -644,11 +649,13 @@ function refreshTableData(isPreRound = false) {
       },
     });
   } else {
+    var TIMEOUT = parseInt($('#setTimeout').val()) * 1000 || 30000
     $.ajax({
       url: URL_MIMIR_GRAPHQL,
       type: "POST",
       data: JSON.stringify(post_data_json),
       contentType: "application/json",
+      timeout: TIMEOUT,
       success: function (response, status) {
         if (response && response.data && response.data.arena) { } else if (response && response.errors && response.errors[0].message) {
           console.log("Lỗi khi lấy dữ liệu từ api của game:", response.errors[0].message);
@@ -881,19 +888,39 @@ function creatTableArena(dataTotal) {
 
       var selectedRadioValue = $('input[name="avatarSelection"]:checked').val();
       suggestList_func(selectedRadioValue);
-      // Lấy agentAddress
-      $.getJSON(URL_9CSCAN + "/account?avatar=" + selectedRadioValue).done(function (apiData) {
-        if (apiData[0].address) {
-          $("#myAgentAddress").val(apiData[0].address);
-          $("#myAgentAddress").prop("disabled", true);
-        } else {
-          $("#myAgentAddress").val("");
-          $("#myAgentAddress").prop("disabled", false);
-        }
-      }).fail(function () {
-        $("#myAgentAddress").val("");
-        $("#myAgentAddress").prop("disabled", false);
-      });
+      // Không cần nữa
+      // // Lấy agentAddress
+      // $.getJSON(URL_9CSCAN + "/account?avatar=" + selectedRadioValue).done(function (apiData) {
+      //   if (apiData[0].address) {
+      //     $("#myAgentAddress").val(apiData[0].address);
+      //     $("#myAgentAddress").prop("disabled", true);
+      //   } else {
+      //     $("#myAgentAddress").val("");
+      //     $("#myAgentAddress").prop("disabled", false);
+      //   }
+      // }).fail(function () {
+      //   $("#myAgentAddress").val("");
+      //   $("#myAgentAddress").prop("disabled", false);
+      // });
+
+      var selectedRadioValue2 = $('input[name="avatarSelection"]:checked').data("cp");
+      var sessionDataArena = getDataFromLocalStorage("sessionDataArena", selectedRadioValue + "/" + selectedRadioValue2);
+      for (var i = 1; i <= 10; i++) {
+        if (sessionDataArena && Object.keys(sessionDataArena).length !== 0) {
+          var studentId = avatarIndex;
+          for (var key in sessionDataArena) {
+
+            var enemyCP = $("#button-" + i).data("cp");
+            if (key.toLowerCase() === $("#button-" + i).data("itemid").toLowerCase()) {
+              var [winRateOld, enemyCPOld] = sessionDataArena[key].split("/");
+              if (parseInt(enemyCPOld) === parseInt(enemyCP)) {
+                $("#button-" + i).text(winRateOld + "%");
+              }
+            }
+          }
+        } else $("#button-" + i).text("-1%");
+      }
+
     });
 
     $('input[name="avatarSelectionAttack"]').change(function () {
