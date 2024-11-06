@@ -530,19 +530,19 @@ function refreshTableData(isPreRound = false) {
         if (Array.isArray(apiData2) && apiData2.length > 0) {
           // Hợp nhất dữ liệu từ hai API
           const mergedData = apiData1.map(data1 => {
-            const matchingData2 = apiData2.find(data2 => data2.avataraddress.toLowerCase() === data1.avataraddress.toLowerCase());
+            const matchingData2 = apiData2.find(data2 => data2?.avataraddress?.toLowerCase() === data1.avataraddress.toLowerCase());
             return {
               ...data1,
-              win: matchingData2.win || 0,
-              lose: matchingData2.lose,
-              currenttickets: matchingData2.currenttickets,
-              purchasedTicketCount: matchingData2.purchasedTicketCount,
-              purchasedTicketNCG: matchingData2.purchasedTicketNCG,
-              nextPTNCG: matchingData2.nextPTNCG,
-              stake: matchingData2.stake,
-              purchasedTicketCountOld: matchingData2.purchasedTicketCountOld,
-              cp: matchingData2.cp,
-              portraitId: matchingData2.portraitId
+              win: matchingData2?.win || 0,
+              lose: matchingData2?.lose || 0,
+              currenttickets: matchingData2?.currenttickets || 0,
+              purchasedTicketCount: matchingData2?.purchasedTicketCount || 0,
+              purchasedTicketNCG: matchingData2?.purchasedTicketNCG || 0,
+              nextPTNCG: matchingData2?.nextPTNCG || 0,
+              stake: matchingData2?.stake || 0,
+              purchasedTicketCountOld: matchingData2?.purchasedTicketCountOld || 0,
+              cp: matchingData2?.cp || 0,
+              portraitId: matchingData2?.portraitId || ""
             };
           });
           creatTableArena(mergedData);
