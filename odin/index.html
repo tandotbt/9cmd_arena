@@ -98,7 +98,14 @@
           không tìm thấy tên nhân vật trong bxh, hãy mở rộng leaderboard hơn tối đa là 3000, mặc định đang để 500</span>
       </div>
     </div>
-
+    <div id="notification" style="display: none;"></div>
+    <script>
+      $.getJSON(url_jsonblod_noti).done(function ({ isShow, color, notification }) {
+        if (isShow) {
+          $("#notification").css({ backgroundColor: color, display: '' }).html(`<marquee behavior="scroll" direction="left">${notification.odin}</marquee>`);
+        }
+      });
+    </script>
     <div
       style="overflow-wrap: anywhere;display: flex;flex-direction: row;align-content: flex-start;flex-wrap: wrap;justify-content: space-around;align-items: flex-start;">
       <div

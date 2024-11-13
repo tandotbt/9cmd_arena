@@ -158,6 +158,19 @@
   <div
     style="display: flex;justify-content: center;flex-direction: column;flex-wrap: wrap;align-items: center;width: 100vw;height: 20vh;align-content: center;">
     <table style="margin-top: 70vh;">
+      <tr id="notification" style="display:none">
+        <td colspan=10>
+          <script>
+            $(() => {
+              $.getJSON("https://jsonblob.com/api/1306284786812051456").done(({ isShow, color, notification: { main } }) => {
+                if (isShow) {
+                  $("#notification").css({ backgroundColor: color, display: '' }).find('td').html(`<marquee behavior="scroll" direction="left">${main}</marquee>`);
+                }
+              });
+            });
+          </script>
+        </td>
+      </tr>
       <tr
         style="background-image: url('assets/cover.png'); background-repeat: no-repeat; background-attachment: fixed; background-size: cover;">
         <th>Server</th>

@@ -11,6 +11,7 @@ const url_jsonblod_time_block = "https://jsonblob.com/api/1194552651059945472";
 const url_jsonblod_all_pre_round = "https://jsonblob.com/api/1210620266811351040";
 // const url_jsonblod_time_block = `${URL_API_9CMD}/arenaTime?network=${SERVER_PLANET_USE}`;
 const url_jsonblod_message = "https://jsonblob.com/api/1193628388912128000";
+const url_jsonblod_noti = "https://jsonblob.com/api/1306284786812051456";
 const urls_node = [
   "https://heimdall-rpc-1.nine-chronicles.com/graphql",
   "https://heimdall-rpc-2.nine-chronicles.com/graphql"

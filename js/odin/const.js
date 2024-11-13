@@ -11,6 +11,7 @@ const url_jsonblod_time_block = "https://jsonblob.com/api/1194552728394522624";
 const url_jsonblod_all_pre_round = "https://jsonblob.com/api/1210625938282110976";
 // const url_jsonblod_time_block = `${URL_API_9CMD}/arenaTime?network=${SERVER_PLANET_USE}`;
 const url_jsonblod_message = "https://jsonblob.com/api/1193642586002022400";
+const url_jsonblod_noti = "https://jsonblob.com/api/1306284786812051456";
 const urls_node = [
   "https://odin-rpc-1.nine-chronicles.com/graphql",
   "https://odin-rpc-2.nine-chronicles.com/graphql"
