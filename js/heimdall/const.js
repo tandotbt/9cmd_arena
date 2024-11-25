@@ -1,4 +1,4 @@
-const URL_API_9CMD_LIST = ["https://api-1.9cmd.top", "https://api-2.9cmd.top", "https://api-3.9cmd.top"]
+const URL_API_9CMD_LIST = []
 const URL_API_9CMD = URL_API_9CMD_LIST[Math.floor(Math.random() * URL_API_9CMD_LIST.length)]
 const SERVER_PLANET_USE = "heimdall"
 const url_9capi_sim = "https://api.9capi.com/arenaSimHeimdall"
@@ -8,7 +8,7 @@ const url_9capi_leadboard = "https://api.9capi.com/arenaLeaderboardHeimdall";
 const url_jsonblod_data_arena_2 = "https://jsonblob.com/api/1194537739986264064";
 const url_jsonblod_leadboard_2 = "https://jsonblob.com/api/1194537894173073408";
 const url_jsonblod_time_block = "https://jsonblob.com/api/1194552651059945472";
-const url_jsonblod_all_pre_round = "https://jsonblob.com/api/1210620266811351040";
+const url_jsonblod_all_pre_round = "https://jsonblob.com/api/1310293837868097536";
 // const url_jsonblod_time_block = `${URL_API_9CMD}/arenaTime?network=${SERVER_PLANET_USE}`;
 const url_jsonblod_message = "https://jsonblob.com/api/1193628388912128000";
 const url_jsonblod_noti = "https://jsonblob.com/api/1306284786812051456";
