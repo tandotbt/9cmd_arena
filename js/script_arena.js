@@ -542,7 +542,8 @@ function refreshTableData(isPreRound = false) {
               stake: matchingData2?.stake || 0,
               purchasedTicketCountOld: matchingData2?.purchasedTicketCountOld || 0,
               cp: matchingData2?.cp || 0,
-              portraitId: matchingData2?.portraitId || ""
+              portraitId: matchingData2?.portraitId || 10200000,
+              avatarname: matchingData2?.avatarname || "",
             };
           });
           creatTableArena(mergedData);
@@ -617,7 +618,7 @@ function refreshTableData(isPreRound = false) {
       });
   }
   var post_data_json = {
-    query: 'query{arena{rank_100:leaderboard(ranking:1,length:100){rank,address,simpleAvatar{agentAddress,name,address},arenaScore{score}}rank_200:leaderboard(ranking:101,length:100){rank,address,simpleAvatar{agentAddress,name,address},arenaScore{score}}rank_300:leaderboard(ranking:201,length:100){rank,address,simpleAvatar{agentAddress,name,address},arenaScore{score}}rank_400:leaderboard(ranking:301,length:100){rank,address,simpleAvatar{agentAddress,name,address},arenaScore{score}}rank_500:leaderboard(ranking:401,length:100){rank,address,simpleAvatar{agentAddress,name,address},arenaScore{score}}rank_600:leaderboard(ranking:501,length:100){rank,address,simpleAvatar{agentAddress,name,address},arenaScore{score}}rank_700:leaderboard(ranking:601,length:100){rank,address,simpleAvatar{agentAddress,name,address},arenaScore{score}}rank_800:leaderboard(ranking:701,length:100){rank,address,simpleAvatar{agentAddress,name,address},arenaScore{score}}rank_900:leaderboard(ranking:801,length:100){rank,address,simpleAvatar{agentAddress,name,address},arenaScore{score}}rank_1000:leaderboard(ranking:901,length:100){rank,address,simpleAvatar{agentAddress,name,address},arenaScore{score}}rank_1100:leaderboard(ranking:1001,length:100){rank,address,simpleAvatar{agentAddress,name,address},arenaScore{score}}rank_1200:leaderboard(ranking:1101,length:100){rank,address,simpleAvatar{agentAddress,name,address},arenaScore{score}}rank_1300:leaderboard(ranking:1201,length:100){rank,address,simpleAvatar{agentAddress,name,address},arenaScore{score}}rank_1400:leaderboard(ranking:1301,length:100){rank,address,simpleAvatar{agentAddress,name,address},arenaScore{score}}rank_1500:leaderboard(ranking:1401,length:100){rank,address,simpleAvatar{agentAddress,name,address},arenaScore{score}}rank_1600:leaderboard(ranking:1501,length:100){rank,address,simpleAvatar{agentAddress,name,address},arenaScore{score}}rank_1700:leaderboard(ranking:1601,length:100){rank,address,simpleAvatar{agentAddress,name,address},arenaScore{score}}rank_1800:leaderboard(ranking:1701,length:100){rank,address,simpleAvatar{agentAddress,name,address},arenaScore{score}}rank_1900:leaderboard(ranking:1801,length:100){rank,address,simpleAvatar{agentAddress,name,address},arenaScore{score}}rank_2000:leaderboard(ranking:1901,length:100){rank,address,simpleAvatar{agentAddress,name,address},arenaScore{score}}rank_2100:leaderboard(ranking:2001,length:100){rank,address,simpleAvatar{agentAddress,name,address},arenaScore{score}}rank_2200:leaderboard(ranking:2101,length:100){rank,address,simpleAvatar{agentAddress,name,address},arenaScore{score}}rank_2300:leaderboard(ranking:2201,length:100){rank,address,simpleAvatar{agentAddress,name,address},arenaScore{score}}rank_2400:leaderboard(ranking:2301,length:100){rank,address,simpleAvatar{agentAddress,name,address},arenaScore{score}}rank_2500:leaderboard(ranking:2401,length:100){rank,address,simpleAvatar{agentAddress,name,address},arenaScore{score}}rank_2600:leaderboard(ranking:2501,length:100){rank,address,simpleAvatar{agentAddress,name,address},arenaScore{score}}rank_2700:leaderboard(ranking:2601,length:100){rank,address,simpleAvatar{agentAddress,name,address},arenaScore{score}}rank_2800:leaderboard(ranking:2701,length:100){rank,address,simpleAvatar{agentAddress,name,address},arenaScore{score}}rank_2900:leaderboard(ranking:2801,length:100){rank,address,simpleAvatar{agentAddress,name,address},arenaScore{score}}rank_3000:leaderboard(ranking:2901,length:100){rank,address,simpleAvatar{agentAddress,name,address},arenaScore{score}}}}',
+    query: 'query{arena{rank_1:leaderboard(ranking:1,length:100){...infoArena}rank_101:leaderboard(ranking:101,length:100){...infoArena}rank_201:leaderboard(ranking:201,length:100){...infoArena}rank_301:leaderboard(ranking:301,length:100){...infoArena}rank_401:leaderboard(ranking:401,length:100){...infoArena}rank_501:leaderboard(ranking:501,length:100){...infoArena}rank_601:leaderboard(ranking:601,length:100){...infoArena}rank_701:leaderboard(ranking:701,length:100){...infoArena}rank_801:leaderboard(ranking:801,length:100){...infoArena}rank_901:leaderboard(ranking:901,length:100){...infoArena}rank_1001:leaderboard(ranking:1001,length:100){...infoArena}rank_1101:leaderboard(ranking:1101,length:100){...infoArena}rank_1201:leaderboard(ranking:1201,length:100){...infoArena}rank_1301:leaderboard(ranking:1301,length:100){...infoArena}rank_1401:leaderboard(ranking:1401,length:100){...infoArena}rank_1501:leaderboard(ranking:1501,length:100){...infoArena}rank_1601:leaderboard(ranking:1601,length:100){...infoArena}rank_1701:leaderboard(ranking:1701,length:100){...infoArena}rank_1801:leaderboard(ranking:1801,length:100){...infoArena}rank_1901:leaderboard(ranking:1901,length:100){...infoArena}rank_end:leaderboardByAvatarAddress(avatarAddress:"0x0000000000000000000000000000000000000000"){...infoArena}}}fragment infoArena on ArenaParticipantDocument{score avatarAddress rank lastBattleBlockIndex}',
   };
   if (isPreRound) {
     $.ajax({
@@ -668,6 +669,19 @@ function refreshTableData(isPreRound = false) {
         for (let key in response.data.arena) {
           arenaList = arenaList.concat(response.data.arena[key]);
         }
+        // Ngăn có 2 đối tượng trùng avatar address
+        arenaList = arenaList.reduce((unique, o) => {
+          const duplicate = unique.find(item => item.avatarAddress === o.avatarAddress);
+          if (duplicate) {
+            if (o.score > duplicate.score) {
+              unique[unique.indexOf(duplicate)] = o;
+            }
+          } else {
+            unique.push(o);
+          }
+          return unique;
+        }, []);
+
         var processedData = arenaList
           .slice(0, 3000) // Giới hạn số lượng phần tử đầu tiên
           .map(function (participant) {
@@ -676,9 +690,10 @@ function refreshTableData(isPreRound = false) {
             // var avatarName = nameWithHash.substring(0, startIndex).trim(); // Chỉ giữ lại phần trước của tên và loại bỏ khoảng trắng thừa          
             return {
               rankid: participant.rank,
-              score: participant.arenaScore.score,
-              avatarname: participant.simpleAvatar.name,
-              avataraddress: participant.simpleAvatar.address,
+              score: participant.score,
+              // avatarname: participant.simpleAvatar.name,
+              avataraddress: participant.avatarAddress,
+              lastBattleBlockIndex: participant.lastBattleBlockIndex,
               // cp: 1,
               // portraitId: 10200000
             };
