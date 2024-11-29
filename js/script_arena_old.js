@@ -145,6 +145,10 @@ function sortColumn(colIdx) {
   creatTableArena(data);
 }
 
+
+
+
+
 function searchItemFun() {
   // Declare variables
   var input, filter, table, tr, td, i, txtValue;
@@ -580,17 +584,7 @@ function refreshTableData(isPreRound = false) {
             const matchingData2 = apiData2.find(data2 => data2?.avataraddress?.toLowerCase() === data1.avataraddress.toLowerCase());
             return {
               ...data1,
-              win: matchingData2?.win || 0,
-              lose: matchingData2?.lose || 0,
-              currenttickets: matchingData2?.currenttickets || 0,
-              purchasedTicketCount: matchingData2?.purchasedTicketCount || 0,
-              purchasedTicketNCG: matchingData2?.purchasedTicketNCG || 0,
-              nextPTNCG: matchingData2?.nextPTNCG || 0,
-              stake: matchingData2?.stake || 0,
-              purchasedTicketCountOld: matchingData2?.purchasedTicketCountOld || 0,
-              cp: matchingData2?.cp || 0,
-              portraitId: matchingData2?.portraitId || 10200000,
-              avatarname: matchingData2?.avatarname || "",
+              ...matchingData2
             };
           });
           creatTableArena(mergedData);
@@ -665,7 +659,7 @@ function refreshTableData(isPreRound = false) {
       });
   }
   var post_data_json = {
-    query: 'query{arena{rank_1:leaderboard(ranking:1,length:100){...infoArena}rank_101:leaderboard(ranking:101,length:100){...infoArena}rank_201:leaderboard(ranking:201,length:100){...infoArena}rank_301:leaderboard(ranking:301,length:100){...infoArena}rank_401:leaderboard(ranking:401,length:100){...infoArena}rank_501:leaderboard(ranking:501,length:100){...infoArena}rank_601:leaderboard(ranking:601,length:100){...infoArena}rank_701:leaderboard(ranking:701,length:100){...infoArena}rank_801:leaderboard(ranking:801,length:100){...infoArena}rank_901:leaderboard(ranking:901,length:100){...infoArena}rank_1001:leaderboard(ranking:1001,length:100){...infoArena}rank_1101:leaderboard(ranking:1101,length:100){...infoArena}rank_1201:leaderboard(ranking:1201,length:100){...infoArena}rank_1301:leaderboard(ranking:1301,length:100){...infoArena}rank_1401:leaderboard(ranking:1401,length:100){...infoArena}rank_1501:leaderboard(ranking:1501,length:100){...infoArena}rank_1601:leaderboard(ranking:1601,length:100){...infoArena}rank_1701:leaderboard(ranking:1701,length:100){...infoArena}rank_1801:leaderboard(ranking:1801,length:100){...infoArena}rank_1901:leaderboard(ranking:1901,length:100){...infoArena}rank_end:leaderboardByAvatarAddress(avatarAddress:"0x0000000000000000000000000000000000000000"){...infoArena}}}fragment infoArena on ArenaParticipantDocument{score avatarAddress rank lastBattleBlockIndex}',
+    query: 'query{stateQuery{arenaParticipants(avatarAddress:"0x0000000000000000000000000000000000000000",filterBounds: false){avatarAddr,score,rank,winScore,loseScore,cp,portraitId,level,nameWithHash}}}',
   };
   if (isPreRound) {
     $.ajax({
@@ -699,53 +693,39 @@ function refreshTableData(isPreRound = false) {
   } else {
     var TIMEOUT = parseInt($('#setTimeout').val()) * 1000 || 30000
     $.ajax({
-      url: URL_MIMIR_GRAPHQL,
-      type: "POST",
-      data: JSON.stringify(post_data_json),
+      // url: URL_NODE_ARENA_USE,
+      // type: "POST",
+      // data: JSON.stringify(post_data_json),
+      url: url_jsonblod_data_arena_2,
+      type: "GET",
       contentType: "application/json",
       timeout: TIMEOUT,
       success: function (response, status) {
-        if (response && response.data && response.data.arena) { } else if (response && response.errors && response.errors[0].message) {
-          console.log("Lỗi khi lấy dữ liệu từ api của game:", response.errors[0].message);
-          get_data_arena_from_9capi();
-        } else {
-          console.log("Lỗi khi lấy dữ liệu từ api của game: Không xác định");
-          get_data_arena_from_9capi();
-        }
-        let arenaList = [];
-        for (let key in response.data.arena) {
-          arenaList = arenaList.concat(response.data.arena[key]);
-        }
-        // Ngăn có 2 đối tượng trùng avatar address
-        arenaList = arenaList.reduce((unique, o) => {
-          const duplicate = unique.find(item => item.avatarAddress === o.avatarAddress);
-          if (duplicate) {
-            if (o.score > duplicate.score) {
-              unique[unique.indexOf(duplicate)] = o;
-            }
-          } else {
-            unique.push(o);
-          }
-          return unique;
-        }, []);
+        // if (response && response.data && response.data.stateQuery) { } else if (response && response.errors && response.errors[0].message) {
+        //   console.log("Lỗi khi lấy dữ liệu từ api của game:", response.errors[0].message);
+        //   get_data_arena_from_9capi();
+        // } else {
+        //   console.log("Lỗi khi lấy dữ liệu từ api của game: Không xác định");
+        //   get_data_arena_from_9capi();
+        // }
 
-        var processedData = arenaList
-          .slice(0, 3000) // Giới hạn số lượng phần tử đầu tiên
-          .map(function (participant) {
-            // var nameWithHash = participant.nameWithHash;
-            // var startIndex = nameWithHash.indexOf('<size=80%>'); // Tìm vị trí bắt đầu của từ '<size=80%>'
-            // var avatarName = nameWithHash.substring(0, startIndex).trim(); // Chỉ giữ lại phần trước của tên và loại bỏ khoảng trắng thừa          
-            return {
-              rankid: participant.rank,
-              score: participant.score,
-              // avatarname: participant.simpleAvatar.name,
-              avataraddress: participant.avatarAddress,
-              lastBattleBlockIndex: participant.lastBattleBlockIndex,
-              // cp: 1,
-              // portraitId: 10200000
-            };
-          });
-        console.log("Sử dụng từ api game");
+        // var processedData = response.data.stateQuery.arenaParticipants
+        //   .slice(0, 3000) // Giới hạn số lượng phần tử đầu tiên
+        //   .map(function (participant) {
+        //     var nameWithHash = participant.nameWithHash;
+        //     var startIndex = nameWithHash.indexOf('<size=80%>'); // Tìm vị trí bắt đầu của từ '<size=80%>'
+        //     var avatarName = nameWithHash.substring(0, startIndex).trim(); // Chỉ giữ lại phần trước của tên và loại bỏ khoảng trắng thừa
+        //     return {
+        //       rankid: participant.rank,
+        //       score: participant.score,
+        //       avatarname: avatarName,
+        //       avataraddress: participant.avatarAddr,
+        //       cp: participant.cp,
+        //       portraitId: participant.portraitId
+        //     };
+        //   });
+        var processedData = response
+        console.log("Sử dụng từ dữ liệu phụ");
         // Chỉ lưu 3000 đối tượng đầu tiên
         const first3000Data = processedData.slice(0, 3000);
 
@@ -761,10 +741,10 @@ function refreshTableData(isPreRound = false) {
         // Chỉ xếp SHOW_BXH_MAX đối tượng đầu tiên
         var SHOW_BXH_MAX = parseInt($('#setRankDisplay').val()) || 3000;
         var data = processedData.slice(0, SHOW_BXH_MAX);
-        hop_nhat_data_phu(data);
+        creatTableArena(data)
       },
       error: function (xhr, status, error) {
-        console.log("Lỗi khi lấy dữ liệu từ api của game:", error);
+        console.log("Lỗi khi lấy dữ liệu từ api phụ:", error);
         if (isPreRound) creatTableArena(dataArenaError)
         else get_data_arena_from_9capi();
       },

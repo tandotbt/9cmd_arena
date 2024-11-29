@@ -87,6 +87,25 @@
       $("#Heimdall_time span").numberAnimate({
         animationTimes: [500, 1000, 500]
       });
+
+      $("#Thor_block span").numberAnimate({
+        animationTimes: [500, 1000, 500]
+      });
+      $("#Thor_avg span").numberAnimate({
+        animationTimes: [500, 1000, 500]
+      });
+      $("#Thor_round span").numberAnimate({
+        animationTimes: [500, 1000, 500]
+      });
+      $("#Thor_blockEnd span").numberAnimate({
+        animationTimes: [500, 1000, 500]
+      });
+      $("#Thor_timeBlock span").numberAnimate({
+        animationTimes: [500, 1000, 500]
+      });
+      $("#Thor_time span").numberAnimate({
+        animationTimes: [500, 1000, 500]
+      });
     });
     $(document).ready(function () {
 
@@ -140,10 +159,37 @@
         // Lập lịch chạy lại hàm sau 10 giây
         setTimeout(Heimdall_refreshInfoTableData, 10000);
       }
+      function Thor_refreshInfoTableData() {
+
+        $.getJSON("https://jsonblob.com/api/1312097501972717568").done(function (data) {
+          $("#Thor_urlImgSeason").attr("src", data.urlImgSeason);
+          if (data.infoArena.includes('!')) {
+            $("#Thor_type").html('<img style="width: 20px;height: 20px;" src="assets/fire.gif"><b> ' + data.infoArena + '</b>');
+          } else {
+            $("#Thor_type").html(data.infoArena);
+          }
+          $("#Thor_block span").eq(0).numberAnimate("set", data.block);
+          $("#Thor_avg span").eq(0).numberAnimate("set", data.avgBlock);
+          $("#Thor_round span").eq(0).numberAnimate("set", data.roundID);
+          $("#Thor_round span").eq(1).numberAnimate("set", data.totalRound);
+          $("#Thor_blockEnd span").eq(0).numberAnimate("set", data.blockEndRound);
+          $("#Thor_timeBlock span").eq(0).numberAnimate("set", data.timeBlock);
+          $("#Thor_time span").eq(0).numberAnimate("set", data.h);
+          $("#Thor_time span").eq(1).numberAnimate("set", data.m);
+          $("#Thor_time span").eq(2).numberAnimate("set", data.s);
+
+        });
+        // Lập lịch chạy lại hàm sau 10 giây
+        setTimeout(Thor_refreshInfoTableData, 10000);
+      }
       Odin_refreshInfoTableData();
       setTimeout(function () {
         // Hành động tiếp theo sau khi đợi 5 giây
         Heimdall_refreshInfoTableData();
+      }, 5000);
+      setTimeout(function () {
+        // Hành động tiếp theo sau khi đợi 5 giây
+        Thor_refreshInfoTableData();
       }, 5000);
 
     });
@@ -163,8 +209,8 @@
           <script>
             $(() => {
               $.getJSON("https://jsonblob.com/api/1306284786812051456").done(({ isShow, color, notification: { main } }) => {
-                if (isShow) {
-                  $("#notification").css({ backgroundColor: color, display: '' }).find('td').html(`<marquee behavior="scroll" direction="left">${main}</marquee>`);
+                if (isShow.main) {
+                  $("#notification").css({ backgroundColor: color.main, display: '' }).find('td').html(`<marquee behavior="scroll" direction="left">${main}</marquee>`);
                 }
               });
             });
@@ -201,6 +247,16 @@
         <td id="Heimdall_blockEnd"><span>------</span></td>
         <td id="Heimdall_timeBlock"><span>-----</span></td>
         <td id="Heimdall_time"><span>--</span>h <span>--</span>m <span>--</span>s</td>
+      </tr>
+      <tr>
+        <td>Thor</td>
+        <td id="Thor_type">-----</td>
+        <td id="Thor_block"><span>------</span></td>
+        <td id="Thor_avg"><span>---</span> s</td>
+        <td id="Thor_round"><span>--</span>/<span>--</span></td>
+        <td id="Thor_blockEnd"><span>------</span></td>
+        <td id="Thor_timeBlock"><span>-----</span></td>
+        <td id="Thor_time"><span>--</span>h <span>--</span>m <span>--</span>s</td>
       </tr>
       <tr
         style="background-image: url('assets/cover.png'); background-repeat: no-repeat; background-attachment: fixed; background-size: cover;">
@@ -240,19 +296,24 @@
 ">
     <div class="tooltip">
       <a href="odin"><button class="button-37">ODIN<span class="tooltiptext"
-            style="width: unset;margin-left: -17vw;"><img id="Odin_urlImgSeason" style="width: 90vw;height: 70vh;"
+            style="width: unset;margin-left: -11vw;"><img id="Odin_urlImgSeason" style="width: 90vw;height: 70vh;"
+              src="assets/loading_small.gif"></span></button></a>
+    </div>
+    <div class="tooltip">
+      <a href="heimdall"><button class="button-37">HEIMDALL<span class="tooltiptext"
+            style="width: unset;margin-left: -33vw;"><img id="Heimdall_urlImgSeason" style="width: 90vw;height: 70vh;"
+              src="assets/loading_small.gif"></span></button></a>
+    </div>
+    <div class="tooltip">
+      <a href="thor"><button class="button-37">THOR<span class="tooltiptext"
+            style="width: unset;margin-left: -57vw;"><img id="Thor_urlImgSeason" style="width: 90vw;height: 70vh;"
               src="assets/loading_small.gif"></span></button></a>
     </div>
     <div class="tooltip">
       <a href="https://counter.dev/dashboard.html?user=tanbt&token=ujb6LnK6MZA%3D"><button class="button-37">Thống
-          kê<span class="tooltiptext" style="width: unset;margin-left: -35vw;background-color: white;"><iframe
+          kê<span class="tooltiptext" style="width: unset;margin-left: -62vw;background-color: white;"><iframe
               width="500vw" height="300vh"
               src="https://counter.dev/dashboard.html?user=tanbt&token=ujb6LnK6MZA%3D"></iframe></span></button></a>
-    </div>
-    <div class="tooltip">
-      <a href="heimdall"><button class="button-37">HEIMDALL<span class="tooltiptext"
-            style="width: unset;margin-left: -74vw;"><img id="Heimdall_urlImgSeason" style="width: 90vw;height: 70vh;"
-              src="assets/loading_small.gif"></span></button></a>
     </div>
   </div>
 </body>
