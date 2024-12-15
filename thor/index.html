@@ -101,7 +101,7 @@
     <div id="notification" style="display: none;"></div>
     <script>
       $.getJSON(url_jsonblod_noti).done(function ({ isShow, color, notification }) {
-        if (isShow.main || isShow.thor) {
+        if (isShow.thor) {
           $("#notification").css({ backgroundColor: color.thor, display: '' }).html(`<marquee behavior="scroll" direction="left">${notification.thor}</marquee>`);
         }
       });

@@ -8,7 +8,7 @@
   <script src="../js/lazysizes.min.js" async=""></script>
   <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
   <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-  <script src="../js/script_arena_old.js"></script>
+  <script src="../js/script_arena.js"></script>
   <script src="../js/odin/const.js"></script>
   <script src="../js/script_attack.js"></script>
   <link rel="stylesheet" type="text/css" href="../css/style.css" />
@@ -101,7 +101,7 @@
     <div id="notification" style="display: none;"></div>
     <script>
       $.getJSON(url_jsonblod_noti).done(function ({ isShow, color, notification }) {
-        if (isShow.main || isShow.odin) {
+        if (isShow.odin) {
           $("#notification").css({ backgroundColor: color.odin, display: '' }).html(`<marquee behavior="scroll" direction="left">${notification.odin}</marquee>`);
         }
       });
