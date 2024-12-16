@@ -47,6 +47,21 @@
     td {
       font-size: 2vh;
     }
+
+    .powered-by {
+      font-family: 'Arial', sans-serif;
+      color: #b0b0b0;
+      font-size: 18px;
+      /* display: flex;
+      align-items: center; */
+      padding: 10px;
+    }
+
+    .powered-by img {
+      width: 100px;
+      height: 50px;
+      margin-left: 8px;
+    }
   </style>
   <script>
     $(document).ready(function () {
@@ -258,7 +273,7 @@
         <td id="Thor_timeBlock"><span>-----</span></td>
         <td id="Thor_time"><span>--</span>h <span>--</span>m <span>--</span>s</td>
       </tr>
-      <tr
+      <tr class="powered-by"
         style="background-image: url('assets/cover.png'); background-repeat: no-repeat; background-attachment: fixed; background-size: cover;">
         <td colspan=10>
           Made with <svg viewBox="0 0 1792 1792" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg"
@@ -266,10 +281,14 @@
             <path
               d="M896 1664q-26 0-44-18l-624-602q-10-8-27.5-26T145 952.5 77 855 23.5 734 0 596q0-220 127-344t351-124q62 0 126.5 21.5t120 58T820 276t76 68q36-36 76-68t95.5-68.5 120-58T1314 128q224 0 351 124t127 344q0 221-229 450l-623 600q-18 18-44 18z"
               fill="#e25555"></path>
-          </svg> by tanbt
+          </svg> by tanbt x Powered by 9cAPI
+          <a href="https://9capi.com/" target="_blank"><img
+              src="https://9capi.com/img/logos/05_%EB%AA%A8%EB%85%B8_1024x1024_B.png" alt="Logo"></a>
           <div class="tooltip">
-            <img src="assets/npcArenaIdle.gif"><span class="tooltiptext" style="bottom: 100px;">Don't be afraid of the
-              enemy in front of you. Have faith in yourself!</span>
+            <img style="width: unset;height: unset;" src="assets/npcArenaIdle.gif">
+            <span class="tooltiptext" style="bottom: 100px;">
+              Don't be afraid of the enemy in front of you. Have faith in yourself!
+            </span>
           </div>
         </td>
       </tr>
