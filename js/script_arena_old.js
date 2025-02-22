@@ -218,6 +218,7 @@ function handleButtonClick(button) {
   var enemyCP = $(button).data("cp");
   // Lấy giá trị của radio được chọn
   var selectedRadioValue = $('input[name="avatarSelection"]:checked').val();
+  var selectedRadioValue1 = $('input[name="avatarSelection"]:checked').data("agent");
   var selectedRadioValue2 = $('input[name="avatarSelection"]:checked').data("cp");
 
 
@@ -228,6 +229,7 @@ function handleButtonClick(button) {
   // Dùng 9capi sim
   var putData = {
     avatarAddress: selectedRadioValue,
+    agentAddress: selectedRadioValue1,
     enemyAddress: itemId,
   };
   sendPostRequest(url_9capi_sim, putData, function (response, status) {
@@ -802,9 +804,9 @@ function creatTableArena(dataTotal) {
     student += "<td>" + "<div class='showIconBeuty' for='radio-" + student1 + "'><span class='mute-text showIconBeuty'>" + (typeof value.stake !== "undefined" && value.stake !== null ? value.stake : "-") + "<img class='notChoiceMeCSS' style='width: 1.6vw;' src='../assets/icon_Goods_0_mod.png'/></span><br><div class='showIconBeuty'>" + "<span id='showNCGBalance-" + student1 + "'>---</span>" + " <img class='notChoiceMeCSS' style='width: 1.6vw;' src='../assets/icon_Goods_0.png'/></div></div></td>";
     student += "<td>" + "<div style='white-space: nowrap;' for='radio-" + student1 + "'>" + (typeof value.win !== "undefined" && value.win !== null ? value.win : "-") + "/" + (typeof value.lose !== "undefined" && value.lose !== null ? value.lose : "-") + "</div></td>";
     student += "<td>" + "<div class='showIconBeuty' for='radio-" + student1 + "'><span class='showIconBeuty'>" + (typeof value.currenttickets !== "undefined" && value.currenttickets !== null ? value.currenttickets : "-") + "<img class='notChoiceMeCSS' style='width: 1.6vw;' src='../assets/icon_Goods_3.png'/></span> <span class='showIconBeuty'>" + (typeof value.purchasedTicketCount !== "undefined" && value.purchasedTicketCount !== null && typeof value.purchasedTicketCountOld !== "undefined" && value.purchasedTicketCountOld !== null ? (value.purchasedTicketCount - value.purchasedTicketCountOld) : "-") + "<img class='notChoiceMeCSS' style='width: 1.6vw;' src='../assets/icon_Goods_3_mod.png'/></span> <span class='showIconBeuty'>" + (typeof value.nextPTNCG !== "undefined" && value.nextPTNCG !== null ? value.nextPTNCG.toFixed(1) : "-") + "<img class='notChoiceMeCSS' style='width: 1.6vw;' src='../assets/icon_Goods_0.png'/></span><br><span class='mute-text' style='white-space: nowrap;'>" + (typeof value.purchasedTicketCount !== "undefined" && value.purchasedTicketCount !== null ? value.purchasedTicketCount : "-") + " • " + (typeof value.purchasedTicketNCG !== "undefined" && value.purchasedTicketNCG !== null ? value.purchasedTicketNCG.toFixed(1) : "-") + " ncg</span></div></td>";
-    student += "<td><div class='radio-wrapper'><input id='radio-" + student1 + "' type='radio' name='avatarSelection' data-cp='" + value.cp + "' data-score='" + value.score + "' value='" + value.avataraddress + "'" + (student1 === 1 ? " checked" : "") + "/><label for='radio-" + student1 + "'></label></div></td>";
-    student += "<td><div class='button-wrapper tooltip'><button class='button-11' id='button-" + student1 + "' onclick='handleButtonClick(this)' data-itemid='" + value.avataraddress + "' data-cp='" + value.cp + "'>-1%</button>" + (typeof value.messageButton !== "undefined" && value.messageButton !== null && value.messageButton !== "none" ? "<span class='tooltiptext' style='z-index: 9999;margin-bottom: -15px;'>" + decodeURIComponent(value.messageButton) + "</span>" : "") + "</div></td>";
-    student += "<td><div class='radio-wrapper'><input id='attackRadio-" + student1 + "' type='radio' name='avatarSelectionAttack' data-cp='" + value.cp + "' data-score='" + value.score + "' value='" + value.avataraddress + "'" + (student1 === 1 ? " checked" : "") + "/><label for='attackRadio-" + student1 + "'></label></div></td>";
+    student += "<td><div class='radio-wrapper'><input id='radio-" + student1 + "' type='radio' name='avatarSelection' data-cp='" + value.cp + "' data-agent='" + value.agentaddress + "' data-score='" + value.score + "' value='" + value.avataraddress + "'" + (student1 === 1 ? " checked" : "") + "/><label for='radio-" + student1 + "'></label></div></td>";
+    student += "<td><div class='button-wrapper tooltip'><button class='button-11' id='button-" + student1 + "' onclick='handleButtonClick(this)' data-itemid='" + value.avataraddress + "' data-cp='" + value.cp + "' data-agent='" + value.agentaddress + "'>-1%</button>" + (typeof value.messageButton !== "undefined" && value.messageButton !== null && value.messageButton !== "none" ? "<span class='tooltiptext' style='z-index: 9999;margin-bottom: -15px;'>" + decodeURIComponent(value.messageButton) + "</span>" : "") + "</div></td>";
+    student += "<td><div class='radio-wrapper'><input id='attackRadio-" + student1 + "' type='radio' name='avatarSelectionAttack' data-cp='" + value.cp + "' data-agent='" + value.agentaddress + "' data-score='" + value.score + "' value='" + value.avataraddress + "'" + (student1 === 1 ? " checked" : "") + "/><label for='attackRadio-" + student1 + "'></label></div></td>";
     student += "</tr>";
 
   });
